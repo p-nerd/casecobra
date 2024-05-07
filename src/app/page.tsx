@@ -256,7 +256,7 @@ export default function Home() {
                             <Link
                                 className={buttonVariants({
                                     size: "lg",
-                                    className: "mx-auto mt-8",
+                                    className: "mx-auto mt-8 ",
                                 })}
                                 href="/configure/upload"
                             >
