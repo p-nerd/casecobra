@@ -42,7 +42,7 @@ const Navbar = async () => {
                                     </Link>
                                 ) : null}
                                 <Link
-                                    href="/configure/upload"
+                                    href="/create-case/upload"
                                     className={buttonVariants({
                                         size: "sm",
                                         className: "hidden items-center gap-1 sm:flex",
@@ -77,7 +77,7 @@ const Navbar = async () => {
                                 <div className="hidden h-8 w-px bg-zinc-200 sm:block" />
 
                                 <Link
-                                    href="/configure/upload"
+                                    href="/create-case/upload"
                                     className={buttonVariants({
                                         size: "sm",
                                         className: "hidden items-center gap-1 sm:flex",

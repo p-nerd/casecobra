@@ -21,7 +21,7 @@ const Upload = () => {
         onClientUploadComplete: ([data]) => {
             const configId = data.serverData.configId;
             startTransition(() => {
-                router.push(`/configure/design?id=${configId}`);
+                router.push(`/create-case/design?id=${configId}`);
             });
         },
         onUploadProgress: p => {

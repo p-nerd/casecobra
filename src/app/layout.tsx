@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const Layout = (p: Readonly<{ children: ReactNode }>) => {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={inter.className} suppressHydrationWarning={true}>
                 <Navbar />
                 <main className="flex min-h-[calc(100vh-3.5rem-1px)] flex-col">
                     <div className="flex h-full flex-1 flex-col">{p.children}</div>

@@ -258,7 +258,7 @@ export default function Home() {
                                     size: "lg",
                                     className: "mx-auto mt-8 ",
                                 })}
-                                href="/configure/upload"
+                                href="/create-case/upload"
                             >
                                 Create your case now <ArrowRight className="ml-1.5 h-4 w-4" />
                             </Link>
