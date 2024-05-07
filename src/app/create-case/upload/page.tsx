@@ -19,9 +19,9 @@ const Upload = () => {
 
     const { startUpload, isUploading } = useUploadThing("imageUploader", {
         onClientUploadComplete: ([data]) => {
-            const configId = data.serverData.configId;
+            const createCaseId = data.serverData.createCaseId;
             startTransition(() => {
-                router.push(`/create-case/design?id=${configId}`);
+                router.push(`/create-case/design?id=${createCaseId}`);
             });
         },
         onUploadProgress: p => {
@@ -43,7 +43,7 @@ const Upload = () => {
             <div className="relative flex w-full flex-1 flex-col items-center justify-center">
                 <Dropzone
                     onDropAccepted={files => {
-                        startUpload(files, { configId: undefined });
+                        startUpload(files, { createCaseId: undefined });
                         setIsDragOver(false);
                     }}
                     onDropRejected={files => {
