@@ -1,3 +1,3 @@
-# e-commerce
+# casecobra
 
-E-Commerce demo project
+Perfect E-Commerce-Store for Custom Phone Cases
