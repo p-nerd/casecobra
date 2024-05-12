@@ -35,3 +35,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+bootstrap/
+database/
+public/build/
+storage/
+vendor/
+
