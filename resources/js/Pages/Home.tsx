@@ -4,18 +4,7 @@ import { buttonVariants } from "@/Components/ui/button";
 import { Icons, Phone } from "@/Components/misc";
 import { ArrowRight, Check, Link, Star } from "lucide-react";
 import Reviews from "@/Components/Reviews";
-import snake1 from "../../images/snake-1.png";
-import snake2 from "../../images/snake-2.png";
-import user1 from "../../images/user-1.png";
-import user2 from "../../images/user-2.png";
-import user3 from "../../images/user-3.png";
-import user4 from "../../images/user-4.jpg";
-import user5 from "../../images/user-5.jpg";
-import yourImage from "../../images/your-image.png";
-import line from "../../images/line.png";
-import horse from "../../images/horse.jpg";
-import arrow from "../../images/arrow.png";
-import horsePhone from "./../../images/horse_phone.jpg";
+import images from "@/lib/images";
 
 const Home = () => {
     return (
@@ -28,7 +17,7 @@ const Home = () => {
                                 <div className="absolute -top-20 left-0 hidden w-28 lg:block">
                                     {/* i forgot this div right here in the video, it's purely visual gradient and looks nice */}
                                     <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-50 via-slate-50/50" />
-                                    <img src={snake1} className="w-full" />
+                                    <img src={images.snake1} className="w-full" />
                                 </div>
                                 <h1 className="relative mt-16 w-fit text-balance text-5xl font-bold !leading-tight tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
                                     Your Image on a{" "}
@@ -63,27 +52,27 @@ const Home = () => {
                                     <div className="flex -space-x-4">
                                         <img
                                             className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
-                                            src={user1}
+                                            src={images.user1}
                                             alt="user image"
                                         />
                                         <img
                                             className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
-                                            src={user2}
+                                            src={images.user2}
                                             alt="user image"
                                         />
                                         <img
                                             className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
-                                            src={user3}
+                                            src={images.user3}
                                             alt="user image"
                                         />
                                         <img
                                             className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
-                                            src={user4}
+                                            src={images.user4}
                                             alt="user image"
                                         />
                                         <img
                                             className="inline-block h-10 w-10 rounded-full object-cover ring-2 ring-slate-100"
-                                            src={user5}
+                                            src={images.user5}
                                             alt="user image"
                                         />
                                     </div>
@@ -109,14 +98,14 @@ const Home = () => {
                         <div className="col-span-full mt-32 flex h-fit w-full justify-center px-8 sm:px-16 md:px-0 lg:col-span-1 lg:mx-0 lg:mt-20">
                             <div className="relative md:max-w-xl">
                                 <img
-                                    src={yourImage}
+                                    src={images.yourImage}
                                     className="absolute -top-20 left-56 hidden w-40 select-none sm:block lg:hidden lg:w-52 xl:block"
                                 />
                                 <img
-                                    src={line}
+                                    src={images.line}
                                     className="absolute -bottom-6 -left-6 w-20 select-none"
                                 />
-                                <Phone className="w-64" imgSrc="/testimonials/1.jpg" />
+                                <Phone className="w-64" imgSrc={images.testimonials1} />
                             </div>
                         </div>
                     </MaxWidthWrapper>
@@ -134,7 +123,7 @@ const Home = () => {
                                 </span>{" "}
                                 say
                             </h2>
-                            <img src={snake2} className="order-0 w-24 lg:order-2" />
+                            <img src={images.snake2} className="order-0 w-24 lg:order-2" />
                         </div>
 
                         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 px-4 lg:mx-0 lg:max-w-none lg:grid-cols-2">
@@ -160,7 +149,7 @@ const Home = () => {
                                 <div className="mt-2 flex gap-4">
                                     <img
                                         className="h-12 w-12 rounded-full object-cover"
-                                        src={user1}
+                                        src={images.user1}
                                         alt="user"
                                     />
                                     <div className="flex flex-col">
@@ -197,7 +186,7 @@ const Home = () => {
                                 <div className="mt-2 flex gap-4">
                                     <img
                                         className="h-12 w-12 rounded-full object-cover"
-                                        src={user4}
+                                        src={images.user4}
                                         alt="user"
                                     />
                                     <div className="flex flex-col">
@@ -234,18 +223,18 @@ const Home = () => {
                         <div className="mx-auto max-w-6xl px-6 lg:px-8">
                             <div className="relative flex grid-cols-2 flex-col items-center gap-40 md:grid">
                                 <img
-                                    src={arrow}
+                                    src={images.arrow}
                                     className="absolute left-1/2 top-[25rem] z-10 -translate-x-1/2 -translate-y-1/2 rotate-90 md:top-1/2 md:rotate-0"
                                 />
 
                                 <div className="relative h-80 w-full max-w-sm rounded-xl bg-gray-900/5 ring-inset ring-gray-900/10 md:h-full md:justify-self-end lg:rounded-2xl">
                                     <img
-                                        src={horse}
+                                        src={images.horse}
                                         className="h-full w-full rounded-md bg-white object-cover shadow-2xl ring-1 ring-gray-900/10"
                                     />
                                 </div>
 
-                                <Phone className="w-60" imgSrc={horsePhone} />
+                                <Phone className="w-60" imgSrc={images.horsePhone} />
                             </div>
                         </div>
 

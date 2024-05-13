@@ -2,21 +2,15 @@ import { type HTMLAttributes, useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MaxWidthWrapper, Phone } from "@/Components/misc";
-import whatPeopleAreBuying from "../../images/what-people-are-buying.png";
-import testimonials1 from "../../images/testimonial-1.jpg";
-import testimonials2 from "../../images/testimonial-2.jpg";
-import testimonials3 from "../../images/testimonial-3.jpg";
-import testimonials4 from "../../images/testimonial-4.jpg";
-import testimonials5 from "../../images/testimonial-5.jpg";
-import testimonials6 from "../../images/testimonial-6.jpg";
+import images from "@/lib/images";
 
 const PHONES = [
-    testimonials1,
-    testimonials2,
-    testimonials3,
-    testimonials4,
-    testimonials5,
-    testimonials6,
+    images.testimonials1,
+    images.testimonials2,
+    images.testimonials3,
+    images.testimonials4,
+    images.testimonials5,
+    images.testimonials6,
 ];
 
 function splitArray<T>(array: Array<T>, numParts: number) {
@@ -154,7 +148,7 @@ function Reviews() {
         <MaxWidthWrapper className="relative max-w-5xl">
             <img
                 aria-hidden="true"
-                src={whatPeopleAreBuying}
+                src={images.whatPeopleAreBuying}
                 className="absolute -left-32 top-1/3 hidden select-none xl:block"
             />
 
