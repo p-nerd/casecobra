@@ -1,21 +1,23 @@
 "use client";
 
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import NextImage from "next/image";
+import useOptions from "./useOptions";
+
+import { toast } from "sonner";
 import { cn, formatPrice } from "@/lib/utils";
-import Image from "next/image";
+import { useUploadThing } from "@/lib/uploadthing";
+import { BASE_PRICE, COLORS, FINISHES, MATERIALS, MODELS } from "./useOptions";
+
 import { Rnd } from "react-rnd";
-import { RadioGroup } from "@headlessui/react";
 import { Label } from "@/components/ui/label";
-import useOptions, { BASE_PRICE, COLORS, FINISHES, MATERIALS, MODELS } from "./useOptions";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup } from "@headlessui/react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Dispatch, RefObject, SetStateAction, useRef, useState } from "react";
 
 const ResizeHandleIcon = () => {
     return (
@@ -28,14 +30,109 @@ const ResizeHandleIcon = () => {
     );
 };
 
+type TDimension = {
+    height: number;
+    width: number;
+};
+
+type TPosition = {
+    x: number;
+    y: number;
+};
+
+const base64ToBlob = (base64: string, mimeType: string) => {
+    const base64Data = base64.split(",")[1];
+
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+};
+
+const useCropImage = (imageUrl: string, imageDimension: TDimension) => {
+    const [renderedDimension, setRenderedDimension] = useState({
+        width: imageDimension.width / 4,
+        height: imageDimension.height / 4,
+    });
+
+    const [renderedPosition, setRenderedPosition] = useState({
+        x: 10,
+        y: 30,
+    });
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const phoneCaseRef = useRef<HTMLDivElement>(null);
+
+    const cropImage = async () => {
+        const { left: containerLeft, top: containerTop } =
+            containerRef.current!.getBoundingClientRect();
+        const {
+            left: caseLeft,
+            top: caseTop,
+            width: caseWidth,
+            height: caseHeight,
+        } = phoneCaseRef.current!.getBoundingClientRect();
+
+        const leftOffset = caseLeft - containerLeft;
+        const topOffset = caseTop - containerTop;
+
+        const actualX = renderedPosition.x - leftOffset;
+        const actualY = renderedPosition.y - topOffset;
+
+        const canvas = document.createElement("canvas");
+
+        canvas.width = caseWidth;
+        canvas.height = caseHeight;
+
+        const ctx = canvas.getContext("2d");
+
+        const originalImage = new Image();
+        originalImage.crossOrigin = "anonymous";
+        originalImage.src = imageUrl;
+
+        // waiting for image loading
+        await new Promise(resolve => (originalImage.onload = resolve));
+
+        ctx?.drawImage(
+            originalImage,
+            actualX,
+            actualY,
+            renderedDimension.width,
+            renderedDimension.height,
+        );
+
+        const base64 = canvas.toDataURL();
+
+        const blob = base64ToBlob(base64, "image/png");
+        const file = new File([blob], "filename.png", { type: "image/png" });
+        return file;
+    };
+
+    return {
+        containerRef,
+        phoneCaseRef,
+        setRenderedDimension,
+        setRenderedPosition,
+        cropImage,
+    };
+};
+
 const ImagePositioner = (p: {
     imageUrl: string;
-    imageDimention: { height: number; width: number };
+    imageDimension: TDimension;
+    containerRef: RefObject<HTMLDivElement>;
+    phoneCaseRef: RefObject<HTMLDivElement>;
+    setRenderedDimension: Dispatch<SetStateAction<TDimension>>;
+    setRenderedPosition: Dispatch<SetStateAction<TPosition>>;
 }) => {
     const { color } = useOptions();
 
     return (
         <div
+            ref={p.containerRef}
             className={cn(
                 "relative col-span-2 flex h-[37.5rem] w-full max-w-4xl",
                 "items-center justify-center overflow-hidden rounded-lg",
@@ -45,10 +142,11 @@ const ImagePositioner = (p: {
         >
             <div className="pointer-events-none relative aspect-[896/1831] w-60 bg-opacity-50">
                 <AspectRatio
+                    ref={p.phoneCaseRef}
                     ratio={896 / 1831}
                     className="pointer-events-none relative z-50 aspect-[896/1831] w-full"
                 >
-                    <Image
+                    <NextImage
                         fill
                         alt="phone image"
                         src="/phone-template.png"
@@ -72,8 +170,8 @@ const ImagePositioner = (p: {
                 default={{
                     x: 10,
                     y: 30,
-                    width: p.imageDimention.width / 4,
-                    height: p.imageDimention.height / 4,
+                    width: p.imageDimension.width / 4,
+                    height: p.imageDimension.height / 4,
                 }}
                 lockAspectRatio={true}
                 resizeHandleComponent={{
@@ -82,10 +180,25 @@ const ImagePositioner = (p: {
                     topRight: <ResizeHandleIcon />,
                     topLeft: <ResizeHandleIcon />,
                 }}
+                onResizeStop={(_, __, ref, ___, { x, y }) => {
+                    p.setRenderedDimension({
+                        width: parseInt(ref.style.width.slice(0, -2)),
+                        height: parseInt(ref.style.height.slice(0, -2)),
+                    });
+                    p.setRenderedPosition({ x, y });
+                }}
+                onDrag={(_, { x, y }) => {
+                    p.setRenderedPosition({ x, y });
+                }}
                 className="absolute z-20 border-[3px] border-primary"
             >
                 <div className="relative h-full w-full">
-                    <Image src={p.imageUrl} fill alt="your image" className="pointer-events-none" />
+                    <NextImage
+                        src={p.imageUrl}
+                        fill
+                        alt="your image"
+                        className="pointer-events-none"
+                    />
                 </div>
             </Rnd>
         </div>
@@ -273,7 +386,7 @@ const SelectFinish = () => {
     );
 };
 
-const PriceAndContinue = () => {
+const PriceAndContinue = (p: { onContinue: () => void }) => {
     const { finish, material } = useOptions();
     return (
         <div className="h-16 w-full bg-white px-8">
@@ -283,7 +396,12 @@ const PriceAndContinue = () => {
                     <p className="whitespace-nowrap font-medium">
                         {formatPrice((BASE_PRICE + finish.price + material.price) / 100)}
                     </p>
-                    <Button loadingText="Saving" size="sm" className="w-full">
+                    <Button
+                        onClick={p.onContinue}
+                        loadingText="Saving"
+                        size="sm"
+                        className="w-full"
+                    >
                         Continue
                         <ArrowRight className="ml-1.5 inline h-4 w-4" />
                     </Button>
@@ -293,11 +411,23 @@ const PriceAndContinue = () => {
     );
 };
 
-const DesignCase = (p: { imageUrl: string; imageDimention: { height: number; width: number } }) => {
+const DesignCase = (p: { createCaseId: string; imageUrl: string; imageDimension: TDimension }) => {
+    const { containerRef, phoneCaseRef, setRenderedDimension, setRenderedPosition, cropImage } =
+        useCropImage(p.imageUrl, p.imageDimension);
+
+    const { startUpload } = useUploadThing("imageUploader");
+
     return (
         <div className="relative mb-20 mt-20 grid grid-cols-1 pb-20 lg:grid-cols-3">
-            <ImagePositioner imageUrl={p.imageUrl} imageDimention={p.imageDimention} />
-            <div className="flex h-[37.5rem] flex-col bg-white">
+            <ImagePositioner
+                imageUrl={p.imageUrl}
+                imageDimension={p.imageDimension}
+                containerRef={containerRef}
+                phoneCaseRef={phoneCaseRef}
+                setRenderedDimension={setRenderedDimension}
+                setRenderedPosition={setRenderedPosition}
+            />
+            <div className="col-span-full flex h-[37.5rem] w-full flex-col bg-white lg:col-span-1">
                 <ScrollArea className="relative flex-1 overflow-auto">
                     <div
                         aria-hidden="true"
@@ -317,7 +447,22 @@ const DesignCase = (p: { imageUrl: string; imageDimention: { height: number; wid
                         </div>
                     </div>
                 </ScrollArea>
-                <PriceAndContinue />
+                <PriceAndContinue
+                    onContinue={async () => {
+                        try {
+                            const croppedImage = await cropImage();
+                            if (!croppedImage) {
+                                return;
+                            }
+                            await startUpload([croppedImage], { createCaseId: p.createCaseId });
+                        } catch (e: any) {
+                            console.log(e);
+                            toast.error("Something went wrong", {
+                                description: e?.message,
+                            });
+                        }
+                    }}
+                />
             </div>
         </div>
     );

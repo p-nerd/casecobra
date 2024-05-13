@@ -17,8 +17,9 @@ const Design = async (p: { searchParams: { id?: string } }) => {
 
     return (
         <DesignCase
+            createCaseId={createCase.id}
             imageUrl={imageUrl}
-            imageDimention={{
+            imageDimension={{
                 height: imageHeight,
                 width: imageWidth,
             }}
