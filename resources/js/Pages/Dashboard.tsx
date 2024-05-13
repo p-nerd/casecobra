@@ -1,6 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { PageProps } from "@/types";
+import { Button } from "@/Components/ui/button";
 
 export default function Dashboard({ auth }: PageProps) {
     return (
@@ -17,6 +18,7 @@ export default function Dashboard({ auth }: PageProps) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">You're logged in!</div>
                     </div>
+                    <Button size="sm">save</Button>
                 </div>
             </div>
         </AuthenticatedLayout>
