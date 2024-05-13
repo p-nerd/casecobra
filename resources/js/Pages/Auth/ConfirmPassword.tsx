@@ -1,10 +1,9 @@
-import { useEffect, FormEventHandler } from "react";
-import GuestLayout from "@/Layouts/GuestLayout";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
+import { useEffect } from "react";
 import { Head, useForm } from "@inertiajs/react";
+import { Button } from "@/Components/ui/button";
+import { Form, TextField } from "@/Components/ui2/form";
+
+import GuestLayout from "@/Layouts/GuestLayout";
 
 export default function ConfirmPassword() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -17,9 +16,7 @@ export default function ConfirmPassword() {
         };
     }, []);
 
-    const submit: FormEventHandler = e => {
-        e.preventDefault();
-
+    const submit = () => {
         post(route("password.confirm"));
     };
 
@@ -32,29 +29,20 @@ export default function ConfirmPassword() {
                 continuing.
             </div>
 
-            <form onSubmit={submit}>
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        isFocused={true}
-                        onChange={e => setData("password", e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
+            <Form onSubmit={submit}>
+                <TextField
+                    label="Password"
+                    type="password"
+                    name="password"
+                    value={data.password}
+                    isFocused={true}
+                    onChange={value => setData("password", value)}
+                    error={errors.password}
+                />
+                <div className="flex items-center justify-end">
+                    <Button disabled={processing}>Confirm</Button>
                 </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Confirm
-                    </PrimaryButton>
-                </div>
-            </form>
+            </Form>
         </GuestLayout>
     );
 }
