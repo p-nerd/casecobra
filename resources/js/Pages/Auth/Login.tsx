@@ -1,13 +1,12 @@
-import { useEffect, FormEventHandler } from "react";
-import Checkbox from "@/Components/Checkbox";
-import GuestLayout from "@/Layouts/GuestLayout";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import TextInput from "@/Components/TextInput";
-import { Head, Link, useForm } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
+import { useEffect } from "react";
+import { useForm } from "@inertiajs/react";
 
-const Login = ({ status, canResetPassword }: { status?: string; canResetPassword: boolean }) => {
+import { Button } from "@/Components/ui/button";
+import { CheckboxField, DireactionLink, Form, TextField } from "@/Components/ui2/form";
+
+import GuestLayout from "@/Layouts/GuestLayout";
+
+const Login = (props: { status?: string; canResetPassword: boolean }) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
         password: "",
@@ -20,74 +19,54 @@ const Login = ({ status, canResetPassword }: { status?: string; canResetPassword
         };
     }, []);
 
-    const submit: FormEventHandler = e => {
-        e.preventDefault();
-
+    const submit = () => {
         post(route("login"));
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
-
-            {status && <div className="mb-4 text-sm font-medium text-green-600">{status}</div>}
-
-            <form onSubmit={submit} className="flex flex-col gap-4">
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={e => setData("email", e.target.value)}
-                    />
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password" value="Password" />
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={e => setData("password", e.target.value)}
-                    />
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div>
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={e => setData("remember", e.target.checked)}
-                        />
-                        <span className="ms-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-                </div>
-
+        <GuestLayout title="Log in">
+            {props.status && (
+                <div className="mb-4 text-sm font-medium text-green-600">{props.status}</div>
+            )}
+            <Form onSubmit={submit}>
+                <TextField
+                    label="Email"
+                    type="email"
+                    name="email"
+                    value={data.email}
+                    autoComplete="username"
+                    isFocused={true}
+                    onChange={value => setData("email", value)}
+                    error={errors.email}
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    name="password"
+                    value={data.password}
+                    autoComplete="current-password"
+                    onChange={value => setData("password", value)}
+                    error={errors.password}
+                />
+                <CheckboxField
+                    label="Remember me"
+                    name="remember"
+                    checked={data.remember}
+                    onChange={checked => setData("remember", checked)}
+                />
                 <div className="flex items-center justify-end gap-4">
-                    {canResetPassword && (
-                        <Link
+                    {props.canResetPassword && (
+                        <DireactionLink
                             href={route("password.request")}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
+                            label="Forgot your password?"
+                        />
                     )}
 
                     <Button disabled={processing} type="submit">
                         Log in
                     </Button>
                 </div>
-            </form>
+            </Form>
         </GuestLayout>
     );
 };

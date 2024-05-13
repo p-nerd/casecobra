@@ -1,10 +1,10 @@
-import { useEffect, FormEventHandler } from "react";
-import GuestLayout from "@/Layouts/GuestLayout";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import TextInput from "@/Components/TextInput";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { useEffect } from "react";
+import { useForm } from "@inertiajs/react";
+
 import { Button } from "@/Components/ui/button";
+import { DireactionLink, Form, TextField } from "@/Components/ui2/form";
+
+import GuestLayout from "@/Layouts/GuestLayout";
 
 const Register = () => {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -20,91 +20,60 @@ const Register = () => {
         };
     }, []);
 
-    const submit: FormEventHandler = e => {
-        e.preventDefault();
-
+    const submit = () => {
         post(route("register"));
     };
 
     return (
-        <GuestLayout>
-            <Head title="Register" />
-
-            <form onSubmit={submit} className="flex flex-col gap-4">
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        onChange={e => setData("name", e.target.value)}
-                        required
-                    />
-                    <InputError message={errors.name} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={e => setData("email", e.target.value)}
-                        required
-                    />
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password" value="Password" />
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={e => setData("password", e.target.value)}
-                        required
-                    />
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={e => setData("password_confirmation", e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
-
+        <GuestLayout title="Register">
+            <Form onSubmit={submit}>
+                <TextField
+                    label="Name"
+                    name="name"
+                    value={data.name}
+                    autoComplete="name"
+                    isFocused={true}
+                    onChange={value => setData("name", value)}
+                    required={true}
+                    error={errors.name}
+                />
+                <TextField
+                    label="Email"
+                    type="email"
+                    name="email"
+                    value={data.email}
+                    autoComplete="username"
+                    onChange={value => setData("email", value)}
+                    required={true}
+                    error={errors.email}
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    name="password"
+                    value={data.password}
+                    autoComplete="new-password"
+                    onChange={value => setData("password", value)}
+                    required={true}
+                    error={errors.password}
+                />
+                <TextField
+                    label="Confirm Password"
+                    type="password"
+                    name="password_confirmation"
+                    value={data.password_confirmation}
+                    autoComplete="new-password"
+                    onChange={value => setData("password_confirmation", value)}
+                    required={true}
+                    error={errors.password_confirmation}
+                />
                 <div className="flex items-center justify-end gap-4">
-                    <Link
-                        href={route("login")}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Already registered?
-                    </Link>
-
+                    <DireactionLink href={route("login")} label="Already registered?" />
                     <Button type="submit" disabled={processing}>
                         Register
                     </Button>
                 </div>
-            </form>
+            </Form>
         </GuestLayout>
     );
 };

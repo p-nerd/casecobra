@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { Head, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
+
 import { Button } from "@/Components/ui/button";
 import { Form, TextField } from "@/Components/ui2/form";
 
 import GuestLayout from "@/Layouts/GuestLayout";
 
-export default function ConfirmPassword() {
+const ConfirmPassword = () => {
     const { data, setData, post, processing, errors, reset } = useForm({
         password: "",
     });
@@ -21,14 +22,11 @@ export default function ConfirmPassword() {
     };
 
     return (
-        <GuestLayout>
-            <Head title="Confirm Password" />
-
+        <GuestLayout title="Confirm Password">
             <div className="mb-4 text-sm text-gray-600">
                 This is a secure area of the application. Please confirm your password before
                 continuing.
             </div>
-
             <Form onSubmit={submit}>
                 <TextField
                     label="Password"
@@ -45,4 +43,6 @@ export default function ConfirmPassword() {
             </Form>
         </GuestLayout>
     );
-}
+};
+
+export default ConfirmPassword;
