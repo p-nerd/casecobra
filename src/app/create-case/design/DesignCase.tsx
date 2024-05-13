@@ -19,7 +19,12 @@ import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 
 const ResizeHandleIcon = () => {
     return (
-        <div className="h-5 w-5 rounded-full border border-zinc-200 bg-white shadow transition hover:bg-primary" />
+        <div
+            className={cn(
+                "h-5 w-5 rounded-full border border-zinc-200 bg-white",
+                "shadow transition hover:bg-primary",
+            )}
+        />
     );
 };
 
@@ -30,7 +35,14 @@ const ImagePositioner = (p: {
     const { color } = useOptions();
 
     return (
-        <div className="relative col-span-2 flex h-[37.5rem] w-full max-w-4xl items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+        <div
+            className={cn(
+                "relative col-span-2 flex h-[37.5rem] w-full max-w-4xl",
+                "items-center justify-center overflow-hidden rounded-lg",
+                "border-2 border-dashed border-gray-300 p-12 text-center",
+                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+            )}
+        >
             <div className="pointer-events-none relative aspect-[896/1831] w-60 bg-opacity-50">
                 <AspectRatio
                     ratio={896 / 1831}
@@ -43,11 +55,16 @@ const ImagePositioner = (p: {
                         className="pointer-events-none z-50 select-none"
                     />
                 </AspectRatio>
-                <div className="absolute inset-0 bottom-px left-[3px] right-[3px] top-px z-40 rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]" />
                 <div
                     className={cn(
-                        "absolute inset-0 bottom-px left-[3px] right-[3px] top-px rounded-[32px]",
-                        `bg-${color.tw}`,
+                        "absolute inset-0 bottom-px left-[3px] right-[3px] top-px",
+                        "z-40 rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]",
+                    )}
+                />
+                <div
+                    className={cn(
+                        "absolute inset-0 bottom-px left-[3px] right-[3px] top-px",
+                        `rounded-[32px] bg-${color.tw}`,
                     )}
                 />
             </div>
@@ -88,7 +105,9 @@ const SelectColor = () => {
                         value={color}
                         className={({ active, checked }) =>
                             cn(
-                                "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full border-2 border-transparent p-0.5 focus:outline-none focus:ring-0 active:outline-none active:ring-0",
+                                "relative -m-0.5 flex cursor-pointer items-center justify-center",
+                                "rounded-full border-2 border-transparent p-0.5 focus:outline-none",
+                                "focus:ring-0 active:outline-none active:ring-0",
                                 {
                                     [`border-${color.tw}`]: active || checked,
                                 },
@@ -97,8 +116,8 @@ const SelectColor = () => {
                     >
                         <span
                             className={cn(
-                                `bg-${color.tw}`,
                                 "h-8 w-8 rounded-full border border-black border-opacity-10",
+                                `bg-${color.tw}`,
                             )}
                         />
                     </RadioGroup.Option>
@@ -162,7 +181,9 @@ const SelectMaterial = () => {
                         value={option}
                         className={({ active, checked }) =>
                             cn(
-                                "relative block cursor-pointer rounded-lg border-2 border-zinc-200 bg-white px-6 py-4 shadow-sm outline-none ring-0 focus:outline-none focus:ring-0 sm:flex sm:justify-between",
+                                "relative block cursor-pointer rounded-lg border-2 border-zinc-200",
+                                "bg-white px-6 py-4 shadow-sm outline-none ring-0 focus:outline-none",
+                                "focus:ring-0 sm:flex sm:justify-between",
                                 {
                                     "border-primary": active || checked,
                                 },
@@ -212,7 +233,9 @@ const SelectFinish = () => {
                         value={option}
                         className={({ active, checked }) =>
                             cn(
-                                "relative block cursor-pointer rounded-lg border-2 border-zinc-200 bg-white px-6 py-4 shadow-sm outline-none ring-0 focus:outline-none focus:ring-0 sm:flex sm:justify-between",
+                                "relative block cursor-pointer rounded-lg border-2 border-zinc-200",
+                                "bg-white px-6 py-4 shadow-sm outline-none ring-0 focus:outline-none",
+                                "focus:ring-0 sm:flex sm:justify-between",
                                 {
                                     "border-primary": active || checked,
                                 },
