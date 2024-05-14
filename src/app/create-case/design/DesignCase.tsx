@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { cn, formatPrice } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { BASE_PRICE, COLORS, FINISHES, MATERIALS, MODELS } from "./useOptions";
+import { updateCreateCase } from "./actions";
+import { useRouter } from "next/navigation";
 
 import { Rnd } from "react-rnd";
 import { Label } from "@/components/ui/label";
@@ -256,7 +258,7 @@ const SelectModel = () => {
                 <DropdownMenuContent>
                     {MODELS.map(model2 => (
                         <DropdownMenuItem
-                            key={model.label}
+                            key={model2.value}
                             className={cn(
                                 "flex cursor-default items-center gap-1 p-1.5 text-sm hover:bg-zinc-100",
                                 {
@@ -386,7 +388,32 @@ const SelectFinish = () => {
     );
 };
 
-const PriceAndContinue = (p: { onContinue: () => void }) => {
+const Spinner = (props: { className?: string }) => {
+    return (
+        <svg
+            className={cn("h-5 w-5 animate-spin text-white", props.className)}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+        >
+            <circle
+                className="opacity-25"
+                cx={12}
+                cy={12}
+                r={10}
+                stroke="currentColor"
+                strokeWidth={4}
+            />
+            <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+        </svg>
+    );
+};
+
+const PriceAndContinue = (p: { onContinue: () => void; loading: boolean }) => {
     const { finish, material } = useOptions();
     return (
         <div className="h-16 w-full bg-white px-8">
@@ -403,7 +430,11 @@ const PriceAndContinue = (p: { onContinue: () => void }) => {
                         className="w-full"
                     >
                         Continue
-                        <ArrowRight className="ml-1.5 inline h-4 w-4" />
+                        {p.loading ? (
+                            <Spinner className="ml-1.5 inline h-4 w-4" />
+                        ) : (
+                            <ArrowRight className="ml-1.5 inline h-4 w-4" />
+                        )}
                     </Button>
                 </div>
             </div>
@@ -416,6 +447,11 @@ const DesignCase = (p: { createCaseId: string; imageUrl: string; imageDimension:
         useCropImage(p.imageUrl, p.imageDimension);
 
     const { startUpload } = useUploadThing("imageUploader");
+    const options = useOptions();
+
+    const router = useRouter();
+
+    const [loading, setLoading] = useState(false);
 
     return (
         <div className="relative mb-20 mt-20 grid grid-cols-1 pb-20 lg:grid-cols-3">
@@ -450,18 +486,30 @@ const DesignCase = (p: { createCaseId: string; imageUrl: string; imageDimension:
                 <PriceAndContinue
                     onContinue={async () => {
                         try {
+                            setLoading(true);
                             const croppedImage = await cropImage();
                             if (!croppedImage) {
                                 return;
                             }
-                            await startUpload([croppedImage], { createCaseId: p.createCaseId });
+                            await Promise.all([
+                                startUpload([croppedImage], { createCaseId: p.createCaseId }),
+                                updateCreateCase({
+                                    createCaseId: p.createCaseId,
+                                    phoneModel: options.model.value,
+                                    caseMaterial: options.material.value,
+                                    caseFinish: options.finish.value,
+                                    caseColor: options.color.value,
+                                }),
+                            ]);
+                            router.push(`/create-case/summery?id=${p.createCaseId}`);
                         } catch (e: any) {
-                            console.log(e);
+                            setLoading(false);
                             toast.error("Something went wrong", {
                                 description: e?.message,
                             });
                         }
                     }}
+                    loading={loading}
                 />
             </div>
         </div>
