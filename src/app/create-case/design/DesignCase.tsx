@@ -501,7 +501,7 @@ const DesignCase = (p: { createCaseId: string; imageUrl: string; imageDimension:
                                     caseColor: options.color.value,
                                 }),
                             ]);
-                            router.push(`/create-case/summery?id=${p.createCaseId}`);
+                            router.push(`/create-case/preview?id=${p.createCaseId}`);
                         } catch (e: any) {
                             setLoading(false);
                             toast.error("Something went wrong", {
