@@ -7,39 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum OrderStatus {
-    fullfilled
-    shipped
-    awaiting_shipment
-}
-
 enum PhoneModel {
-    iphonex
-    iphone11
-    iphone12
-    iphone13
-    iphone14
-    iphone15
+  iphonex
+  iphone11
+  iphone12
+  iphone13
+  iphone14
+  iphone15
 }
 
 enum CaseMaterial {
-    silicone
-    polycarbonate
+  silicone
+  polycarbonate
 }
 
 enum CaseFinish {
-    smooth
-    textured
+  smooth
+  textured
 }
 
 enum CaseColor {
-    black
-    blue
-    rose
+  black
+  blue
+  rose
 }
 
 model CreateCase {
-  id              String  @id @default(cuid())
+  id              String        @id @default(cuid())
   imageUrl        String
   imageWidth      Int
   imageHeight     Int
@@ -48,4 +42,55 @@ model CreateCase {
   caseMaterial    CaseMaterial?
   caseFinish      CaseFinish?
   caseColor       CaseColor?
+  Order           Order[]
+}
+
+enum OrderStatus {
+  fullfilled
+  shipped
+  awaiting_shipment
+}
+
+model Order {
+  id                String           @id @default(cuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  createCaseId      String
+  createCase        CreateCase       @relation(fields: [createCaseId], references: [id])
+  userId            String
+  amount            Float
+  isPaid            Boolean          @default(false)
+  status            OrderStatus      @default(awaiting_shipment)
+  ShippingAddress   ShippingAddress? @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId String?
+  BillingAddress    BillingAddress?  @relation(fields: [billingAddressId], references: [id])
+  billingAddressId  String?
+}
+
+model ShippingAddress {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  street      String
+  city        String
+  postalCode  String
+  county      String
+  state       String?
+  phoneNumber String?
+  order       Order[]
+}
+
+model BillingAddress {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  street      String
+  city        String
+  postalCode  String
+  county      String
+  state       String?
+  phoneNumber String?
+  order       Order[]
 }

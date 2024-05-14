@@ -4,10 +4,10 @@ import { notFound } from "next/navigation";
 import { BASE_PRICE, COLORS, FINISHES, MATERIALS, MODELS } from "../design/useOptions";
 
 import { Phone } from "@/components/misc";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 
 import Confetti from "./Confetti";
+import Checkout from "./Checkout";
 
 const Preview = async (p: { searchParams: { id?: string } }) => {
     const { id } = p.searchParams;
@@ -112,9 +112,7 @@ const Preview = async (p: { searchParams: { id?: string } }) => {
                         </div>
 
                         <div className="mt-8 flex justify-end pb-12">
-                            <Button className="px-4 sm:px-6 lg:px-8">
-                                Checkout <ArrowRight className="ml-1.5 inline h-4 w-4" />
-                            </Button>
+                            <Checkout createCaseId={createCase.id} />
                         </div>
                     </div>
                 </div>
