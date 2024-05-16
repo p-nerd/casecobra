@@ -9,7 +9,8 @@
         "lint": "next lint",
         "format": "prettier --write ./src",
         "shadcn-ui": "shadcn-ui",
-        "prisma": "prisma"
+        "prisma": "prisma",
+        "webhook": "stripe listen --forward-to localhost:3000/api/webhooks"
     },
     "dependencies": {
         "@headlessui/react": "^1.7.19",
@@ -23,6 +24,7 @@
         "@radix-ui/react-progress": "^1.0.3",
         "@radix-ui/react-scroll-area": "^1.0.5",
         "@radix-ui/react-slot": "^1.0.2",
+        "@react-email/components": "^0.0.17",
         "@uploadthing/react": "^6.5.1",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
@@ -37,6 +39,7 @@
         "react-dom-confetti": "^0.2.0",
         "react-dropzone": "^14.2.3",
         "react-rnd": "^10.4.10",
+        "resend": "^3.2.0",
         "sharp": "0.32.6",
         "sonner": "^1.4.41",
         "stripe": "^15.6.0",
