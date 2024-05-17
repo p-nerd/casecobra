@@ -140,7 +140,7 @@ const Layout = (props: { children: ReactNode; title: string }) => {
         <div>
             <Head title={props.title} />
             <Navbar user={page.props.auth.user} />
-            <main className="flex min-h-[calc(100vh-3.5rem-1px)] flex-col">
+            <main className="grainy-light flex min-h-[calc(100vh-3.5rem-1px)] flex-col">
                 <div className="flex h-full flex-1 flex-col">{props.children}</div>
                 <Footer />
             </main>

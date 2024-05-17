@@ -1,5 +1,6 @@
 import snake1 from "../../images/snake-1.png";
 import snake2 from "../../images/snake-2.png";
+import snake3 from "../../images/snake-3.png";
 import user1 from "../../images/user-1.png";
 import user2 from "../../images/user-2.png";
 import user3 from "../../images/user-3.png";
@@ -21,6 +22,7 @@ import testimonials6 from "../../images/testimonial-6.jpg";
 const images = {
     snake1,
     snake2,
+    snake3,
     user1,
     user2,
     user3,
