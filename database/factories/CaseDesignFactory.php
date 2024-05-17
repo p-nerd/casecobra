@@ -25,11 +25,11 @@ class CaseDesignFactory extends Factory
         return [
             'original_image_id' => Image::factory(),
             'cropped_image_id' => Image::factory(),
-            'phone_model_id' => PhoneModel::factory(),
-            'color_id' => Color::factory(),
-            'material_id' => Material::factory(),
-            'finish_id' => Finish::factory(),
-            'user_id' => User::factory(),
+            'phone_model_id' => PhoneModel::inRandomOrder()->pluck('id')->random(),
+            'color_id' => Color::inRandomOrder()->pluck('id')->random(),
+            'material_id' => Material::inRandomOrder()->pluck('id')->random(),
+            'finish_id' => Finish::inRandomOrder()->pluck('id')->random(),
+            'user_id' => User::inRandomOrder()->pluck('id')->random(),
         ];
     }
 }

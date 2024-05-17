@@ -8,6 +8,7 @@ use App\Models\Color;
 use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
+use App\Models\Order;
 use App\Models\PhoneModel;
 use App\Models\Profile;
 use App\Models\User;
@@ -36,6 +37,8 @@ class DatabaseSeeder extends Seeder
         $this->colors($adminUser->id);
         $this->materials($adminUser->id);
         $this->finishes($adminUser->id);
+
+        Order::factory()->count(10)->create();
     }
 
     private function phoneModels(int $user_id)
