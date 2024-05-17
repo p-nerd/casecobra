@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Color;
 use App\Models\Image;
+use App\Models\Material;
 use App\Models\PhoneModel;
 use App\Models\Profile;
 use App\Models\User;
@@ -30,11 +31,12 @@ class DatabaseSeeder extends Seeder
 
         Image::factory(10)->create();
 
-        $this->phoneModel($adminUser->id);
-        $this->color($adminUser->id);
+        $this->phoneModels($adminUser->id);
+        $this->colors($adminUser->id);
+        $this->materials($adminUser->id);
     }
 
-    private function phoneModel(int $user_id)
+    private function phoneModels(int $user_id)
     {
         $image = Image::factory()->create();
 
@@ -82,7 +84,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function color(int $user_id)
+    private function colors(int $user_id)
     {
         $colors = [
             [
@@ -107,6 +109,34 @@ class DatabaseSeeder extends Seeder
                 'label' => $color['label'],
                 'name' => $color['name'],
                 'value' => $color['value'],
+                'user_id' => $user_id,
+            ]);
+        }
+    }
+
+    private function materials(int $user_id)
+    {
+        $materials = [
+            [
+                'label' => 'Silicone',
+                'value' => 'silicone',
+                'description' => null,
+                'price' => 0,
+            ],
+            [
+                'label' => 'Soft Polycarbonate',
+                'value' => 'polycarbonate',
+                'description' => 'Scratch-resistant coating',
+                'price' => 500,
+            ],
+        ];
+
+        foreach ($materials as $material) {
+            Material::create([
+                'label' => $material['label'],
+                'value' => $material['value'],
+                'description' => $material['description'],
+                'price' => $material['price'],
                 'user_id' => $user_id,
             ]);
         }
