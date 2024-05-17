@@ -1,11 +1,13 @@
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
+import type { PageProps } from "@/types";
 
 import { cn } from "@/lib/utils";
-import images from "@/lib/images";
-import { MaxWidthWrapper } from "@/Components/misc";
-import Layout from "./Layout";
 import { usePage } from "@inertiajs/react";
-import { PageProps } from "@/types";
+
+import { MaxWidthWrapper } from "@/Components/misc";
+
+import images from "@/lib/images";
+import Layout from "./Layout";
 
 const STEPS = [
     {
@@ -29,8 +31,7 @@ const STEPS = [
 ];
 
 const Steps = () => {
-    const page = usePage<PageProps>();
-    const pathname = page.url;
+    const pathname = usePage<PageProps>().url;
 
     return (
         <ol className="bg:border-r bg:border-gray-200 rounded-md bg-white lg:flex lg:rounded-none">

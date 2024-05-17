@@ -20,8 +20,6 @@ class ImageFactory extends Factory
         return [
             'url' => fake()->imageUrl(),
             'alt' => fake()->optional(0.7)->sentence(),
-            'width' => fake()->numberBetween(100, 1920),
-            'height' => fake()->numberBetween(100, 1080),
             'removable' => false,
             'user_id' => User::inRandomOrder()->pluck('id')->random(),
         ];

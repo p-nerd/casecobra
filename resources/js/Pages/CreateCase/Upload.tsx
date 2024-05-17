@@ -1,15 +1,16 @@
-import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
-import Dropzone from "react-dropzone";
-import { Image, Loader2, MousePointerSquareDashed } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Progress } from "@/Components/ui/progress";
 import { toast } from "sonner";
 import { useForm } from "@inertiajs/react";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
+
+import { Progress } from "@/Components/ui/progress";
+import { Image, Loader2, MousePointerSquareDashed } from "lucide-react";
+
+import Dropzone from "react-dropzone";
+import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
 
 const Upload = () => {
     const [isDragOver, setIsDragOver] = useState<boolean>(false);
-    const [isPending] = useTransition();
 
     const { data, setData, post, progress } = useForm<{
         image: File | null;
@@ -17,18 +18,11 @@ const Upload = () => {
         image: null,
     });
 
-    const startUpload = async (files: File[]) => {
-        setData("image", files[0]);
-    };
-
     useEffect(() => {
         if (data.image) {
             post("/create-case/upload", {
                 forceFormData: true,
-                onError: error => {
-                    console.log("here", error);
-                    toast.error(error.image);
-                },
+                onError: e => toast.error(e.image),
             });
         }
     }, [data.image]);
@@ -48,7 +42,7 @@ const Upload = () => {
                 <div className="relative flex w-full flex-1 flex-col items-center justify-center">
                     <Dropzone
                         onDropAccepted={files => {
-                            startUpload(files);
+                            setData("image", files[0]);
                             setIsDragOver(false);
                         }}
                         onDropRejected={files => {
@@ -60,12 +54,13 @@ const Upload = () => {
                         }}
                         onDragEnter={() => setIsDragOver(true)}
                         onDragLeave={() => setIsDragOver(false)}
-                        disabled={!!progress || isPending}
+                        disabled={!!progress}
                         accept={{
                             "image/png": [".png"],
                             "image/jpeg": [".jpeg", ".jpg"],
                             "image/jpg": [".jpg", ".jpeg"],
                         }}
+                        multiple={false}
                     >
                         {({ getRootProps, getInputProps }) => (
                             <div
@@ -75,7 +70,7 @@ const Upload = () => {
                                 <input {...getInputProps()} />
                                 {isDragOver ? (
                                     <MousePointerSquareDashed className="mb-2 h-6 w-6 text-zinc-500" />
-                                ) : progress || isPending ? (
+                                ) : progress ? (
                                     <Loader2 className="mb-2 h-6 w-6 animate-spin text-zinc-500" />
                                 ) : (
                                     <Image className="mb-2 h-6 w-6 text-zinc-500" />
@@ -89,10 +84,6 @@ const Upload = () => {
                                                 className="mt-2 h-2 w-40 bg-gray-300"
                                             />
                                         </div>
-                                    ) : isPending ? (
-                                        <div className="flex flex-col items-center">
-                                            <p>Redirecting, please wait...</p>
-                                        </div>
                                     ) : isDragOver ? (
                                         <p>
                                             <span className="font-semibold ">Drop file</span> to
@@ -105,11 +96,7 @@ const Upload = () => {
                                         </p>
                                     )}
                                 </div>
-                                {isPending ? (
-                                    <></>
-                                ) : (
-                                    <p className="text-xs text-zinc-500">PNG, JPEG and JPG</p>
-                                )}
+                                <p className="text-xs text-zinc-500">PNG, JPEG and JPG</p>
                             </div>
                         )}
                     </Dropzone>

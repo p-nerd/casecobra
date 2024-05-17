@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -17,8 +18,10 @@ class CreateCaseController extends Controller
         $request->validate([
             'image' => ["required", "image", "mimes:jpeg,png,jpg", "max:2048"],
         ]);
-        $path = $request->image->store('images');
+        $image = Image::store($request->image);
 
-        return Redirect::route("/create-case/design?path=$path")->with('path', $path);
+        dd($image->fullurl());
+
+        return Redirect::route("/create-case/design");
     }
 }
