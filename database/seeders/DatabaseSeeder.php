@@ -8,6 +8,7 @@ use App\Models\Color;
 use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
+use App\Models\Option;
 use App\Models\Order;
 use App\Models\PhoneModel;
 use App\Models\Profile;
@@ -39,6 +40,12 @@ class DatabaseSeeder extends Seeder
         $this->finishes($adminUser->id);
 
         Order::factory()->count(10)->create();
+
+        Option::create([
+            "name" => "CASE_BASE_PRICE",
+            "value" => 1400,
+            "type" => "integer",
+        ]);
     }
 
     private function phoneModels(int $user_id)

@@ -7,6 +7,7 @@ use App\Models\Color;
 use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
+use App\Models\Option;
 use App\Models\PhoneModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -46,6 +47,8 @@ class CreateCaseController extends Controller
         $materials = Material::query()->get(["id", "label", "value", "description", "price"]);
         $finishes = Finish::query()->get(["id", "label", "value", "description", "price"]);
 
+        $basePrice = Option::query()->where("name", "=", "CASE_BASE_PRICE")->first()->value;
+
         return inertia("CreateCase/Design", [
             "id" => $caseDesign->id,
             "image" => [
@@ -57,6 +60,7 @@ class CreateCaseController extends Controller
             "models" => $models,
             "materials" => $materials,
             "finishes" => $finishes,
+            "basePrice" => $basePrice,
         ]);
     }
 

@@ -11,7 +11,7 @@ import { ArrowRight } from "lucide-react";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 
 import toast from "@/lib/toast";
-import useCreateCaseDesign from "@/states/useCreateCaseDesign";
+import useCreateCaseDesign, { calculatePrice } from "@/states/useCreateCaseDesign";
 
 import SelectColor from "@/screens/createCase/design/SelectColor";
 import SelectModel from "@/screens/createCase/design/SelectModel";
@@ -20,9 +20,7 @@ import SelectMaterial from "@/screens/createCase/design/SelectMaterial";
 import ImagePositioner from "@/screens/createCase/design/ImagePositioner";
 import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
 
-const BASE_PRICE = 14_00;
-
-const PriceAndContinue = (p: { onContinue: () => void; loading: boolean }) => {
+const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loading: boolean }) => {
     const { finish, material } = useCreateCaseDesign();
 
     return (
@@ -31,9 +29,7 @@ const PriceAndContinue = (p: { onContinue: () => void; loading: boolean }) => {
             <div className="flex h-full w-full items-center justify-end">
                 <div className="flex w-full items-center gap-6">
                     <p className="whitespace-nowrap font-medium">
-                        {formatPrice(
-                            (BASE_PRICE + (finish?.price || 0) + (material?.price || 0)) / 100,
-                        )}
+                        {formatPrice(calculatePrice(p.basePrice, material, finish))}
                     </p>
                     <Button
                         onClick={p.onContinue}
@@ -57,6 +53,7 @@ type TDesignProps = TProps<{
     models: TModel[];
     materials: TMaterial[];
     finishes: TFinish[];
+    basePrice: number;
 }>;
 
 const Design = (p: TDesignProps) => {
@@ -99,6 +96,7 @@ const Design = (p: TDesignProps) => {
                         </div>
                     </ScrollArea>
                     <PriceAndContinue
+                        basePrice={p.basePrice}
                         onContinue={async () => {
                             try {
                                 setLoading(true);

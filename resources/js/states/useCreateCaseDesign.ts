@@ -69,3 +69,7 @@ const useCreateCaseDesign = create<{
 );
 
 export default useCreateCaseDesign;
+
+export const calculatePrice = (basePrice: number, material?: TMaterial, finish?: TFinish) => {
+    return (basePrice + (finish?.price || 0) + (material?.price || 0)) / 100;
+};
