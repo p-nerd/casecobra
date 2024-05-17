@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Color;
 use App\Models\Image;
 use App\Models\PhoneModel;
 use App\Models\Profile;
@@ -29,10 +30,11 @@ class DatabaseSeeder extends Seeder
 
         Image::factory(10)->create();
 
-        $this->seedPhoneModel($adminUser->id);
+        $this->phoneModel($adminUser->id);
+        $this->color($adminUser->id);
     }
 
-    private function seedPhoneModel(int $user_id)
+    private function phoneModel(int $user_id)
     {
         $image = Image::factory()->create();
 
@@ -76,6 +78,36 @@ class DatabaseSeeder extends Seeder
                 'description' => $model['description'],
                 'user_id' => $user_id,
                 "image_id" => $image->id,
+            ]);
+        }
+    }
+
+    private function color(int $user_id)
+    {
+        $colors = [
+            [
+                'label' => 'Black',
+                'value' => '#27272a',
+                'name' => 'black',
+            ],
+            [
+                'label' => 'Blue',
+                'value' => '#171e29',
+                'name' => 'blue',
+            ],
+            [
+                'label' => 'Rose',
+                'value' => '#1e1b1e',
+                'name' => 'rose',
+            ],
+        ];
+
+        foreach ($colors as $color) {
+            Color::create([
+                'label' => $color['label'],
+                'name' => $color['name'],
+                'value' => $color['value'],
+                'user_id' => $user_id,
             ]);
         }
     }
