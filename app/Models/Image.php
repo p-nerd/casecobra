@@ -40,8 +40,8 @@ class Image extends Model
     public function fullurl()
     {
         $url = $this->url;
-        if (!Str::isUrl($this->url)) {
-            $url = Storage::url(self::DIR . "/" . $this->url);
+        if (! Str::isUrl($this->url)) {
+            $url = Storage::url(self::DIR."/".$this->url);
         }
 
         return $url;
