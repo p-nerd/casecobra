@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CaseDesign;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -20,8 +21,19 @@ class CreateCaseController extends Controller
         ]);
         $image = Image::store($request->image);
 
-        dd($image->fullurl());
+        $caseDesign = CaseDesign::create([
+            "original_image_id" => $image->id,
+        ]);
 
-        return Redirect::route("/create-case/design");
+        return Redirect::to("/create-case/design?id={$caseDesign->id}");
+    }
+
+    public function designCreate()
+    {
+        return inertia("CreateCase/Design");
+    }
+
+    public function designStore()
+    {
     }
 }

@@ -9,8 +9,13 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name("home");
 
-Route::get("/create-case/upload", [CreateCaseController::class, "uploadCreate"]);
-Route::post("/create-case/upload", [CreateCaseController::class, "uploadStore"]);
+Route::prefix("/create-case")->group(function () {
+    Route::get("/upload", [CreateCaseController::class, "uploadCreate"]);
+    Route::post("/upload", [CreateCaseController::class, "uploadStore"]);
+
+    Route::get("/design", [CreateCaseController::class, "designCreate"]);
+    Route::post("/design", [CreateCaseController::class, "designStore"]);
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -22,4 +27,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
