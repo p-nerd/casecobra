@@ -1,9 +1,9 @@
 import { useForm } from "@inertiajs/react";
 
-import { Button } from "@/Components/ui/button";
-import { Form, TextField } from "@/Components/ui2/form";
+import { Button } from "@/components/ui/button";
+import { Form, TextField } from "@/components/ui2/form";
 
-import GuestLayout from "@/Layouts/GuestLayout";
+import GuestLayout from "@/layouts/GuestLayout";
 
 const ForgotPassword = (props: { status?: string }) => {
     const { data, setData, post, processing, errors } = useForm({

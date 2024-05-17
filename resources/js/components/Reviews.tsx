@@ -1,7 +1,7 @@
 import { type HTMLAttributes, useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { MaxWidthWrapper, Phone } from "@/Components/misc";
+import { MaxWidthWrapper, Phone } from "@/components/misc";
 import images from "@/lib/images";
 
 const PHONES = [

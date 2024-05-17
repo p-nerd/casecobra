@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 
-import { Label } from "@/Components/ui/label";
-import { Button } from "@/Components/ui/button";
-import { DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/Components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import useCreateCaseDesign, { type TModel } from "@/states/useCreateCaseDesign";
 
 const SelectModel = (p: { models: TModel[] }) => {

@@ -4,11 +4,11 @@ import { router } from "@inertiajs/react";
 import { useState } from "react";
 import { getImageDimensions } from "@/lib/file";
 
-import { Progress } from "@/Components/ui/progress";
+import { Progress } from "@/components/ui/progress";
 import { ImageIcon, Loader2, MousePointerSquareDashed } from "lucide-react";
 
 import Dropzone from "react-dropzone";
-import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
+import CreateCaseLayout from "@/layouts/CreateCaseLayout";
 
 const Upload = () => {
     const [isDragOver, setIsDragOver] = useState<boolean>(false);

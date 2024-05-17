@@ -1,7 +1,7 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { PageProps } from "@/types";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard({ auth }: PageProps) {
     return (

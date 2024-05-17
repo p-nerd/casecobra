@@ -1,7 +1,7 @@
-import { Toaster } from "@/Components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { ArrowRight } from "lucide-react";
-import { MaxWidthWrapper } from "@/Components/misc";
-import { Button, buttonVariants } from "@/Components/ui/button";
+import { MaxWidthWrapper } from "@/components/misc";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { PageProps, User } from "@/types";
 import { ReactNode } from "react";

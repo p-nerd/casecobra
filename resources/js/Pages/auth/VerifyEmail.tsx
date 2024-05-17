@@ -1,8 +1,8 @@
-import { Button } from "@/Components/ui/button";
-import { Form } from "@/Components/ui2/form";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui2/form";
 import { Link, useForm } from "@inertiajs/react";
 
-import GuestLayout from "@/Layouts/GuestLayout";
+import GuestLayout from "@/layouts/GuestLayout";
 
 const VerifyEmail = (props: { status?: string }) => {
     const { post, processing } = useForm({});

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";
 
 import { Rnd } from "react-rnd";
-import { AspectRatio } from "@/Components/ui/aspect-ratio";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import images from "@/lib/images";
 import useCreateCaseDesign from "@/states/useCreateCaseDesign";

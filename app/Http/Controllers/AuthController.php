@@ -27,7 +27,7 @@ class AuthController extends Controller
      */
     public function registerCreate(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('auth/Register');
     }
 
     /**
@@ -61,7 +61,7 @@ class AuthController extends Controller
      */
     public function loginCreate(): Response
     {
-        return Inertia::render('Auth/Login', [
+        return Inertia::render('auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
         ]);
@@ -98,7 +98,7 @@ class AuthController extends Controller
      */
     public function forgotPasswordCreate(): Response
     {
-        return Inertia::render('Auth/ForgotPassword', [
+        return Inertia::render('auth/ForgotPassword', [
             'status' => session('status'),
         ]);
     }
@@ -135,7 +135,7 @@ class AuthController extends Controller
      */
     public function resetPasswordCreate(Request $request): Response
     {
-        return Inertia::render('Auth/ResetPassword', [
+        return Inertia::render('auth/ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
         ]);
@@ -188,7 +188,7 @@ class AuthController extends Controller
     {
         return $request->user()->hasVerifiedEmail()
             ? redirect()->intended(route('dashboard', absolute: false))
-            : Inertia::render('Auth/VerifyEmail', ['status' => session('status')]);
+            : Inertia::render('auth/VerifyEmail', ['status' => session('status')]);
     }
 
     /**
@@ -226,7 +226,7 @@ class AuthController extends Controller
      */
     public function confirmPasswordShow(): Response
     {
-        return Inertia::render('Auth/ConfirmPassword');
+        return Inertia::render('auth/ConfirmPassword');
     }
 
     /**

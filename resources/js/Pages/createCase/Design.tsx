@@ -6,9 +6,9 @@ import { formatPrice } from "@/lib/utils";
 import { useCropImage } from "@/screens/createCase/design/ImagePositioner";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { ScrollArea } from "@/Components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import toast from "@/lib/toast";
 import useCreateCaseDesign, { calculatePrice } from "@/states/useCreateCaseDesign";
@@ -18,7 +18,7 @@ import SelectModel from "@/screens/createCase/design/SelectModel";
 import SelectFinish from "@/screens/createCase/design/SelectFinish";
 import SelectMaterial from "@/screens/createCase/design/SelectMaterial";
 import ImagePositioner from "@/screens/createCase/design/ImagePositioner";
-import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
+import CreateCaseLayout from "@/layouts/CreateCaseLayout";
 
 const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loading: boolean }) => {
     const { finish, material } = useCreateCaseDesign();

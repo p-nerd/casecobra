@@ -1,8 +1,8 @@
 import { type PropsWithChildren, type HTMLInputTypeAttribute } from "react";
-import InputError from "@/Components/InputError";
-import TextInput from "@/Components/TextInput";
-import Checkbox from "@/Components/Checkbox";
-import { Label } from "@/Components/ui/label";
+import InputError from "@/components/InputError";
+import TextInput from "@/components/TextInput";
+import Checkbox from "@/components/Checkbox";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Link } from "@inertiajs/react";
 

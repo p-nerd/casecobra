@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { Button } from "@/Components/ui/button";
-import { DireactionLink, Form, TextField } from "@/Components/ui2/form";
+import { Button } from "@/components/ui/button";
+import { DireactionLink, Form, TextField } from "@/components/ui2/form";
 
-import GuestLayout from "@/Layouts/GuestLayout";
+import GuestLayout from "@/layouts/GuestLayout";
 
 const Register = () => {
     const { data, setData, post, processing, errors, reset } = useForm({

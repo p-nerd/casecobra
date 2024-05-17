@@ -1,9 +1,9 @@
-import { MaxWidthWrapper } from "@/Components/misc";
-import Layout from "@/Layouts/Layout";
-import { buttonVariants } from "@/Components/ui/button";
-import { Icons, Phone } from "@/Components/misc";
+import { MaxWidthWrapper } from "@/components/misc";
+import Layout from "@/layouts/Layout";
+import { buttonVariants } from "@/components/ui/button";
+import { Icons, Phone } from "@/components/misc";
 import { ArrowRight, Check, Star } from "lucide-react";
-import Reviews from "@/Components/Reviews";
+import Reviews from "@/components/Reviews";
 import images from "@/lib/images";
 import { Link } from "@inertiajs/react";
 

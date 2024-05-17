@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Label } from "@/Components/ui/label";
+import { Label } from "@/components/ui/label";
 import { RadioGroup } from "@headlessui/react";
 import useCreateCaseDesign, { type TColor } from "@/states/useCreateCaseDesign";
 

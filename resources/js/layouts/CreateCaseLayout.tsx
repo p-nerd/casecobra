@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { MaxWidthWrapper } from "@/Components/misc";
+import { MaxWidthWrapper } from "@/components/misc";
 
 import images from "@/lib/images";
 
