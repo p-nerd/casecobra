@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Providers from "./Providers";
 
 const recuresive = Recursive({ subsets: ["latin"] });
 
@@ -20,7 +21,9 @@ const Layout = (p: Readonly<{ children: ReactNode }>) => {
             <body className={recuresive.className} suppressHydrationWarning={true}>
                 <Navbar />
                 <main className="grainy-light flex min-h-[calc(100vh-3.5rem-1px)] flex-col">
-                    <div className="flex h-full flex-1 flex-col">{p.children}</div>
+                    <div className="flex h-full flex-1 flex-col">
+                        <Providers>{p.children}</Providers>
+                    </div>
                     <Footer />
                 </main>
                 <Toaster />
