@@ -9,17 +9,19 @@ use App\Models\Image;
 use App\Models\Material;
 use App\Models\Option;
 use App\Models\PhoneModel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Response;
 
 class CreateCaseController extends Controller
 {
-    public function uploadCreate()
+    public function uploadCreate(): Response
     {
         return inertia("createCase/Upload");
     }
 
-    public function uploadStore(Request $request)
+    public function uploadStore(Request $request): RedirectResponse
     {
         $request->validate([
             'image' => ["required", "image", "mimes:jpeg,png,jpg", "max:2048"],

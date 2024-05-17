@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { MaxWidthWrapper } from "@/components/misc";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import { PageProps, User } from "@/types";
+import { TProps, User } from "@/types";
 import { ReactNode } from "react";
 
 const Navbar = (props: { user: User }) => {
@@ -135,7 +135,7 @@ const Footer = () => {
 };
 
 const Layout = (props: { children: ReactNode; title: string }) => {
-    const page = usePage<PageProps>();
+    const page = usePage<TProps>();
     return (
         <div>
             <Head title={props.title} />

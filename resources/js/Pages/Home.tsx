@@ -15,9 +15,9 @@ const Home = () => {
                     <div className="col-span-2 px-6 lg:px-0 lg:pt-4">
                         <div className="relative mx-auto flex flex-col items-center text-center lg:items-start lg:text-left">
                             <div className="absolute -top-20 left-0 hidden w-28 lg:block">
-                                {/* i forgot this div right here in the video, it's purely visual gradient and looks nice */}
+                                {/* I forgot this div right here in the video, it's purely visual gradient and looks nice */}
                                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-50 via-slate-50/50" />
-                                <img src={images.snake1} className="w-full" />
+                                <img src={images.snake1} className="w-full" alt="" />
                             </div>
                             <h1 className="relative mt-16 w-fit text-balance text-5xl font-bold !leading-tight tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
                                 Your Image on a{" "}
@@ -99,10 +99,12 @@ const Home = () => {
                             <img
                                 src={images.yourImage}
                                 className="absolute -top-20 left-56 hidden w-40 select-none sm:block lg:hidden lg:w-52 xl:block"
+                                alt=""
                             />
                             <img
                                 src={images.line}
                                 className="absolute -bottom-6 -left-6 w-20 select-none"
+                                alt=""
                             />
                             <Phone className="w-64" imgSrc={images.testimonials1} />
                         </div>
@@ -122,7 +124,7 @@ const Home = () => {
                             </span>{" "}
                             say
                         </h2>
-                        <img src={images.snake2} className="order-0 w-24 lg:order-2" />
+                        <img src={images.snake2} className="order-0 w-24 lg:order-2" alt="" />
                     </div>
 
                     <div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 px-4 lg:mx-0 lg:max-w-none lg:grid-cols-2">
@@ -173,7 +175,7 @@ const Home = () => {
                             <div className="text-lg leading-8">
                                 <p>
                                     "I usually keep my phone together with my keys in my pocket and
-                                    that led to some pretty heavy scratchmarks on all of my last
+                                    that led to some pretty heavy scratch-marks on all of my last
                                     phone cases. This one, besides a barely noticeable scratch on
                                     the corner,{" "}
                                     <span className="bg-slate-800 p-0.5 text-white">
@@ -224,12 +226,14 @@ const Home = () => {
                             <img
                                 src={images.arrow}
                                 className="absolute left-1/2 top-[25rem] z-10 -translate-x-1/2 -translate-y-1/2 rotate-90 md:top-1/2 md:rotate-0"
+                                alt=""
                             />
 
                             <div className="relative h-80 w-full max-w-sm rounded-xl bg-gray-900/5 ring-inset ring-gray-900/10 md:h-full md:justify-self-end lg:rounded-2xl">
                                 <img
                                     src={images.horse}
                                     className="h-full w-full rounded-md bg-white object-cover shadow-2xl ring-1 ring-gray-900/10"
+                                    alt=""
                                 />
                             </div>
 

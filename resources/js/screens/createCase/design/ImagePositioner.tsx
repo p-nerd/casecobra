@@ -85,8 +85,7 @@ export const useCropImage = (image: TImage) => {
         const base64 = canvas.toDataURL();
 
         const blob = base64ToBlob(base64, "image/png");
-        const file = new File([blob], "filename.png", { type: "image/png" });
-        return file;
+        return new File([blob], "filename.png", { type: "image/png" });
     };
 
     return {

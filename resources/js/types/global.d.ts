@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import type { AxiosInstance } from "axios";
 import { route as ziggyRoute } from "ziggy-js";
 
 declare global {

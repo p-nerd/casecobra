@@ -1,11 +1,13 @@
+import type { TProps } from "@/types";
+
+import { Button } from "@/components/ui/button";
+import { FormEventHandler } from "react";
+import { Transition } from "@headlessui/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
+
 import InputError from "@/components/InputError";
 import InputLabel from "@/components/InputLabel";
 import TextInput from "@/components/TextInput";
-import { Link, useForm, usePage } from "@inertiajs/react";
-import { Transition } from "@headlessui/react";
-import { FormEventHandler } from "react";
-import { PageProps } from "@/types";
-import { Button } from "@/components/ui/button";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -16,7 +18,7 @@ export default function UpdateProfileInformation({
     status?: string;
     className?: string;
 }) {
-    const user = usePage<PageProps>().props.auth.user;
+    const user = usePage<TProps>().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
         name: user.name,

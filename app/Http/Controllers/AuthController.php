@@ -33,7 +33,7 @@ class AuthController extends Controller
     /**
      * Handle an incoming registration request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function registerStore(Request $request): RedirectResponse
     {
@@ -69,6 +69,8 @@ class AuthController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     *
+     * @throws ValidationException
      */
     public function loginStore(LoginRequest $request): RedirectResponse
     {
@@ -106,7 +108,7 @@ class AuthController extends Controller
     /**
      * Handle an incoming password reset link request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function forgotPasswordStore(Request $request): RedirectResponse
     {
@@ -144,7 +146,7 @@ class AuthController extends Controller
     /**
      * Handle an incoming new password request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function resetPasswordStore(Request $request): RedirectResponse
     {
@@ -231,6 +233,8 @@ class AuthController extends Controller
 
     /**
      * Confirm the user's password.
+     *
+     * @throws ValidationException
      */
     public function confirmPasswordStore(Request $request): RedirectResponse
     {

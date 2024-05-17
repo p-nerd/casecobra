@@ -47,12 +47,11 @@ class Image extends Model
         return $url;
     }
 
-    private static function humanifyFilename($filename)
+    private static function humanifyFilename($filename): string
     {
         $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
         $normalizedFilename = str_replace(['_', '-'], ' ', $filenameWithoutExtension);
-        $humanReadableName = Str::title($normalizedFilename);
 
-        return $humanReadableName;
+        return Str::title($normalizedFilename);
     }
 }

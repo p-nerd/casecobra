@@ -1,9 +1,9 @@
 import AuthenticatedLayout from "@/layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { PageProps } from "@/types";
 import { Button } from "@/components/ui/button";
+import { TProps } from "@/types";
 
-export default function Dashboard({ auth }: PageProps) {
+export default function Dashboard({ auth }: TProps) {
     return (
         <AuthenticatedLayout
             user={auth.user}
