@@ -1,24 +1,14 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import { db } from "@/db";
+import { notFound } from "next/navigation";
 import { getIsAdmin } from "@/lib/auth";
 import { formatPrice } from "@/lib/utils";
-import { notFound } from "next/navigation";
+
+import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import { CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Table, TableBody, TableCell } from "@/components/ui/table";
+import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 import StatusDropdown from "./StatusDropdown";
 
 const getUserById = async (_: string) => {
