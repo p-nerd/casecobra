@@ -4,8 +4,7 @@ Perfect E-Commerce-Store for Custom Phone Cases
 
 ## Models
 
----
-
+```
 -   User
     -   id
     -   email
@@ -81,5 +80,4 @@ Perfect E-Commerce-Store for Custom Phone Cases
     -   state
     -   country
     -   zip
-
----
+```
