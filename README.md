@@ -1,3 +1,81 @@
 # casecobra
 
 Perfect E-Commerce-Store for Custom Phone Cases
+
+## Models
+
+-   User
+    -   id
+    -   email
+    -   name
+    -   password
+-   Profile
+    -   id
+    -   avatar
+    -   phone
+    -   address_1
+    -   address_2
+    -   city
+    -   state
+    -   country
+    -   zip
+    -   user_id
+-   Image
+    -   id
+    -   url
+    -   alt
+    -   width
+    -   height
+    -   removable
+    -   user_id
+-   PhoneModel
+    -   id
+    -   label
+    -   value
+    -   description
+    -   image_id
+    -   user_id
+-   Color
+    -   id
+    -   label
+    -   name
+    -   value
+    -   user_id
+-   Material
+    -   id
+    -   label
+    -   value
+    -   description
+    -   price
+    -   user_id
+-   Finish
+    -   id
+    -   label
+    -   value
+    -   description
+    -   price
+    -   user_id
+-   CaseDesign
+    -   id
+    -   original_image_id
+    -   cropped_image_id
+    -   phone_model_id
+    -   color_id
+    -   material_id
+    -   finish_id
+    -   user_id
+-   Order
+    -   id
+    -   amount
+    -   paid
+    -   status
+    -   case_design_id
+    -   user_id
+    -   email
+    -   phone
+    -   address_1
+    -   address_2
+    -   city
+    -   state
+    -   country
+    -   zip
