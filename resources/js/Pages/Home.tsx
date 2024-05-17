@@ -2,9 +2,10 @@ import { MaxWidthWrapper } from "@/Components/misc";
 import Layout from "@/Layouts/Layout";
 import { buttonVariants } from "@/Components/ui/button";
 import { Icons, Phone } from "@/Components/misc";
-import { ArrowRight, Check, Link, Star } from "lucide-react";
+import { ArrowRight, Check, Star } from "lucide-react";
 import Reviews from "@/Components/Reviews";
 import images from "@/lib/images";
+import { Link } from "@inertiajs/react";
 
 const Home = () => {
     return (

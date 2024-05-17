@@ -53,7 +53,7 @@ const Navbar = (props: { user: User }) => {
                         ) : (
                             <>
                                 <Link
-                                    href="/api/auth/register"
+                                    href="/register"
                                     className={buttonVariants({
                                         size: "sm",
                                         variant: "ghost",
@@ -63,7 +63,7 @@ const Navbar = (props: { user: User }) => {
                                 </Link>
 
                                 <Link
-                                    href="/api/auth/login"
+                                    href="/login"
                                     className={buttonVariants({
                                         size: "sm",
                                         variant: "ghost",
