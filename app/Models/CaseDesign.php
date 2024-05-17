@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CaseDesign extends Model
 {
@@ -18,4 +19,9 @@ class CaseDesign extends Model
         'material_id',
         'finish_id',
     ];
+
+    public function originalImage(): HasOne
+    {
+        return $this->hasOne(Image::class, "id", "original_image_id");
+    }
 }

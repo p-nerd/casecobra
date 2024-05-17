@@ -13,3 +13,10 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     };
     ziggy: Config & { location: string };
 };
+
+export type TProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    };
+    ziggy: Config & { location: string };
+};

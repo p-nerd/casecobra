@@ -30,9 +30,20 @@ class CreateCaseController extends Controller
         return Redirect::to("/create-case/design?id={$caseDesign->id}");
     }
 
-    public function designCreate()
+    public function designCreate(Request $request)
     {
-        return inertia("CreateCase/Design");
+        $id = $request->query("id");
+        $caseDesign = CaseDesign::query()->with("originalImage")->findOrFail($id);
+        $originalImage = $caseDesign->originalImage;
+
+        return inertia("CreateCase/Design", [
+            "id" => $caseDesign->id,
+            "image" => [
+                "url" => $originalImage->fullurl(),
+                "height" => $originalImage->height,
+                "width" => $originalImage->width,
+            ],
+        ]);
     }
 
     public function designStore()

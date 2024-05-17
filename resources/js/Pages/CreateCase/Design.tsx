@@ -1,6 +1,3 @@
-import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
-import useOptions from "./useOptions";
-
 import { toast } from "sonner";
 import { cn, formatPrice } from "@/lib/utils";
 import { BASE_PRICE, COLORS, FINISHES, MATERIALS, MODELS } from "./useOptions";
@@ -15,7 +12,10 @@ import { DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/Components/ui/dropdown-menu";
 import { Dispatch, RefObject, SetStateAction, useRef, useState } from "react";
-import { PageProps } from "@/types";
+import { type TProps } from "@/types";
+
+import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
+import useOptions from "./useOptions";
 
 const ResizeHandleIcon = () => {
     return (
@@ -475,8 +475,21 @@ const DesignCase = (p: { caseDesignId: string; imageUrl: string; imageDimension:
     );
 };
 
-const Design = (props: PageProps<{ caseDesignId: string }>) => {
-    return <CreateCaseLayout title="Design the case">Hello</CreateCaseLayout>;
+const Design = (
+    props: TProps<{
+        id: string;
+        image: { url: string; height: number; width: number };
+    }>,
+) => {
+    return (
+        <CreateCaseLayout title="Design the case">
+            <DesignCase
+                caseDesignId={props.id}
+                imageUrl={props.image.url}
+                imageDimension={{ height: props.image.height, width: props.image.width }}
+            />
+        </CreateCaseLayout>
+    );
 };
 
 export default Design;
