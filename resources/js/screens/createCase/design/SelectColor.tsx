@@ -11,7 +11,6 @@ const SelectColor = (p: { colors: TColor[] }) => {
             <Label>Color: {color?.label}</Label>
             <div className="mt-3 flex items-center space-x-3">
                 {p.colors.map(c => {
-                    console.log(c.value);
                     return (
                         <RadioGroup.Option
                             key={c.label}

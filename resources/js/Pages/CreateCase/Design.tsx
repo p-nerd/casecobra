@@ -1,32 +1,30 @@
-import { toast } from "sonner";
+import type { TProps } from "@/types";
+import type { TImage } from "@/screens/createCase/design/ImagePositioner";
+import type { TColor, TFinish, TMaterial, TModel } from "@/states/useCreateCaseDesign";
+
 import { formatPrice } from "@/lib/utils";
+import { useCropImage } from "@/screens/createCase/design/ImagePositioner";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/Components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ScrollArea } from "@/Components/ui/scroll-area";
-import { type TProps } from "@/types";
 
-import useCreateCaseDesign, {
-    TColor,
-    TFinish,
-    TMaterial,
-    TModel,
-} from "@/states/useCreateCaseDesign";
-import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
+import toast from "@/lib/toast";
+import useCreateCaseDesign from "@/states/useCreateCaseDesign";
+
 import SelectColor from "@/screens/createCase/design/SelectColor";
 import SelectModel from "@/screens/createCase/design/SelectModel";
-import SelectMaterial from "@/screens/createCase/design/SelectMaterial";
 import SelectFinish from "@/screens/createCase/design/SelectFinish";
-import ImagePositioner, {
-    type TImage,
-    useCropImage,
-} from "@/screens/createCase/design/ImagePositioner";
+import SelectMaterial from "@/screens/createCase/design/SelectMaterial";
+import ImagePositioner from "@/screens/createCase/design/ImagePositioner";
+import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
 
 const BASE_PRICE = 14_00;
 
 const PriceAndContinue = (p: { onContinue: () => void; loading: boolean }) => {
     const { finish, material } = useCreateCaseDesign();
+
     return (
         <div className="h-16 w-full bg-white px-8">
             <div className="h-px w-full bg-zinc-200" />
@@ -53,39 +51,31 @@ const PriceAndContinue = (p: { onContinue: () => void; loading: boolean }) => {
     );
 };
 
-const Design = (
-    p: TProps<{
-        image: TImage;
-        colors: TColor[];
-        models: TModel[];
-        materials: TMaterial[];
-        finishes: TFinish[];
-    }>,
-) => {
-    const { containerRef, phoneCaseRef, setRenderedDimension, setRenderedPosition, cropImage } =
-        useCropImage(p.image.url, { width: p.image.width, height: p.image.height });
+type TDesignProps = TProps<{
+    image: TImage;
+    colors: TColor[];
+    models: TModel[];
+    materials: TMaterial[];
+    finishes: TFinish[];
+}>;
 
+const Design = (p: TDesignProps) => {
     const [loading, setLoading] = useState(false);
 
-    const { setColor, setModel, setMaterial, setFinish } = useCreateCaseDesign();
+    const cropImage = useCropImage(p.image);
+    const createCaseDesign = useCreateCaseDesign();
 
     useEffect(() => {
-        setColor(p.colors[0]);
-        setModel(p.models[0]);
-        setMaterial(p.materials[0]);
-        setFinish(p.finishes[0]);
+        createCaseDesign.setColor(p.colors[0]);
+        createCaseDesign.setModel(p.models[0]);
+        createCaseDesign.setMaterial(p.materials[0]);
+        createCaseDesign.setFinish(p.finishes[0]);
     }, []);
 
     return (
         <CreateCaseLayout title="Design the case">
             <div className="relative mb-20 mt-20 grid grid-cols-1 pb-20 lg:grid-cols-3">
-                <ImagePositioner
-                    image={p.image}
-                    containerRef={containerRef}
-                    phoneCaseRef={phoneCaseRef}
-                    setRenderedDimension={setRenderedDimension}
-                    setRenderedPosition={setRenderedPosition}
-                />
+                <ImagePositioner image={p.image} cropImage={cropImage} />
                 <div className="col-span-full flex h-[37.5rem] w-full flex-col bg-white lg:col-span-1">
                     <ScrollArea className="relative flex-1 overflow-auto">
                         <div
@@ -112,7 +102,7 @@ const Design = (
                         onContinue={async () => {
                             try {
                                 setLoading(true);
-                                const croppedImage = await cropImage();
+                                const croppedImage = await cropImage.crop();
                                 if (!croppedImage) {
                                     return;
                                 }

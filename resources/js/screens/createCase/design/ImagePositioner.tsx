@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
+import { useRef, useState } from "react";
 
 import { Rnd } from "react-rnd";
 import { AspectRatio } from "@/Components/ui/aspect-ratio";
-import { Dispatch, RefObject, SetStateAction, useRef, useState } from "react";
 
 import images from "@/lib/images";
 import useCreateCaseDesign from "@/states/useCreateCaseDesign";
@@ -18,16 +18,6 @@ const ResizeHandleIcon = () => {
     );
 };
 
-type TDimension = {
-    height: number;
-    width: number;
-};
-
-type TPosition = {
-    x: number;
-    y: number;
-};
-
 const base64ToBlob = (base64: string, mimeType: string) => {
     const base64Data = base64.split(",")[1];
 
@@ -40,10 +30,10 @@ const base64ToBlob = (base64: string, mimeType: string) => {
     return new Blob([byteArray], { type: mimeType });
 };
 
-export const useCropImage = (imageUrl: string, imageDimension: TDimension) => {
+export const useCropImage = (image: TImage) => {
     const [renderedDimension, setRenderedDimension] = useState({
-        width: imageDimension.width / 4,
-        height: imageDimension.height / 4,
+        width: image.width / 4,
+        height: image.height / 4,
     });
 
     const [renderedPosition, setRenderedPosition] = useState({
@@ -54,7 +44,7 @@ export const useCropImage = (imageUrl: string, imageDimension: TDimension) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const phoneCaseRef = useRef<HTMLDivElement>(null);
 
-    const cropImage = async () => {
+    const crop = async () => {
         const { left: containerLeft, top: containerTop } =
             containerRef.current!.getBoundingClientRect();
         const {
@@ -79,7 +69,7 @@ export const useCropImage = (imageUrl: string, imageDimension: TDimension) => {
 
         const originalImage = new Image();
         originalImage.crossOrigin = "anonymous";
-        originalImage.src = imageUrl;
+        originalImage.src = image.url;
 
         // waiting for image loading
         await new Promise(resolve => (originalImage.onload = resolve));
@@ -102,26 +92,20 @@ export const useCropImage = (imageUrl: string, imageDimension: TDimension) => {
     return {
         containerRef,
         phoneCaseRef,
-        setRenderedDimension,
-        setRenderedPosition,
-        cropImage,
+        setDimension: setRenderedDimension,
+        setPosition: setRenderedPosition,
+        crop,
     };
 };
 
 export type TImage = { url: string; height: number; width: number };
 
-const ImagePositioner = (p: {
-    image: TImage;
-    containerRef: RefObject<HTMLDivElement>;
-    phoneCaseRef: RefObject<HTMLDivElement>;
-    setRenderedDimension: Dispatch<SetStateAction<TDimension>>;
-    setRenderedPosition: Dispatch<SetStateAction<TPosition>>;
-}) => {
+const ImagePositioner = (p: { image: TImage; cropImage: ReturnType<typeof useCropImage> }) => {
     const { color } = useCreateCaseDesign();
 
     return (
         <div
-            ref={p.containerRef}
+            ref={p.cropImage.containerRef}
             className={cn(
                 "relative col-span-2 flex h-[37.5rem] w-full max-w-4xl",
                 "items-center justify-center overflow-hidden rounded-lg",
@@ -131,7 +115,7 @@ const ImagePositioner = (p: {
         >
             <div className="pointer-events-none relative aspect-[896/1831] w-60 bg-opacity-50">
                 <AspectRatio
-                    ref={p.phoneCaseRef}
+                    ref={p.cropImage.phoneCaseRef}
                     ratio={896 / 1831}
                     className="pointer-events-none relative z-50 aspect-[896/1831] w-full"
                 >
@@ -170,14 +154,14 @@ const ImagePositioner = (p: {
                     topLeft: <ResizeHandleIcon />,
                 }}
                 onResizeStop={(_, __, ref, ___, { x, y }) => {
-                    p.setRenderedDimension({
+                    p.cropImage.setDimension({
                         width: parseInt(ref.style.width.slice(0, -2)),
                         height: parseInt(ref.style.height.slice(0, -2)),
                     });
-                    p.setRenderedPosition({ x, y });
+                    p.cropImage.setPosition({ x, y });
                 }}
                 onDrag={(_, { x, y }) => {
-                    p.setRenderedPosition({ x, y });
+                    p.cropImage.setPosition({ x, y });
                 }}
                 className="absolute z-20 border-[3px] border-primary"
             >
