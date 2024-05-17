@@ -4,22 +4,34 @@ import { Image, Loader2, MousePointerSquareDashed } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/Components/ui/progress";
 import { toast } from "sonner";
-import { router } from "@inertiajs/react";
-import { useState, useTransition } from "react";
+import { useForm } from "@inertiajs/react";
+import { useEffect, useState, useTransition } from "react";
 
 const Upload = () => {
     const [isDragOver, setIsDragOver] = useState<boolean>(false);
-    const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [isPending] = useTransition();
 
-    const [isPending, startTransition] = useTransition();
+    const { data, setData, post, progress } = useForm<{
+        image: File | null;
+    }>({
+        image: null,
+    });
 
-    const isUploading = false;
-
-    const startUpload = (files: File[]) => {
-        startTransition(() => {
-            router.get(`/create-case/design?id=${""}`);
-        });
+    const startUpload = async (files: File[]) => {
+        setData("image", files[0]);
     };
+
+    useEffect(() => {
+        if (data.image) {
+            post("/create-case/upload", {
+                forceFormData: true,
+                onError: error => {
+                    console.log("here", error);
+                    toast.error(error.image);
+                },
+            });
+        }
+    }, [data.image]);
 
     return (
         <CreateCaseLayout title="Upload your image">
@@ -48,7 +60,7 @@ const Upload = () => {
                         }}
                         onDragEnter={() => setIsDragOver(true)}
                         onDragLeave={() => setIsDragOver(false)}
-                        disabled={isUploading || isPending}
+                        disabled={!!progress || isPending}
                         accept={{
                             "image/png": [".png"],
                             "image/jpeg": [".jpeg", ".jpg"],
@@ -63,17 +75,17 @@ const Upload = () => {
                                 <input {...getInputProps()} />
                                 {isDragOver ? (
                                     <MousePointerSquareDashed className="mb-2 h-6 w-6 text-zinc-500" />
-                                ) : isUploading || isPending ? (
+                                ) : progress || isPending ? (
                                     <Loader2 className="mb-2 h-6 w-6 animate-spin text-zinc-500" />
                                 ) : (
                                     <Image className="mb-2 h-6 w-6 text-zinc-500" />
                                 )}
                                 <div className="mb-2 flex flex-col justify-center text-sm text-zinc-700">
-                                    {isUploading ? (
+                                    {progress ? (
                                         <div className="flex flex-col items-center">
                                             <p>Uploading...</p>
                                             <Progress
-                                                value={uploadProgress}
+                                                value={progress?.percentage}
                                                 className="mt-2 h-2 w-40 bg-gray-300"
                                             />
                                         </div>

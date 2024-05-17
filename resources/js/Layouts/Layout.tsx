@@ -144,7 +144,7 @@ const Layout = (props: { children: ReactNode; title: string }) => {
                 <div className="flex h-full flex-1 flex-col">{props.children}</div>
                 <Footer />
             </main>
-            <Toaster />
+            <Toaster position="top-right" />
         </div>
     );
 };
