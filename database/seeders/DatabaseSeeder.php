@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Color;
+use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
 use App\Models\PhoneModel;
@@ -34,6 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->phoneModels($adminUser->id);
         $this->colors($adminUser->id);
         $this->materials($adminUser->id);
+        $this->finishes($adminUser->id);
     }
 
     private function phoneModels(int $user_id)
@@ -137,6 +139,34 @@ class DatabaseSeeder extends Seeder
                 'value' => $material['value'],
                 'description' => $material['description'],
                 'price' => $material['price'],
+                'user_id' => $user_id,
+            ]);
+        }
+    }
+
+    private function finishes(int $user_id)
+    {
+        $finishes = [
+            [
+                'label' => 'Smooth Finish',
+                'value' => 'smooth',
+                'description' => null,
+                'price' => 0,
+            ],
+            [
+                'label' => 'Textured Finish',
+                'value' => 'textured',
+                'description' => 'Soft grippy texture',
+                'price' => 300,
+            ],
+        ];
+
+        foreach ($finishes as $finish) {
+            Finish::create([
+                'label' => $finish['label'],
+                'value' => $finish['value'],
+                'description' => $finish['description'],
+                'price' => $finish['price'],
                 'user_id' => $user_id,
             ]);
         }
