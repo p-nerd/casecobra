@@ -16,7 +16,7 @@ class CreateCaseController extends Controller
 {
     public function uploadCreate()
     {
-        return inertia("CreateCase/Upload");
+        return inertia("createCase/Upload");
     }
 
     public function uploadStore(Request $request)
@@ -49,7 +49,7 @@ class CreateCaseController extends Controller
 
         $basePrice = Option::query()->where("name", "=", "CASE_BASE_PRICE")->first()->value;
 
-        return inertia("CreateCase/Design", [
+        return inertia("createCase/Design", [
             "id" => $caseDesign->id,
             "image" => [
                 "url" => $originalImage->fullurl(),
