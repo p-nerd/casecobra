@@ -10,6 +10,7 @@ Route::get('/', function () {
 })->name("home");
 
 Route::prefix("/create-case")->group(function () {
+    Route::get("/", fn () => redirect("/create-case/upload"));
     Route::get("/upload", [CreateCaseController::class, "uploadCreate"]);
     Route::post("/upload", [CreateCaseController::class, "uploadStore"]);
 

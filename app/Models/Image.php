@@ -24,7 +24,7 @@ class Image extends Model
 
     protected const DIR = "images";
 
-    public static function store(UploadedFile $file): self
+    public static function store(UploadedFile $file, int $height, int $width): self
     {
         $path = $file->store(self::DIR);
 
@@ -32,6 +32,8 @@ class Image extends Model
             "user_id" => Auth::id(),
             'url' => str_replace('images/', '', $path),
             "alt" => self::humanifyFilename($file->getClientOriginalName()),
+            "height" => $height,
+            "width" => $width,
         ]);
     }
 

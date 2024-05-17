@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->nullable();
             $table->string('url');
             $table->string('alt')->nullable();
+            $table->unsignedSmallInteger('width')->nullable();
+            $table->unsignedSmallInteger('height')->nullable();
             $table->boolean('removable')->default(false);
             $table->timestamps();
         });

@@ -18,8 +18,10 @@ class CreateCaseController extends Controller
     {
         $request->validate([
             'image' => ["required", "image", "mimes:jpeg,png,jpg", "max:2048"],
+            "height" => ["required", "int", "min:0"],
+            "width" => ["required", "int", "min:0"],
         ]);
-        $image = Image::store($request->image);
+        $image = Image::store($request->image, $request->height, $request->width);
 
         $caseDesign = CaseDesign::create([
             "original_image_id" => $image->id,

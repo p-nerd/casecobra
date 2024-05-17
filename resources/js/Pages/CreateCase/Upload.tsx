@@ -1,31 +1,39 @@
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useForm } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { router } from "@inertiajs/react";
+import { useState } from "react";
+import { getImageDimensions } from "@/lib/file";
 
 import { Progress } from "@/Components/ui/progress";
-import { Image, Loader2, MousePointerSquareDashed } from "lucide-react";
+import { ImageIcon, Loader2, MousePointerSquareDashed } from "lucide-react";
 
 import Dropzone from "react-dropzone";
 import CreateCaseLayout from "@/Layouts/CreateCaseLayout";
 
 const Upload = () => {
     const [isDragOver, setIsDragOver] = useState<boolean>(false);
+    const [progress, setProgress] = useState<number | null>();
 
-    const { data, setData, post, progress } = useForm<{
-        image: File | null;
-    }>({
-        image: null,
-    });
-
-    useEffect(() => {
-        if (data.image) {
-            post("/create-case/upload", {
-                forceFormData: true,
-                onError: e => toast.error(e.image),
-            });
+    const handleUpload = async (image: File) => {
+        try {
+            const { height, width } = await getImageDimensions(image);
+            router.post(
+                "/create-case/upload",
+                {
+                    image,
+                    height,
+                    width,
+                },
+                {
+                    forceFormData: true,
+                    onProgress: p => setProgress(p?.percentage),
+                    onError: e => toast.error(e.image),
+                },
+            );
+        } catch (e: any) {
+            toast.error(e?.message || "");
         }
-    }, [data.image]);
+    };
 
     return (
         <CreateCaseLayout title="Upload your image">
@@ -41,8 +49,8 @@ const Upload = () => {
             >
                 <div className="relative flex w-full flex-1 flex-col items-center justify-center">
                     <Dropzone
-                        onDropAccepted={files => {
-                            setData("image", files[0]);
+                        onDropAccepted={async files => {
+                            await handleUpload(files[0]);
                             setIsDragOver(false);
                         }}
                         onDropRejected={files => {
@@ -73,14 +81,14 @@ const Upload = () => {
                                 ) : progress ? (
                                     <Loader2 className="mb-2 h-6 w-6 animate-spin text-zinc-500" />
                                 ) : (
-                                    <Image className="mb-2 h-6 w-6 text-zinc-500" />
+                                    <ImageIcon className="mb-2 h-6 w-6 text-zinc-500" />
                                 )}
                                 <div className="mb-2 flex flex-col justify-center text-sm text-zinc-700">
                                     {progress ? (
                                         <div className="flex flex-col items-center">
                                             <p>Uploading...</p>
                                             <Progress
-                                                value={progress?.percentage}
+                                                value={progress}
                                                 className="mt-2 h-2 w-40 bg-gray-300"
                                             />
                                         </div>
