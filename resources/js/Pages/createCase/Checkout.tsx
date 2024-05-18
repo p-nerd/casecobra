@@ -1,10 +1,10 @@
-import { MaxWidthWrapper } from "@/components/misc";
+import { Container } from "@/components/ui2/misc";
 import Layout from "@/layouts/Layout";
 
 const Checkout = () => {
     return (
         <Layout title="checkout">
-            <MaxWidthWrapper>Hello</MaxWidthWrapper>
+            <Container>Hello</Container>
         </Layout>
     );
 };

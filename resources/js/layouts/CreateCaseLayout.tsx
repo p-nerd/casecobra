@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { MaxWidthWrapper } from "@/components/misc";
+import { Container } from "@/components/ui2/misc";
 
 import images from "@/lib/images";
 
@@ -114,10 +114,10 @@ const Steps = () => {
 const CreateCaseLayout = (props: { title: string; children: ReactNode }) => {
     return (
         <Layout title={props.title}>
-            <MaxWidthWrapper className="flex flex-1 flex-col">
+            <Container className="flex flex-1 flex-col">
                 <Steps />
                 {props.children}
-            </MaxWidthWrapper>
+            </Container>
         </Layout>
     );
 };

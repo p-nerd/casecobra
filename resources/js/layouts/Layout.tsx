@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import { ArrowRight } from "lucide-react";
-import { MaxWidthWrapper } from "@/components/misc";
+import { Container } from "@/components/ui2/misc";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { TProps, User } from "@/types";
@@ -12,7 +12,7 @@ const Navbar = (props: { user: User }) => {
 
     return (
         <nav className="sticky inset-x-0 top-0 z-[100] h-14 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
-            <MaxWidthWrapper>
+            <Container>
                 <div className="flex h-14 items-center justify-between border-b border-zinc-200">
                     <Link href="/" className="z-40 flex font-semibold">
                         case<span className="text-green-600">cobra</span>
@@ -88,7 +88,7 @@ const Navbar = (props: { user: User }) => {
                         )}
                     </div>
                 </div>
-            </MaxWidthWrapper>
+            </Container>
         </nav>
     );
 };
@@ -96,7 +96,7 @@ const Navbar = (props: { user: User }) => {
 const Footer = () => {
     return (
         <footer className="relative h-20 bg-white">
-            <MaxWidthWrapper>
+            <Container>
                 <div className="border-t border-gray-200" />
 
                 <div className="flex h-full flex-col items-center justify-center md:flex-row md:justify-between">
@@ -129,7 +129,7 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-            </MaxWidthWrapper>
+            </Container>
         </footer>
     );
 };

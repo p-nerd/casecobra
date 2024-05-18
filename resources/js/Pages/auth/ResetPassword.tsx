@@ -42,7 +42,7 @@ const ResetPassword = (props: { token: string; email: string }) => {
                     name="password"
                     value={data.password}
                     autoComplete="new-password"
-                    isFocused={true}
+                    autoFocus={true}
                     onChange={value => setData("password", value)}
                     error={errors.password}
                 />

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
-import { DireactionLink, Form, TextField } from "@/components/ui2/form";
+import { DirectionLink, Form, TextField } from "@/components/ui2/form";
 
 import GuestLayout from "@/layouts/GuestLayout";
 
@@ -36,7 +36,7 @@ const Register = (props: { to?: string }) => {
                     name="name"
                     value={data.name}
                     autoComplete="name"
-                    isFocused={true}
+                    autoFocus={true}
                     onChange={value => setData("name", value)}
                     required={true}
                     error={errors.name}
@@ -72,7 +72,7 @@ const Register = (props: { to?: string }) => {
                     error={errors.password_confirmation}
                 />
                 <div className="flex items-center justify-end gap-4">
-                    <DireactionLink href={route("login")} label="Already registered?" />
+                    <DirectionLink href={route("login")} label="Already registered?" />
                     <Button type="submit" disabled={processing}>
                         Register
                     </Button>

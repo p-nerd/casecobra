@@ -1,4 +1,4 @@
-import ApplicationLogo from "@/components/ApplicationLogo";
+import ApplicationLogo from "@/components/layout/ApplicationLogo";
 import { type PropsWithChildren } from "react";
 import { Head, Link } from "@inertiajs/react";
 import { Card } from "@/components/ui/card";

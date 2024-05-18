@@ -28,7 +28,7 @@ const ForgotPassword = (props: { status?: string }) => {
                     type="email"
                     name="email"
                     value={data.email}
-                    isFocused={true}
+                    autoFocus={true}
                     onChange={value => setData("email", value)}
                     error={errors.email}
                 />

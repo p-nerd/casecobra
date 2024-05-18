@@ -1,10 +1,11 @@
-import { useRef, FormEventHandler } from "react";
-import InputError from "@/components/InputError";
-import InputLabel from "@/components/InputLabel";
-import TextInput from "@/components/TextInput";
+import type { FormEventHandler } from "react";
+
+import { useRef } from "react";
 import { useForm } from "@inertiajs/react";
-import { Transition } from "@headlessui/react";
+
 import { Button } from "@/components/ui/button";
+import { Transition } from "@headlessui/react";
+import { TextField } from "@/components/ui2/form";
 
 export default function UpdatePasswordForm({ className = "" }: { className?: string }) {
     const passwordInput = useRef<HTMLInputElement>(null);
@@ -46,53 +47,36 @@ export default function UpdatePasswordForm({ className = "" }: { className?: str
                 </p>
             </header>
 
-            <form onSubmit={updatePassword} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="current_password" value="Current Password" />
-
-                    <TextInput
-                        id="current_password"
-                        ref={currentPasswordInput}
-                        value={data.current_password}
-                        onChange={e => setData("current_password", e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                    />
-
-                    <InputError message={errors.current_password} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password" value="New Password" />
-
-                    <TextInput
-                        id="password"
-                        ref={passwordInput}
-                        value={data.password}
-                        onChange={e => setData("password", e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
-                    <TextInput
-                        id="password_confirmation"
-                        value={data.password_confirmation}
-                        onChange={e => setData("password_confirmation", e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
+            <form onSubmit={updatePassword} className="mt-6 flex flex-col space-y-6">
+                <TextField
+                    label="Current Password"
+                    ref={currentPasswordInput}
+                    value={data.current_password}
+                    onChange={value => setData("current_password", value)}
+                    type="password"
+                    autoComplete="current-password"
+                    name="current_password"
+                    error={errors.current_password}
+                />
+                <TextField
+                    label="New Password"
+                    name="password"
+                    ref={passwordInput}
+                    value={data.password}
+                    onChange={value => setData("password", value)}
+                    type="password"
+                    autoComplete="new-password"
+                    error={errors.password}
+                />
+                <TextField
+                    label="Confirm Password"
+                    name="password_confirmation"
+                    value={data.password_confirmation}
+                    onChange={value => setData("password_confirmation", value)}
+                    type="password"
+                    autoComplete="new-password"
+                    error={errors.password_confirmation}
+                />
 
                 <div className="flex items-center gap-4">
                     <Button disabled={processing}>Save</Button>

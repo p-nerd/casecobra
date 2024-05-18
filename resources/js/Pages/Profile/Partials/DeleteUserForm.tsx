@@ -1,11 +1,10 @@
 import { useRef, useState, FormEventHandler } from "react";
-import DangerButton from "@/components/DangerButton";
-import InputError from "@/components/InputError";
-import InputLabel from "@/components/InputLabel";
+
 import Modal from "@/components/Modal";
-import SecondaryButton from "@/components/SecondaryButton";
-import TextInput from "@/components/TextInput";
+
 import { useForm } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
+import { TextField } from "@/components/ui2/form";
 
 export default function DeleteUserForm({ className = "" }: { className?: string }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
@@ -55,7 +54,9 @@ export default function DeleteUserForm({ className = "" }: { className?: string 
                 </p>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>Delete Account</DangerButton>
+            <Button variant="destructive" onClick={confirmUserDeletion}>
+                Delete Account
+            </Button>
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
@@ -63,36 +64,30 @@ export default function DeleteUserForm({ className = "" }: { className?: string 
                         Are you sure you want to delete your account?
                     </h2>
 
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mb-6 mt-1 text-sm text-gray-600">
                         Once your account is deleted, all of its resources and data will be
                         permanently deleted. Please enter your password to confirm you would like to
                         permanently delete your account.
                     </p>
 
-                    <div className="mt-6">
-                        <InputLabel htmlFor="password" value="Password" className="sr-only" />
-
-                        <TextInput
-                            id="password"
-                            type="password"
-                            name="password"
-                            ref={passwordInput}
-                            value={data.password}
-                            onChange={e => setData("password", e.target.value)}
-                            className="mt-1 block w-3/4"
-                            isFocused
-                            placeholder="Password"
-                        />
-
-                        <InputError message={errors.password} className="mt-2" />
-                    </div>
-
+                    <TextField
+                        name="password"
+                        type="password"
+                        value={data.password}
+                        ref={passwordInput}
+                        autoFocus={true}
+                        onChange={value => setData("password", value)}
+                        className="w-3/4"
+                        placeholder="Password"
+                        error={errors.password}
+                    />
                     <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
-
-                        <DangerButton className="ms-3" disabled={processing}>
+                        <Button variant="secondary" onClick={closeModal}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" className="ms-3" disabled={processing}>
                             Delete Account
-                        </DangerButton>
+                        </Button>
                     </div>
                 </form>
             </Modal>

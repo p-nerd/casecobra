@@ -33,7 +33,7 @@ const ConfirmPassword = () => {
                     type="password"
                     name="password"
                     value={data.password}
-                    isFocused={true}
+                    autoFocus={true}
                     onChange={value => setData("password", value)}
                     error={errors.password}
                 />

@@ -1,13 +1,12 @@
 import type { TProps } from "@/types";
+import type { FormEventHandler } from "react";
 
+import { useForm, usePage } from "@inertiajs/react";
+
+import { Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
-import { FormEventHandler } from "react";
+import { TextField } from "@/components/ui2/form";
 import { Transition } from "@headlessui/react";
-import { Link, useForm, usePage } from "@inertiajs/react";
-
-import InputError from "@/components/InputError";
-import InputLabel from "@/components/InputLabel";
-import TextInput from "@/components/TextInput";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -42,37 +41,28 @@ export default function UpdateProfileInformation({
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
-
-                    <TextInput
-                        id="name"
-                        className="mt-1 block w-full"
-                        value={data.name}
-                        onChange={e => setData("name", e.target.value)}
-                        required
-                        isFocused
-                        autoComplete="name"
-                    />
-
-                    <InputError className="mt-2" message={errors.name} />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={e => setData("email", e.target.value)}
-                        required
-                        autoComplete="username"
-                    />
-
-                    <InputError className="mt-2" message={errors.email} />
-                </div>
+                <TextField
+                    label="Name"
+                    name="name"
+                    className="mt-1 block w-full"
+                    value={data.name}
+                    onChange={name => setData("name", name)}
+                    required={true}
+                    autoFocus={true}
+                    autoComplete="name"
+                    error={errors.name}
+                />
+                <TextField
+                    label="Email"
+                    name="email"
+                    type="email"
+                    className="mt-1 block w-full"
+                    value={data.email}
+                    onChange={value => setData("email", value)}
+                    required={true}
+                    autoComplete="username"
+                    error={errors.email}
+                />
 
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>

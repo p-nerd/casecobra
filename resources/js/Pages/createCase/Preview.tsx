@@ -1,29 +1,24 @@
-import CreateCaseLayout from "@/layouts/CreateCaseLayout";
-
-import { cn, formatPrice } from "@/lib/utils";
-
-import { Phone } from "@/components/misc";
-import { ArrowRight, Check } from "lucide-react";
-
-import RDConfetti from "react-dom-confetti";
-import { useEffect, useState } from "react";
-import { TProps } from "@/types";
-import { TImage } from "@/screens/createCase/design/ImagePositioner";
-import { calculatePrice } from "@/states/useCreateCaseDesign";
-import { Button } from "@/components/ui/button";
+import type { TProps } from "@/types";
+import type { TImage } from "@/components/design/ImagePositioner";
 import type { Dispatch, SetStateAction } from "react";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+
+import { useState } from "react";
+import { calculatePrice } from "@/states/useCreateCaseDesign";
+import { cn, formatPrice } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import images from "@/lib/images";
-import { Link, router, usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
+
+import { Link } from "@inertiajs/react";
+import { Phone } from "@/components/ui2/misc";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Check } from "lucide-react";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
+
 import toast from "@/lib/toast";
-import { setDefaultHighWaterMark } from "stream";
+import images from "@/lib/images";
+
+import CreateCaseLayout from "@/layouts/CreateCaseLayout";
 
 const LoginModal = ({
     caseDesignId,
@@ -69,20 +64,6 @@ const LoginModal = ({
     );
 };
 
-const Confetti = () => {
-    const [showConfetti, setShowConfetti] = useState<boolean>(false);
-
-    useEffect(() => setShowConfetti(true), []);
-
-    return (
-        <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 flex select-none justify-center overflow-hidden"
-        >
-            <RDConfetti active={showConfetti} config={{ elementCount: 200, spread: 90 }} />
-        </div>
-    );
-};
 const Checkout = (props: { caseDesignId: number }) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState<boolean>(false);
@@ -148,7 +129,6 @@ type TPreviewProps = TProps<{
 const Preview = (p: TPreviewProps) => {
     return (
         <CreateCaseLayout title="Your case summery">
-            <Confetti />
             <div className="mt-20 flex flex-col items-center text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:grid md:gap-x-8 lg:gap-x-12">
                 <div className="md:col-span-4 md:row-span-2 md:row-end-2 lg:col-span-3">
                     <Phone

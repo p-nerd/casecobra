@@ -1,10 +1,10 @@
 import type { TProps } from "@/types";
-import type { TImage } from "@/screens/createCase/design/ImagePositioner";
+import type { TImage } from "@/components/design/ImagePositioner";
 import type { TColor, TFinish, TMaterial, TModel } from "@/states/useCreateCaseDesign";
 
 import { router } from "@inertiajs/react";
 import { formatPrice } from "@/lib/utils";
-import { useCropImage } from "@/screens/createCase/design/ImagePositioner";
+import { useCropImage } from "@/components/design/ImagePositioner";
 import { getImageDimensions } from "@/lib/file";
 import { useEffect, useState } from "react";
 
@@ -15,11 +15,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import toast from "@/lib/toast";
 import useCreateCaseDesign, { calculatePrice } from "@/states/useCreateCaseDesign";
 
-import SelectColor from "@/screens/createCase/design/SelectColor";
-import SelectModel from "@/screens/createCase/design/SelectModel";
-import SelectFinish from "@/screens/createCase/design/SelectFinish";
-import SelectMaterial from "@/screens/createCase/design/SelectMaterial";
-import ImagePositioner from "@/screens/createCase/design/ImagePositioner";
+import SelectColor from "@/components/design/SelectColor";
+import SelectModel from "@/components/design/SelectModel";
+import SelectFinish from "@/components/design/SelectFinish";
+import SelectMaterial from "@/components/design/SelectMaterial";
+import ImagePositioner from "@/components/design/ImagePositioner";
 import CreateCaseLayout from "@/layouts/CreateCaseLayout";
 
 const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loading: boolean }) => {

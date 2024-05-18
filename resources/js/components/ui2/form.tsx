@@ -1,10 +1,10 @@
-import { type PropsWithChildren, type HTMLInputTypeAttribute } from "react";
-import InputError from "@/components/InputError";
-import TextInput from "@/components/TextInput";
-import Checkbox from "@/components/Checkbox";
-import { Label } from "@/components/ui/label";
+import type { HTMLAttributes, PropsWithChildren, HTMLInputTypeAttribute, RefObject } from "react";
+
 import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
 import { Link } from "@inertiajs/react";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const Form = (props: PropsWithChildren<{ className?: string; onSubmit: () => void }>) => {
     return (
@@ -20,17 +20,31 @@ export const Form = (props: PropsWithChildren<{ className?: string; onSubmit: ()
     );
 };
 
+export const InputError = ({
+    message,
+    className = "",
+    ...props
+}: HTMLAttributes<HTMLParagraphElement> & { message?: string }) => {
+    return message ? (
+        <p {...props} className={"text-sm text-red-600 " + className}>
+            {message}
+        </p>
+    ) : null;
+};
+
 export const TextField = (props: {
     name: string;
     value: string;
     onChange: (value: string) => void;
-    isFocused?: boolean;
+    autoFocus?: boolean;
     type?: HTMLInputTypeAttribute;
     label?: string;
     error?: string;
     className?: string;
     autoComplete?: string;
     required?: boolean;
+    placeholder?: string;
+    ref?: RefObject<HTMLInputElement>;
 }) => {
     return (
         <div>
@@ -41,16 +55,17 @@ export const TextField = (props: {
             ) : (
                 <></>
             )}
-            <TextInput
+            <Input
                 id={props.name}
                 name={props.name}
                 type={props.type}
                 value={props.value}
                 className={cn("block w-full", props.className)}
-                isFocused={props.isFocused}
+                autoFocus={props.autoFocus}
                 onChange={e => props.onChange(e.target.value)}
                 autoComplete={props.autoComplete}
                 required={props.required}
+                placeholder={props.placeholder}
             />
             {props.error ? <InputError message={props.error} className="mt-2" /> : <></>}
         </div>
@@ -67,9 +82,10 @@ export const CheckboxField = (props: {
         <div>
             <label className="flex cursor-pointer items-center">
                 <Checkbox
+                    id={props.name}
                     name={props.name}
                     checked={props.checked}
-                    onChange={e => props.onChange(e.target.checked)}
+                    onCheckedChange={checked => props.onChange(!!checked)}
                 />
                 {props.label ? (
                     <span className="ms-2 text-sm text-gray-600">{props.label}</span>
@@ -81,7 +97,7 @@ export const CheckboxField = (props: {
     );
 };
 
-export const DireactionLink = (props: { href: string; label: string }) => {
+export const DirectionLink = (props: { href: string; label: string }) => {
     return (
         <Link
             href={props.href}

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
-import { CheckboxField, DireactionLink, Form, TextField } from "@/components/ui2/form";
+import { CheckboxField, DirectionLink, Form, TextField } from "@/components/ui2/form";
 
 import GuestLayout from "@/layouts/GuestLayout";
 
@@ -39,7 +39,7 @@ const Login = (props: { to?: string; status?: string; canResetPassword: boolean 
                     name="email"
                     value={data.email}
                     autoComplete="username"
-                    isFocused={true}
+                    autoFocus={true}
                     onChange={value => setData("email", value)}
                     error={errors.email}
                 />
@@ -60,7 +60,7 @@ const Login = (props: { to?: string; status?: string; canResetPassword: boolean 
                 />
                 <div className="flex items-center justify-end gap-4">
                     {props.canResetPassword && (
-                        <DireactionLink
+                        <DirectionLink
                             href={route("password.request")}
                             label="Forgot your password?"
                         />

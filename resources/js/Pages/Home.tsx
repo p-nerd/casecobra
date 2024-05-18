@@ -1,9 +1,9 @@
-import { MaxWidthWrapper } from "@/components/misc";
+import { Container } from "@/components/ui2/misc";
 import Layout from "@/layouts/Layout";
 import { buttonVariants } from "@/components/ui/button";
-import { Icons, Phone } from "@/components/misc";
+import { Icons, Phone } from "@/components/ui2/misc";
 import { ArrowRight, Check, Star } from "lucide-react";
-import Reviews from "@/components/Reviews";
+import Reviews from "@/components/home/Reviews";
 import images from "@/lib/images";
 import { Link } from "@inertiajs/react";
 
@@ -11,7 +11,7 @@ const Home = () => {
     return (
         <Layout title="Make Your Image on a Custom Phone Case">
             <section>
-                <MaxWidthWrapper className="pb-24 pt-10 sm:pb-32 lg:grid lg:grid-cols-3 lg:gap-x-0 lg:pb-52 lg:pt-24 xl:gap-x-8 xl:pt-32">
+                <Container className="pb-24 pt-10 sm:pb-32 lg:grid lg:grid-cols-3 lg:gap-x-0 lg:pb-52 lg:pt-24 xl:gap-x-8 xl:pt-32">
                     <div className="col-span-2 px-6 lg:px-0 lg:pt-4">
                         <div className="relative mx-auto flex flex-col items-center text-center lg:items-start lg:text-left">
                             <div className="absolute -top-20 left-0 hidden w-28 lg:block">
@@ -109,12 +109,12 @@ const Home = () => {
                             <Phone className="w-64" imgSrc={images.testimonials1} />
                         </div>
                     </div>
-                </MaxWidthWrapper>
+                </Container>
             </section>
 
             {/* value proposition section */}
             <section className="grainy-dark bg-slate-100 py-24">
-                <MaxWidthWrapper className="flex flex-col items-center gap-16 sm:gap-32">
+                <Container className="flex flex-col items-center gap-16 sm:gap-32">
                     <div className="flex flex-col items-center gap-4 sm:gap-6 lg:flex-row">
                         <h2 className="order-1 mt-2 text-balance text-center text-5xl font-bold !leading-tight tracking-tight text-gray-900 md:text-6xl">
                             What our{" "}
@@ -200,7 +200,7 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                </MaxWidthWrapper>
+                </Container>
 
                 <div className="pt-16">
                     <Reviews />
@@ -208,7 +208,7 @@ const Home = () => {
             </section>
 
             <section>
-                <MaxWidthWrapper className="py-24">
+                <Container className="py-24">
                     <div className="mb-12 px-6 lg:px-8">
                         <div className="mx-auto max-w-2xl sm:text-center">
                             <h2 className="order-1 mt-2 text-balance text-center text-5xl font-bold !leading-tight tracking-tight text-gray-900 md:text-6xl">
@@ -271,7 +271,7 @@ const Home = () => {
                             </Link>
                         </div>
                     </ul>
-                </MaxWidthWrapper>
+                </Container>
             </section>
         </Layout>
     );

@@ -1,7 +1,10 @@
-import { type HTMLAttributes, useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
+import type { CSSProperties, HTMLAttributes } from "react";
+
 import { cn } from "@/lib/utils";
-import { MaxWidthWrapper, Phone } from "@/components/misc";
+import { useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { Container, Phone } from "@/components/ui2/misc";
+
 import images from "@/lib/images";
 
 const PHONES = [
@@ -60,7 +63,7 @@ function ReviewColumn({
         <div
             ref={columnRef}
             className={cn("animate-marquee space-y-8 py-4", className)}
-            style={{ "--marquee-duration": duration } as React.CSSProperties}
+            style={{ "--marquee-duration": duration } as CSSProperties}
         >
             {reviews.concat(reviews).map((imgSrc, reviewIndex) => (
                 <Review
@@ -145,15 +148,16 @@ function ReviewGrid() {
 
 function Reviews() {
     return (
-        <MaxWidthWrapper className="relative max-w-5xl">
+        <Container className="relative max-w-5xl">
             <img
                 aria-hidden="true"
                 src={images.whatPeopleAreBuying}
                 className="absolute -left-32 top-1/3 hidden select-none xl:block"
+                alt=""
             />
 
             <ReviewGrid />
-        </MaxWidthWrapper>
+        </Container>
     );
 }
 

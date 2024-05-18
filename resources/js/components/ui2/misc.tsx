@@ -1,10 +1,10 @@
 import { type ReactNode, type HTMLAttributes } from "react";
 import { type LucideProps } from "lucide-react";
 import { cn } from "@/lib/utils";
-import phoneTemplateDarkEdges from "../../images/phone-template-dark-edges.png";
-import phoneTemplateWhiteEdges from "../../images/phone-template-white-edges.png";
+import phoneTemplateDarkEdges from "../../../images/phone-template-dark-edges.png";
+import phoneTemplateWhiteEdges from "../../../images/phone-template-white-edges.png";
 
-export const MaxWidthWrapper = (p: { className?: string; children: ReactNode }) => {
+export const Container = (p: { className?: string; children: ReactNode }) => {
     return (
         <div className={cn("mx-auto h-full w-full max-w-screen-xl px-2.5 lg:px-20", p.className)}>
             {p.children}
