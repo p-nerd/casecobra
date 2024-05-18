@@ -1,7 +1,8 @@
-import AuthenticatedLayout from "@/layouts/AuthenticatedLayout";
+import type { TProps } from "@/types";
+
 import { Head } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { TProps } from "@/types";
+
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout";
 
 export default function Dashboard({ auth }: TProps) {
     return (
@@ -18,7 +19,6 @@ export default function Dashboard({ auth }: TProps) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">You're logged in!</div>
                     </div>
-                    <Button size="sm">save</Button>
                 </div>
             </div>
         </AuthenticatedLayout>
