@@ -155,4 +155,9 @@ class CreateCaseController extends Controller
 
         return inertia("createCase/Preview", $payload);
     }
+
+    public function previewStore(Request $request)
+    {
+        return redirect("/checkout");
+    }
 }

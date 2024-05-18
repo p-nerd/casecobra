@@ -106,10 +106,11 @@ const Design = (p: TDesignProps) => {
             );
         } catch (e: any) {
             setLoading(false);
-            console.log(e);
             toast.error("Something went wrong", {
                 description: e?.message,
             });
+        } finally {
+            setLoading(false);
         }
     };
     return (

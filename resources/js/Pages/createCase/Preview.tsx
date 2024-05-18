@@ -21,7 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { buttonVariants } from "@/components/ui/button";
 import images from "@/lib/images";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
+import toast from "@/lib/toast";
 
 const LoginModal = ({
     caseDesignId,
@@ -36,16 +37,14 @@ const LoginModal = ({
         <Dialog onOpenChange={setIsOpen} open={isOpen}>
             <DialogContent className="absolute z-[9999999]">
                 <DialogHeader>
-                    <div className="relative mx-auto mb-2 h-24 w-24">
+                    <div className="relative mx-auto mb-10 h-24 w-24">
                         <img src={images.snake1} alt="snake image" className="object-contain" />
                     </div>
                     <DialogTitle className="text-center text-3xl font-bold tracking-tight text-gray-900">
                         Log in to continue
                     </DialogTitle>
                     <DialogDescription className="py-2 text-center text-base">
-                        <span className="font-medium text-zinc-900">
-                            Your configuration was saved!
-                        </span>{" "}
+                        <span className="font-medium text-zinc-900">Your design was saved!</span>{" "}
                         Please login or create an account to complete your purchase.
                     </DialogDescription>
                 </DialogHeader>
@@ -95,22 +94,19 @@ const Checkout = (props: { caseDesignId: number }) => {
             return;
         }
 
-        // try {
-        //     setLoading(true);
-        //     const { url } = await createCheckoutSession({ createCaseId: props.createCaseId });
-        //     if (!url) {
-        //         throw new Error("Unable to retrieve payment url");
-        //     }
-        //     router.push(url);
-        // } catch (e: any) {
-        //     console.log(e);
-        //     toast.error("Something went wrong on checkout", {
-        //         description: e?.message || "",
-        //     });
-        //     setLoading(false);
-        // } finally {
-        //     setLoading(false);
-        // }
+        try {
+            setLoading(true);
+            router.post("/create-case/preview", {
+                caseDesignId: props.caseDesignId,
+            });
+        } catch (e: any) {
+            console.log(e);
+            toast.error("Something went wrong on checkout", {
+                description: e?.message || "",
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
