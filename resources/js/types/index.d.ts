@@ -13,3 +13,5 @@ export type TProps<T extends Record<string, unknown> = Record<string, unknown>> 
     };
     ziggy: Config & { location: string };
 };
+
+export type TID = number;

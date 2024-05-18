@@ -1,3 +1,5 @@
+import type { TImage } from "@/types/createCase";
+
 import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";
 
@@ -100,8 +102,6 @@ export const useCropImage = (image: TImage) => {
         crop,
     };
 };
-
-export type TImage = { url: string; alt?: string; height: number; width: number };
 
 const ImagePositioner = (p: { image: TImage; cropImage: ReturnType<typeof useCropImage> }) => {
     const { color } = useCreateCaseDesign();

@@ -13,3 +13,11 @@ export const formatPrice = (price: number) => {
 
     return formatter.format(price);
 };
+
+export const calculatePrice = (
+    basePrice: number,
+    material?: { price: number },
+    finish?: { price: number },
+) => {
+    return (basePrice + (finish?.price || 0) + (material?.price || 0)) / 100;
+};

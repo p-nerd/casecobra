@@ -1,62 +1,23 @@
 import type { TProps } from "@/types";
-import type { TImage } from "@/components/design/ImagePositioner";
-import type { TColor, TFinish, TMaterial, TModel } from "@/states/useCreateCaseDesign";
+import type { TCaseDesign, TImage, TColor, TFinish, TMaterial, TModel } from "@/types/createCase";
 
 import { router } from "@inertiajs/react";
-import { formatPrice } from "@/lib/utils";
-import { useCropImage } from "@/components/design/ImagePositioner";
+import { useCropImage } from "@/components/createCase/ImagePositioner";
 import { getImageDimensions } from "@/lib/file";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import toast from "@/lib/toast";
-import useCreateCaseDesign, { calculatePrice } from "@/states/useCreateCaseDesign";
+import useCreateCaseDesign from "@/states/useCreateCaseDesign";
 
-import SelectColor from "@/components/design/SelectColor";
-import SelectModel from "@/components/design/SelectModel";
-import SelectFinish from "@/components/design/SelectFinish";
-import SelectMaterial from "@/components/design/SelectMaterial";
-import ImagePositioner from "@/components/design/ImagePositioner";
+import SelectColor from "@/components/createCase/SelectColor";
+import SelectModel from "@/components/createCase/SelectModel";
+import SelectFinish from "@/components/createCase/SelectFinish";
+import SelectMaterial from "@/components/createCase/SelectMaterial";
+import ImagePositioner from "@/components/createCase/ImagePositioner";
 import CreateCaseLayout from "@/layouts/CreateCaseLayout";
-
-const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loading: boolean }) => {
-    const { finish, material } = useCreateCaseDesign();
-
-    return (
-        <div className="h-16 w-full bg-white px-8">
-            <div className="h-px w-full bg-zinc-200" />
-            <div className="flex h-full w-full items-center justify-end">
-                <div className="flex w-full items-center gap-6">
-                    <p className="whitespace-nowrap font-medium">
-                        {formatPrice(calculatePrice(p.basePrice, material, finish))}
-                    </p>
-                    <Button
-                        onClick={p.onContinue}
-                        loadingText="Saving"
-                        size="sm"
-                        className="w-full"
-                        isLoading={p.loading}
-                    >
-                        Continue
-                        <ArrowRight className="ml-1.5 inline h-4 w-4" />
-                    </Button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-type TCaseDesign = {
-    id: number;
-    userId?: number;
-    modelId?: number;
-    colorId?: number;
-    materialId?: number;
-    finishId?: number;
-};
+import PriceAndContinue from "@/components/createCase/PriceAndContinue";
 
 type TDesignProps = TProps<{
     caseDesign: TCaseDesign;
@@ -105,7 +66,6 @@ const Design = (p: TDesignProps) => {
                 { forceFormData: true },
             );
         } catch (e: any) {
-            setLoading(false);
             toast.error("Something went wrong", {
                 description: e?.message,
             });

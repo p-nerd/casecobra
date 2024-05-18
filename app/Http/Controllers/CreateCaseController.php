@@ -25,7 +25,7 @@ class CreateCaseController extends Controller
     public function uploadStore(Request $request): RedirectResponse
     {
         $payload = $request->validate([
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg'],
             'height' => ['required', 'int', 'min:0'],
             'width' => ['required', 'int', 'min:0'],
         ]);
@@ -83,7 +83,7 @@ class CreateCaseController extends Controller
             'colorId' => ['required', 'numeric'],
             'materialId' => ['required'],
             'finishId' => ['required'],
-            'croppedImage' => ['required', 'image', 'mimes:png', 'max:2048'],
+            'croppedImage' => ['required', 'image', 'mimes:png'],
             'height' => ['required', 'int', 'min:0'],
             'width' => ['required', 'int', 'min:0'],
         ]);

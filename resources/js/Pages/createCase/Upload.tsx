@@ -27,11 +27,15 @@ const Upload = () => {
                 {
                     forceFormData: true,
                     onProgress: p => setProgress(p?.percentage),
-                    onError: e => toast.error(e.image),
+                    onError: e => {
+                        toast.error(e.image);
+                        setProgress(null);
+                    },
                 },
             );
         } catch (e: any) {
             toast.error(e?.message || "");
+            setProgress(null);
         }
     };
 

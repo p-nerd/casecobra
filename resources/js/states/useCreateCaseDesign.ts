@@ -1,34 +1,7 @@
+import type { TColor, TFinish, TMaterial, TModel } from "@/types/createCase";
+
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-
-export type TColor = {
-    id: number;
-    label: string;
-    name: string;
-    value: string;
-};
-
-export type TModel = {
-    id: number;
-    label: string;
-    value: string;
-};
-
-export type TMaterial = {
-    id: number;
-    label: string;
-    value: string;
-    description: string;
-    price: number;
-};
-
-export type TFinish = {
-    id: number;
-    label: string;
-    value: string;
-    description: string;
-    price: number;
-};
 
 const useCreateCaseDesign = create<{
     color?: TColor;
@@ -69,11 +42,3 @@ const useCreateCaseDesign = create<{
 );
 
 export default useCreateCaseDesign;
-
-export const calculatePrice = (
-    basePrice: number,
-    material?: { price: number },
-    finish?: { price: number },
-) => {
-    return (basePrice + (finish?.price || 0) + (material?.price || 0)) / 100;
-};
