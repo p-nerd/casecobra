@@ -101,17 +101,17 @@ class DatabaseSeeder extends Seeder
         $colors = [
             [
                 'label' => 'Black',
-                'value' => '#27272a',
+                'value' => '#18181b',
                 'name' => 'black',
             ],
             [
                 'label' => 'Blue',
-                'value' => '#171e29',
+                'value' => '#172554',
                 'name' => 'blue',
             ],
             [
                 'label' => 'Rose',
-                'value' => '#1e1b1e',
+                'value' => '#4c0519',
                 'name' => 'rose',
             ],
         ];

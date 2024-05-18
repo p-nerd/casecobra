@@ -19,6 +19,7 @@ import SelectFinish from "@/screens/createCase/design/SelectFinish";
 import SelectMaterial from "@/screens/createCase/design/SelectMaterial";
 import ImagePositioner from "@/screens/createCase/design/ImagePositioner";
 import CreateCaseLayout from "@/layouts/CreateCaseLayout";
+import { router } from "@inertiajs/react";
 
 const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loading: boolean }) => {
     const { finish, material } = useCreateCaseDesign();
@@ -48,6 +49,7 @@ const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loadin
 };
 
 type TDesignProps = TProps<{
+    id: string;
     image: TImage;
     colors: TColor[];
     models: TModel[];
@@ -69,6 +71,33 @@ const Design = (p: TDesignProps) => {
         createCaseDesign.setFinish(p.finishes[0]);
     }, []);
 
+    const handleContinue = async () => {
+        try {
+            setLoading(true);
+            const croppedImage = await cropImage.crop();
+            if (!croppedImage) {
+                return;
+            }
+            router.post(
+                "/create-case/design",
+                {
+                    croppedImage,
+                    caseDesignId: p.id,
+                    phoneModelId: createCaseDesign.model?.id,
+                    colorId: createCaseDesign.color?.id,
+                    material: createCaseDesign.material?.id,
+                    finish: createCaseDesign.finish?.id,
+                },
+                { forceFormData: true },
+            );
+        } catch (e: any) {
+            setLoading(false);
+            console.log(e);
+            toast.error("Something went wrong", {
+                description: e?.message,
+            });
+        }
+    };
     return (
         <CreateCaseLayout title="Design the case">
             <div className="relative mb-20 mt-20 grid grid-cols-1 pb-20 lg:grid-cols-3">
@@ -97,31 +126,7 @@ const Design = (p: TDesignProps) => {
                     </ScrollArea>
                     <PriceAndContinue
                         basePrice={p.basePrice}
-                        onContinue={async () => {
-                            try {
-                                setLoading(true);
-                                const croppedImage = await cropImage.crop();
-                                if (!croppedImage) {
-                                    return;
-                                }
-                                await Promise.all([
-                                    // startUpload([croppedImage], { createCaseId: p.createCaseId }),
-                                    // updateCreateCase({
-                                    //     createCaseId: p.createCaseId,
-                                    //     phoneModel: options.model.value,
-                                    //     caseMaterial: options.material.value,
-                                    //     caseFinish: options.finish.value,
-                                    //     caseColor: options.color.value,
-                                    // }),
-                                ]);
-                                // router.push(`/create-case/preview?id=${p.createCaseId}`);
-                            } catch (e: any) {
-                                setLoading(false);
-                                toast.error("Something went wrong", {
-                                    description: e?.message,
-                                });
-                            }
-                        }}
+                        onContinue={handleContinue}
                         loading={loading}
                     />
                 </div>

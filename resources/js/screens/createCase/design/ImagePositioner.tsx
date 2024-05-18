@@ -6,6 +6,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import images from "@/lib/images";
 import useCreateCaseDesign from "@/states/useCreateCaseDesign";
+import axios from "axios";
 
 const ResizeHandleIcon = () => {
     return (
@@ -67,9 +68,17 @@ export const useCropImage = (image: TImage) => {
 
         const ctx = canvas.getContext("2d");
 
-        const originalImage = new Image();
-        originalImage.crossOrigin = "anonymous";
+        // const response = await axios.get(image.url, {
+        //     responseType: "blob",
+        //     withCredentials: true,
+        // });
+        // const imageBlobUrl = URL.createObjectURL(response.data);
+
+        const originalImage = document.createElement("img");
         originalImage.src = image.url;
+        // const originalImage = new Image();
+        originalImage.crossOrigin = "*";
+        // originalImage.src = image.url;
 
         // waiting for image loading
         await new Promise(resolve => (originalImage.onload = resolve));

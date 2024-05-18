@@ -66,7 +66,8 @@ class CreateCaseController extends Controller
         ]);
     }
 
-    public function designStore()
+    public function designStore(Request $request)
     {
+        dd($request->all());
     }
 }
