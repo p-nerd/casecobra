@@ -2,8 +2,10 @@ import type { TProps } from "@/types";
 import type { TImage } from "@/screens/createCase/design/ImagePositioner";
 import type { TColor, TFinish, TMaterial, TModel } from "@/states/useCreateCaseDesign";
 
+import { router } from "@inertiajs/react";
 import { formatPrice } from "@/lib/utils";
 import { useCropImage } from "@/screens/createCase/design/ImagePositioner";
+import { getImageDimensions } from "@/lib/file";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +21,6 @@ import SelectFinish from "@/screens/createCase/design/SelectFinish";
 import SelectMaterial from "@/screens/createCase/design/SelectMaterial";
 import ImagePositioner from "@/screens/createCase/design/ImagePositioner";
 import CreateCaseLayout from "@/layouts/CreateCaseLayout";
-import { router } from "@inertiajs/react";
 
 const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loading: boolean }) => {
     const { finish, material } = useCreateCaseDesign();
@@ -78,6 +79,7 @@ const Design = (p: TDesignProps) => {
             if (!croppedImage) {
                 return;
             }
+            const dimensions = await getImageDimensions(croppedImage);
             router.post(
                 "/create-case/design",
                 {
@@ -85,8 +87,10 @@ const Design = (p: TDesignProps) => {
                     caseDesignId: p.id,
                     phoneModelId: createCaseDesign.model?.id,
                     colorId: createCaseDesign.color?.id,
-                    material: createCaseDesign.material?.id,
-                    finish: createCaseDesign.finish?.id,
+                    materialId: createCaseDesign.material?.id,
+                    finishId: createCaseDesign.finish?.id,
+                    height: dimensions.height,
+                    width: dimensions.width,
                 },
                 { forceFormData: true },
             );

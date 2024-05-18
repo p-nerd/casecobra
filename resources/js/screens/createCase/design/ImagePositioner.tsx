@@ -30,6 +30,10 @@ const base64ToBlob = (base64: string, mimeType: string) => {
     return new Blob([byteArray], { type: mimeType });
 };
 
+const generateCroppedImageName = (alt?: string) => {
+    return alt ? `${alt} Cropped` : "cropped-image.png";
+};
+
 export const useCropImage = (image: TImage) => {
     const [renderedDimension, setRenderedDimension] = useState({
         width: image.width / 4,
@@ -85,7 +89,7 @@ export const useCropImage = (image: TImage) => {
         const base64 = canvas.toDataURL();
 
         const blob = base64ToBlob(base64, "image/png");
-        return new File([blob], "filename.png", { type: "image/png" });
+        return new File([blob], generateCroppedImageName(image.alt), { type: "image/png" });
     };
 
     return {
@@ -97,7 +101,7 @@ export const useCropImage = (image: TImage) => {
     };
 };
 
-export type TImage = { url: string; height: number; width: number };
+export type TImage = { url: string; alt?: string; height: number; width: number };
 
 const ImagePositioner = (p: { image: TImage; cropImage: ReturnType<typeof useCropImage> }) => {
     const { color } = useCreateCaseDesign();

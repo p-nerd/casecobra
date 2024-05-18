@@ -37,7 +37,7 @@ class CreateCaseController extends Controller
         return Redirect::to("/create-case/design?id={$caseDesign->id}");
     }
 
-    public function designCreate(Request $request)
+    public function designCreate(Request $request): Response
     {
         $id = $request->query("id");
 
@@ -55,6 +55,7 @@ class CreateCaseController extends Controller
             "id" => $caseDesign->id,
             "image" => [
                 "url" => $originalImage->fullurl(),
+                "alt" => $originalImage->alt,
                 "height" => $originalImage->height,
                 "width" => $originalImage->width,
             ],
@@ -72,14 +73,59 @@ class CreateCaseController extends Controller
             'caseDesignId' => ['required', 'numeric'],
             'phoneModelId' => ['required', 'numeric'],
             'colorId' => ['required', 'numeric'],
-            'material' => ['required'],
-            'finish' => ['required'],
+            'materialId' => ['required'],
+            'finishId' => ['required'],
             'croppedImage' => ['required', 'image', 'mimes:png', 'max:2048'],
+            "height" => ["required", "int", "min:0"],
+            "width" => ["required", "int", "min:0"],
         ]);
 
-        $caseDesign = CaseDesign::query()->find($payload["caseDesignId"])->first();
-        dd($caseDesign);
+        $croppedImage = Image::store($payload["croppedImage"], $payload["height"], $payload["width"]);
 
-        dd($payload);
+        $caseDesign = CaseDesign::query()->find($payload["caseDesignId"])->first();
+
+        if ($caseDesign->cropped_image_id) {
+            $caseDesign->croppedImage->update(["removable" => true]);
+        }
+
+        $caseDesign->update([
+            "phone_model_id" => $payload["phoneModelId"],
+            "color_id" => $payload["colorId"],
+            "material_id" => $payload["materialId"],
+            "finish_id" => $payload["finishId"],
+            "cropped_image_id" => $croppedImage->id,
+        ]);
+
+        return Redirect::to("/create-case/preview?id={$caseDesign->id}");
+    }
+
+    public function previewCreate(Request $request): Response
+    {
+        $id = $request->query("id");
+
+        $caseDesign = CaseDesign::query()->with("originalImage")->findOrFail($id);
+        $originalImage = $caseDesign->originalImage;
+
+        $colors = Color::query()->get(["id", "label", "name", "value"]);
+        $models = PhoneModel::query()->get(["id", "label", "value"]);
+        $materials = Material::query()->get(["id", "label", "value", "description", "price"]);
+        $finishes = Finish::query()->get(["id", "label", "value", "description", "price"]);
+
+        $basePrice = Option::query()->where("name", "=", "CASE_BASE_PRICE")->first()->value;
+
+        return inertia("createCase/Preview", [
+            "id" => $caseDesign->id,
+            "image" => [
+                "url" => $originalImage->fullurl(),
+                "alt" => $originalImage->alt,
+                "height" => $originalImage->height,
+                "width" => $originalImage->width,
+            ],
+            "colors" => $colors,
+            "models" => $models,
+            "materials" => $materials,
+            "finishes" => $finishes,
+            "basePrice" => $basePrice,
+        ]);
     }
 }

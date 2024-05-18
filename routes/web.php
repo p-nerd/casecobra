@@ -11,11 +11,15 @@ Route::get('/', function () {
 
 Route::prefix("/create-case")->group(function () {
     Route::get("/", fn () => redirect("/create-case/upload"));
+
     Route::get("/upload", [CreateCaseController::class, "uploadCreate"]);
     Route::post("/upload", [CreateCaseController::class, "uploadStore"]);
 
     Route::get("/design", [CreateCaseController::class, "designCreate"]);
     Route::post("/design", [CreateCaseController::class, "designStore"]);
+
+    Route::get("/preview", [CreateCaseController::class, "previewCreate"]);
+    Route::post("/preview", [CreateCaseController::class, "previewStore"]);
 });
 
 Route::get('/dashboard', function () {

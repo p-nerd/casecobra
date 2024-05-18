@@ -24,4 +24,9 @@ class CaseDesign extends Model
     {
         return $this->hasOne(Image::class, "id", "original_image_id");
     }
+
+    public function croppedImage(): HasOne
+    {
+        return $this->hasOne(Image::class, "id", "cropped_image_id");
+    }
 }
