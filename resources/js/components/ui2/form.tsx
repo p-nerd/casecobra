@@ -1,8 +1,9 @@
 import type { HTMLAttributes, PropsWithChildren, HTMLInputTypeAttribute, RefObject } from "react";
 
 import { cn } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
+
 import { Link } from "@inertiajs/react";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 

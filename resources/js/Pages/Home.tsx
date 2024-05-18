@@ -1,11 +1,14 @@
-import { Container } from "@/components/ui2/misc";
-import Layout from "@/layouts/Layout";
 import { buttonVariants } from "@/components/ui/button";
+
+import { Link } from "@inertiajs/react";
+import { Container } from "@/components/ui2/misc";
 import { Icons, Phone } from "@/components/ui2/misc";
 import { ArrowRight, Check, Star } from "lucide-react";
-import Reviews from "@/components/home/Reviews";
+
 import images from "@/lib/images";
-import { Link } from "@inertiajs/react";
+
+import Layout from "@/layouts/Layout";
+import Reviews from "@/components/home/Reviews";
 
 const Home = () => {
     return (

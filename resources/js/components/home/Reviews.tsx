@@ -3,6 +3,7 @@ import type { CSSProperties, HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+
 import { Container, Phone } from "@/components/ui2/misc";
 
 import images from "@/lib/images";

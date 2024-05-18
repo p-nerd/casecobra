@@ -1,7 +1,11 @@
+import type { TColor } from "@/types/createCase";
+
 import { cn } from "@/lib/utils";
+
 import { Label } from "@/components/ui/label";
 import { RadioGroup } from "@headlessui/react";
-import useCreateCaseDesign, { type TColor } from "@/states/useCreateCaseDesign";
+
+import useCreateCaseDesign from "@/states/useCreateCaseDesign";
 
 const SelectColor = (p: { colors: TColor[] }) => {
     const { color, setColor } = useCreateCaseDesign();

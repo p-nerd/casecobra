@@ -1,9 +1,11 @@
 import { type HTMLAttributes } from "react";
-import snake1 from "../../../images/snake-1.png";
+
 import { cn } from "@/lib/utils";
 
+import images from "@/lib/images";
+
 const ApplicationLogo = (props: HTMLAttributes<HTMLImageElement>) => {
-    return <img src={snake1} {...props} className={cn("w-36", props.className)} alt="" />;
+    return <img src={images.snake1} {...props} className={cn("w-36", props.className)} alt="" />;
 };
 
 export default ApplicationLogo;

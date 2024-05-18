@@ -1,23 +1,12 @@
-import type { TProps } from "@/types";
-import type { TImage } from "@/types/createCase";
 import type { Dispatch, SetStateAction } from "react";
 
-import { useState } from "react";
-import { cn, formatPrice, calculatePrice } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { router, usePage } from "@inertiajs/react";
 
 import { Link } from "@inertiajs/react";
-import { Phone } from "@/components/ui2/misc";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Check } from "lucide-react";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
 
-import toast from "@/lib/toast";
 import images from "@/lib/images";
-
-import CreateCaseLayout from "@/layouts/CreateCaseLayout";
 
 const LoginModal = ({
     caseDesignId,

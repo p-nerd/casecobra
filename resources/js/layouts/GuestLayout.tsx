@@ -1,7 +1,9 @@
-import ApplicationLogo from "@/components/layout/ApplicationLogo";
-import { type PropsWithChildren } from "react";
-import { Head, Link } from "@inertiajs/react";
+import type { PropsWithChildren } from "react";
+
 import { Card } from "@/components/ui/card";
+import { Head, Link } from "@inertiajs/react";
+
+import ApplicationLogo from "@/components/layout/ApplicationLogo";
 
 const Guest = (props: PropsWithChildren<{ title: string }>) => {
     return (

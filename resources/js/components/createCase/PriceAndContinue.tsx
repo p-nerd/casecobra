@@ -1,9 +1,9 @@
-import { formatPrice } from "@/lib/utils";
+import { calculatePrice, formatPrice } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-import useCreateCaseDesign, { calculatePrice } from "@/states/useCreateCaseDesign";
+import useCreateCaseDesign from "@/states/useCreateCaseDesign";
 
 const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loading: boolean }) => {
     const { finish, material } = useCreateCaseDesign();

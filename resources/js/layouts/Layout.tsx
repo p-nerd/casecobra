@@ -1,12 +1,16 @@
-import { Toaster } from "@/components/ui/sonner";
-import { ArrowRight } from "lucide-react";
-import { Container } from "@/components/ui2/misc";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Head, Link, router, usePage } from "@inertiajs/react";
-import { TProps, User } from "@/types";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
+import type { TProps, TUser } from "@/types";
 
-const Navbar = (props: { user: User }) => {
+import { buttonVariants } from "@/components/ui/button";
+import { router, usePage } from "@inertiajs/react";
+
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
+import { Container } from "@/components/ui2/misc";
+import { ArrowRight } from "lucide-react";
+import { Head, Link } from "@inertiajs/react";
+
+const Navbar = (props: { user: TUser }) => {
     const user = props.user;
     const isAdmin = true;
 

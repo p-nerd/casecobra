@@ -1,8 +1,12 @@
-import { useState, PropsWithChildren, ReactNode } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
+import type { TUser } from "@/types";
+
+import { useState } from "react";
+
+import { Link } from "@inertiajs/react";
+
 import ApplicationLogo from "@/components/layout/ApplicationLogo";
 import Dropdown from "@/components/Dropdown";
-import { Link } from "@inertiajs/react";
-import { User } from "@/types";
 
 import type { InertiaLinkProps } from "@inertiajs/react";
 
@@ -52,7 +56,7 @@ export default function Authenticated({
     user,
     header,
     children,
-}: PropsWithChildren<{ user: User; header?: ReactNode }>) {
+}: PropsWithChildren<{ user: TUser; header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (

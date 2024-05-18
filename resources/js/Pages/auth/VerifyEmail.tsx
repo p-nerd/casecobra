@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { useForm } from "@inertiajs/react";
+
+import { Link } from "@inertiajs/react";
 import { Form } from "@/components/ui2/form";
-import { Link, useForm } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
 
 import GuestLayout from "@/layouts/GuestLayout";
 

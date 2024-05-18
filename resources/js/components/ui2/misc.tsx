@@ -1,8 +1,9 @@
-import { type ReactNode, type HTMLAttributes } from "react";
-import { type LucideProps } from "lucide-react";
+import type { LucideProps } from "lucide-react";
+import type { ReactNode, HTMLAttributes } from "react";
+
 import { cn } from "@/lib/utils";
-import phoneTemplateDarkEdges from "../../../images/phone-template-dark-edges.png";
-import phoneTemplateWhiteEdges from "../../../images/phone-template-white-edges.png";
+
+import images from "@/lib/images";
 
 export const Container = (p: { className?: string; children: ReactNode }) => {
     return (
@@ -24,7 +25,7 @@ export const Phone = ({ imgSrc, className, dark = false, ...props }: PhoneProps)
             {...props}
         >
             <img
-                src={dark ? phoneTemplateDarkEdges : phoneTemplateWhiteEdges}
+                src={dark ? images.phoneTemplateDarkEdges : images.phoneTemplateWhiteEdges}
                 className="pointer-events-none z-50 select-none"
                 alt="phone image"
             />

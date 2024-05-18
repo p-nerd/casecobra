@@ -1,8 +1,11 @@
+import type { TMaterial } from "@/types/createCase";
+
 import { cn, formatPrice } from "@/lib/utils";
 
 import { Label } from "@/components/ui/label";
 import { RadioGroup } from "@headlessui/react";
-import useCreateCaseDesign, { TMaterial } from "@/states/useCreateCaseDesign";
+
+import useCreateCaseDesign from "@/states/useCreateCaseDesign";
 
 const SelectMaterial = (p: { materials: TMaterial[] }) => {
     const { material, setMaterial } = useCreateCaseDesign();

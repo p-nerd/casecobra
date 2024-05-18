@@ -1,3 +1,5 @@
+import type { TModel } from "@/types/createCase";
+
 import { cn } from "@/lib/utils";
 
 import { Label } from "@/components/ui/label";
@@ -5,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import useCreateCaseDesign, { type TModel } from "@/states/useCreateCaseDesign";
+
+import useCreateCaseDesign from "@/states/useCreateCaseDesign";
 
 const SelectModel = (p: { models: TModel[] }) => {
     const { model, setModel } = useCreateCaseDesign();

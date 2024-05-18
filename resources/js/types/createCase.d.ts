@@ -17,20 +17,20 @@ export type TImage = {
 };
 
 export type TColor = {
-    id: number;
+    id: TID;
     label: string;
     name: string;
     value: string;
 };
 
 export type TModel = {
-    id: number;
+    id: TID;
     label: string;
     value: string;
 };
 
 export type TMaterial = {
-    id: number;
+    id: TID;
     label: string;
     value: string;
     description: string;
@@ -38,7 +38,7 @@ export type TMaterial = {
 };
 
 export type TFinish = {
-    id: number;
+    id: TID;
     label: string;
     value: string;
     description: string;

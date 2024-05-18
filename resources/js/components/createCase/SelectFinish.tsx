@@ -1,8 +1,11 @@
+import type { TFinish } from "@/types/createCase";
+
 import { cn, formatPrice } from "@/lib/utils";
 
 import { Label } from "@/components/ui/label";
 import { RadioGroup } from "@headlessui/react";
-import useCreateCaseDesign, { TFinish } from "@/states/useCreateCaseDesign";
+
+import useCreateCaseDesign from "@/states/useCreateCaseDesign";
 
 const SelectFinish = (p: { finishes: TFinish[] }) => {
     const { finish, setFinish } = useCreateCaseDesign();

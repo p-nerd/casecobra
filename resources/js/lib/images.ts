@@ -19,6 +19,8 @@ import testimonials4 from "../../images/testimonial-4.jpg";
 import testimonials5 from "../../images/testimonial-5.jpg";
 import testimonials6 from "../../images/testimonial-6.jpg";
 import phoneTemplate from "../../images/phone-template.png";
+import phoneTemplateDarkEdges from "../../images/phone-template-dark-edges.png";
+import phoneTemplateWhiteEdges from "../../images/phone-template-white-edges.png";
 
 const images = {
     snake1,
@@ -42,6 +44,8 @@ const images = {
     testimonials5,
     testimonials6,
     phoneTemplate,
+    phoneTemplateDarkEdges,
+    phoneTemplateWhiteEdges,
 } as const;
 
 export default images;

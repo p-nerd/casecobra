@@ -1,8 +1,8 @@
 import type { RouteName } from "ziggy-js";
 
+import { route } from "../../vendor/tightenco/ziggy";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { route } from "../../vendor/tightenco/ziggy";
 
 import createServer from "@inertiajs/react/server";
 
