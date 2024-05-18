@@ -27,4 +27,9 @@ class Option extends Model
             $this->attributes['value'] = $value;
         }
     }
+
+    public static function caseBasePrice()
+    {
+        return self::where('name', 'CASE_BASE_PRICE')->first()->value;
+    }
 }
