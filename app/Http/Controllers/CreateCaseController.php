@@ -23,12 +23,12 @@ class CreateCaseController extends Controller
 
     public function uploadStore(Request $request): RedirectResponse
     {
-        $request->validate([
+        $payload = $request->validate([
             'image' => ["required", "image", "mimes:jpeg,png,jpg", "max:2048"],
             "height" => ["required", "int", "min:0"],
             "width" => ["required", "int", "min:0"],
         ]);
-        $image = Image::store($request->image, $request->height, $request->width);
+        $image = Image::store($payload["image"], $payload["height"], $payload["width"]);
 
         $caseDesign = CaseDesign::create([
             "original_image_id" => $image->id,
@@ -68,6 +68,18 @@ class CreateCaseController extends Controller
 
     public function designStore(Request $request)
     {
-        dd($request->all());
+        $payload = $request->validate([
+            'caseDesignId' => ['required', 'numeric'],
+            'phoneModelId' => ['required', 'numeric'],
+            'colorId' => ['required', 'numeric'],
+            'material' => ['required'],
+            'finish' => ['required'],
+            'croppedImage' => ['required', 'image', 'mimes:png', 'max:2048'],
+        ]);
+
+        $caseDesign = CaseDesign::query()->find($payload["caseDesignId"])->first();
+        dd($caseDesign);
+
+        dd($payload);
     }
 }

@@ -9,7 +9,6 @@ use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
 use App\Models\Option;
-use App\Models\Order;
 use App\Models\PhoneModel;
 use App\Models\Profile;
 use App\Models\User;
@@ -30,16 +29,11 @@ class DatabaseSeeder extends Seeder
         Profile::factory()->create([
             "user_id" => $adminUser->id,
         ]);
-        Profile::factory(10)->create();
-
-        Image::factory(10)->create();
 
         $this->phoneModels($adminUser->id);
         $this->colors($adminUser->id);
         $this->materials($adminUser->id);
         $this->finishes($adminUser->id);
-
-        Order::factory()->count(10)->create();
 
         Option::create([
             "name" => "CASE_BASE_PRICE",
