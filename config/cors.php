@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://casecobra.test'],
+    'allowed_origins' => ['http://casecobra.test', '*'],
 
     'allowed_origins_patterns' => [],
 

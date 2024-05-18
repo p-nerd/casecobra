@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CaseDesign extends Model
 {
@@ -20,38 +20,38 @@ class CaseDesign extends Model
         'finish_id',
     ];
 
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, "id", "user_id");
+        return $this->belongsTo(User::class);
     }
 
-    public function originalImage(): HasOne
+    public function originalImage(): BelongsTo
     {
-        return $this->hasOne(Image::class, "id", "original_image_id");
+        return $this->belongsTo(Image::class, 'original_image_id');
     }
 
-    public function croppedImage(): HasOne
+    public function croppedImage(): BelongsTo
     {
-        return $this->hasOne(Image::class, "id", "cropped_image_id");
+        return $this->belongsTo(Image::class, 'cropped_image_id');
     }
 
-    public function phoneModel(): HasOne
+    public function phoneModel(): BelongsTo
     {
-        return $this->hasOne(PhoneModel::class, "id", "phone_model_id");
+        return $this->belongsTo(PhoneModel::class);
     }
 
-    public function color(): HasOne
+    public function color(): BelongsTo
     {
-        return $this->hasOne(Color::class, "id", "color_id");
+        return $this->belongsTo(Color::class);
     }
 
-    public function material(): HasOne
+    public function material(): BelongsTo
     {
-        return $this->hasOne(Material::class, "id", "material_id");
+        return $this->belongsTo(Material::class);
     }
 
-    public function finish(): HasOne
+    public function finish(): BelongsTo
     {
-        return $this->hasOne(Finish::class, "id", "finish_id");
+        return $this->belongsTo(Finish::class);
     }
 }

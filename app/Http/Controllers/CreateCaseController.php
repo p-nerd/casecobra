@@ -174,6 +174,10 @@ class CreateCaseController extends Controller
                     "to" => "/create-case/upload",
                 ]);
             }
+        } else {
+            $caseDesign->update([
+                "user_id" => Auth::id(),
+            ]);
         }
 
         return redirect("create-case/checkout?id={$caseDesign->id}");
@@ -186,7 +190,7 @@ class CreateCaseController extends Controller
             ->where("user_id", "=", Auth::id())
             ->first();
 
-        if (! $caseDesign) {
+        if (!$caseDesign) {
             return redirect("/create-case/upload");
         }
 
