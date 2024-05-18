@@ -6,7 +6,7 @@ import { DireactionLink, Form, TextField } from "@/components/ui2/form";
 
 import GuestLayout from "@/layouts/GuestLayout";
 
-const Register = () => {
+const Register = (props: { to?: string }) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         email: "",
@@ -21,7 +21,11 @@ const Register = () => {
     }, []);
 
     const submit = () => {
-        post(route("register"));
+        const params: Record<string, string> = {};
+        if (props.to) {
+            params.to = props.to;
+        }
+        post(route("register", params));
     };
 
     return (

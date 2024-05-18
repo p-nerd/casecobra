@@ -25,9 +25,11 @@ class AuthController extends Controller
     /**
      * Display the registration view.
      */
-    public function registerCreate(): Response
+    public function registerCreate(Request $request): Response
     {
-        return Inertia::render('auth/Register');
+        return Inertia::render('auth/Register', [
+            "to" => $request->query("to"),
+        ]);
     }
 
     /**
@@ -37,6 +39,8 @@ class AuthController extends Controller
      */
     public function registerStore(Request $request): RedirectResponse
     {
+        $to = $request->query("to");
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
@@ -53,15 +57,16 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('home', absolute: false));
+        return redirect($to ? $to : route('home', absolute: false));
     }
 
     /**
      * Display the login view.
      */
-    public function loginCreate(): Response
+    public function loginCreate(Request $request): Response
     {
         return Inertia::render('auth/Login', [
+            "to" => $request->query("to"),
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
         ]);
@@ -74,11 +79,13 @@ class AuthController extends Controller
      */
     public function loginStore(LoginRequest $request): RedirectResponse
     {
+        $to = $request->query("to");
+
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home', absolute: false));
+        return redirect()->intended($to ? $to : route('home', absolute: false));
     }
 
     /**

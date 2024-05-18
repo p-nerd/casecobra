@@ -21,12 +21,14 @@ import {
 } from "@/components/ui/dialog";
 import { buttonVariants } from "@/components/ui/button";
 import images from "@/lib/images";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 const LoginModal = ({
+    caseDesignId,
     isOpen,
     setIsOpen,
 }: {
+    caseDesignId: number;
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -49,10 +51,16 @@ const LoginModal = ({
                 </DialogHeader>
 
                 <div className="grid grid-cols-2 gap-6 divide-x divide-gray-200">
-                    <Link className={buttonVariants({ variant: "outline" })} href="/login">
+                    <Link
+                        className={buttonVariants({ variant: "outline" })}
+                        href={`/login?to=/create-case/preview?id=${caseDesignId}`}
+                    >
                         Login
                     </Link>
-                    <Link className={buttonVariants({ variant: "default" })} href="/register">
+                    <Link
+                        className={buttonVariants({ variant: "default" })}
+                        href={`/register?to=/create-case/preview?id=${caseDesignId}`}
+                    >
                         Sign up
                     </Link>
                 </div>
@@ -75,10 +83,18 @@ const Confetti = () => {
         </div>
     );
 };
-const Checkout = (props: { caseDesignId: string }) => {
+const Checkout = (props: { caseDesignId: number }) => {
     const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
+
+    const page = usePage<TProps>();
 
     const handleCheckout = async () => {
+        if (!page.props.auth?.user?.id) {
+            setOpen(true);
+            return;
+        }
+
         // try {
         //     setLoading(true);
         //     const { url } = await createCheckoutSession({ createCaseId: props.createCaseId });
@@ -97,11 +113,9 @@ const Checkout = (props: { caseDesignId: string }) => {
         // }
     };
 
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
-
     return (
         <>
-            <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
+            <LoginModal caseDesignId={props.caseDesignId} isOpen={open} setIsOpen={setOpen} />
             <Button isLoading={loading} onClick={handleCheckout} className="px-4 sm:px-6 lg:px-8">
                 Checkout <ArrowRight className="ml-1.5 inline h-4 w-4" />
             </Button>
@@ -110,7 +124,7 @@ const Checkout = (props: { caseDesignId: string }) => {
 };
 
 type TPreviewProps = TProps<{
-    id: string;
+    id: number;
     originalImage: TImage;
     croppedImage: TImage;
     color: { value: string };

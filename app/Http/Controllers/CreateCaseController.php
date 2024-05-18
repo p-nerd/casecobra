@@ -89,7 +89,7 @@ class CreateCaseController extends Controller
 
         $croppedImage = Image::store($payload["croppedImage"], $payload["height"], $payload["width"]);
 
-        $caseDesign = CaseDesign::query()->find($payload["caseDesignId"])->first();
+        $caseDesign = CaseDesign::query()->findOrFail($payload["caseDesignId"]);
 
         if ($caseDesign->cropped_image_id) {
             $caseDesign->croppedImage->update(["removable" => true]);

@@ -6,7 +6,7 @@ import { CheckboxField, DireactionLink, Form, TextField } from "@/components/ui2
 
 import GuestLayout from "@/layouts/GuestLayout";
 
-const Login = (props: { status?: string; canResetPassword: boolean }) => {
+const Login = (props: { to?: string; status?: string; canResetPassword: boolean }) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
         password: "",
@@ -20,7 +20,11 @@ const Login = (props: { status?: string; canResetPassword: boolean }) => {
     }, []);
 
     const submit = () => {
-        post(route("login"));
+        const params: Record<string, string> = {};
+        if (props.to) {
+            params.to = props.to;
+        }
+        post(route("login", params));
     };
 
     return (
