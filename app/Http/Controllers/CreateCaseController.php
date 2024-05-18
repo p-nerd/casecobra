@@ -103,29 +103,49 @@ class CreateCaseController extends Controller
     {
         $id = $request->query("id");
 
-        $caseDesign = CaseDesign::query()->with("originalImage")->findOrFail($id);
-        $originalImage = $caseDesign->originalImage;
+        $caseDesign = CaseDesign::query()->findOrFail($id);
 
-        $colors = Color::query()->get(["id", "label", "name", "value"]);
-        $models = PhoneModel::query()->get(["id", "label", "value"]);
-        $materials = Material::query()->get(["id", "label", "value", "description", "price"]);
-        $finishes = Finish::query()->get(["id", "label", "value", "description", "price"]);
+        $originalImage = $caseDesign->originalImage;
+        $croppedImage = $caseDesign->croppedImage;
 
         $basePrice = Option::query()->where("name", "=", "CASE_BASE_PRICE")->first()->value;
 
-        return inertia("createCase/Preview", [
+        $color = $caseDesign->color;
+        $phoneModel = $caseDesign->phoneModel;
+        $material = $caseDesign->material;
+        $finish = $caseDesign->finish;
+
+        $payload = [
             "id" => $caseDesign->id,
-            "image" => [
+            "originalImage" => [
                 "url" => $originalImage->fullurl(),
                 "alt" => $originalImage->alt,
                 "height" => $originalImage->height,
                 "width" => $originalImage->width,
             ],
-            "colors" => $colors,
-            "models" => $models,
-            "materials" => $materials,
-            "finishes" => $finishes,
+            "croppedImage" => [
+                "url" => $croppedImage->fullurl(),
+                "alt" => $croppedImage->alt,
+                "height" => $croppedImage->height,
+                "width" => $croppedImage->width,
+            ],
+            "color" => [
+                "value" => $color->value,
+            ],
+            "model" => [
+                "label" => $phoneModel->label,
+            ],
+            "material" => [
+                "label" => $material->label,
+                "price" => $material->price,
+            ],
+            "finish" => [
+                "label" => $finish->label,
+                "price" => $finish->price,
+            ],
             "basePrice" => $basePrice,
-        ]);
+        ];
+
+        return inertia("createCase/Preview", $payload);
     }
 }

@@ -20,6 +20,11 @@ class CaseDesign extends Model
         'finish_id',
     ];
 
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, "id", "user_id");
+    }
+
     public function originalImage(): HasOne
     {
         return $this->hasOne(Image::class, "id", "original_image_id");
@@ -28,5 +33,25 @@ class CaseDesign extends Model
     public function croppedImage(): HasOne
     {
         return $this->hasOne(Image::class, "id", "cropped_image_id");
+    }
+
+    public function phoneModel(): HasOne
+    {
+        return $this->hasOne(PhoneModel::class, "id", "phone_model_id");
+    }
+
+    public function color(): HasOne
+    {
+        return $this->hasOne(Color::class, "id", "color_id");
+    }
+
+    public function material(): HasOne
+    {
+        return $this->hasOne(Material::class, "id", "material_id");
+    }
+
+    public function finish(): HasOne
+    {
+        return $this->hasOne(Finish::class, "id", "finish_id");
     }
 }
