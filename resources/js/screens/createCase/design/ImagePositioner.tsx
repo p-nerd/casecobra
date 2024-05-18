@@ -74,11 +74,9 @@ export const useCropImage = (image: TImage) => {
         // });
         // const imageBlobUrl = URL.createObjectURL(response.data);
 
-        const originalImage = document.createElement("img");
-        originalImage.src = image.url;
-        // const originalImage = new Image();
+        const originalImage = new Image();
         originalImage.crossOrigin = "*";
-        // originalImage.src = image.url;
+        originalImage.src = image.url;
 
         // waiting for image loading
         await new Promise(resolve => (originalImage.onload = resolve));
