@@ -23,6 +23,7 @@ import { buttonVariants } from "@/components/ui/button";
 import images from "@/lib/images";
 import { Link, router, usePage } from "@inertiajs/react";
 import toast from "@/lib/toast";
+import { setDefaultHighWaterMark } from "stream";
 
 const LoginModal = ({
     caseDesignId,
@@ -96,9 +97,23 @@ const Checkout = (props: { caseDesignId: number }) => {
 
         try {
             setLoading(true);
-            router.post("/create-case/preview", {
-                caseDesignId: props.caseDesignId,
-            });
+            router.post(
+                "/create-case/preview",
+                {
+                    caseDesignId: props.caseDesignId,
+                },
+                {
+                    onError: e => {
+                        toast.error(e?.message);
+
+                        if (e?.to) {
+                            setTimeout(() => {
+                                router.get(e.to, undefined, { replace: true });
+                            }, 1000);
+                        }
+                    },
+                },
+            );
         } catch (e: any) {
             console.log(e);
             toast.error("Something went wrong on checkout", {

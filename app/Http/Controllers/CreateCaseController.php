@@ -11,7 +11,9 @@ use App\Models\Option;
 use App\Models\PhoneModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Inertia\Response;
 
 class CreateCaseController extends Controller
@@ -31,6 +33,7 @@ class CreateCaseController extends Controller
         $image = Image::store($payload["image"], $payload["height"], $payload["width"]);
 
         $caseDesign = CaseDesign::create([
+            "user_id" => Auth::id(),
             "original_image_id" => $image->id,
         ]);
 
@@ -158,6 +161,37 @@ class CreateCaseController extends Controller
 
     public function previewStore(Request $request)
     {
-        return redirect("/checkout");
+        $payload = $request->validate([
+            'caseDesignId' => ['required', 'numeric'],
+        ]);
+
+        $caseDesign = CaseDesign::query()->findOrFail($payload["caseDesignId"]);
+
+        if ($caseDesign->user_id) {
+            if ($caseDesign->user_id !== Auth::id()) {
+                throw ValidationException::withMessages([
+                    "message" => "This is not your order",
+                    "to" => "/create-case/upload",
+                ]);
+            }
+        }
+
+        return redirect("create-case/checkout?id={$caseDesign->id}");
+    }
+
+    public function checkoutCreate(Request $request)
+    {
+        $caseDesign = CaseDesign::query()
+            ->where("id", "=", $request->query("id"))
+            ->where("user_id", "=", Auth::id())
+            ->first();
+
+        if (! $caseDesign) {
+            return redirect("/create-case/upload");
+        }
+
+        return inertia("createCase/Checkout", [
+            "caseDesignId" => $caseDesign->id,
+        ]);
     }
 }
