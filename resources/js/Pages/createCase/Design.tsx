@@ -49,8 +49,17 @@ const PriceAndContinue = (p: { basePrice: number; onContinue: () => void; loadin
     );
 };
 
+type TCaseDesign = {
+    id: number;
+    userId?: number;
+    modelId?: number;
+    colorId?: number;
+    materialId?: number;
+    finishId?: number;
+};
+
 type TDesignProps = TProps<{
-    id: string;
+    caseDesign: TCaseDesign;
     image: TImage;
     colors: TColor[];
     models: TModel[];
@@ -66,10 +75,11 @@ const Design = (p: TDesignProps) => {
     const createCaseDesign = useCreateCaseDesign();
 
     useEffect(() => {
-        createCaseDesign.setColor(p.colors[0]);
-        createCaseDesign.setModel(p.models[0]);
-        createCaseDesign.setMaterial(p.materials[0]);
-        createCaseDesign.setFinish(p.finishes[0]);
+        const ccd = createCaseDesign;
+        ccd.setColor(p.colors.find(c => c.id === p.caseDesign.colorId) || p.colors[0]);
+        ccd.setModel(p.models.find(m => m.id === p.caseDesign.modelId) || p.models[0]);
+        ccd.setMaterial(p.materials.find(m => m.id === p.caseDesign.materialId) || p.materials[0]);
+        ccd.setFinish(p.finishes.find(f => f.id === p.caseDesign.finishId) || p.finishes[0]);
     }, []);
 
     const handleContinue = async () => {
@@ -84,7 +94,7 @@ const Design = (p: TDesignProps) => {
                 "/create-case/design",
                 {
                     croppedImage,
-                    caseDesignId: p.id,
+                    caseDesignId: p.caseDesign.id,
                     phoneModelId: createCaseDesign.model?.id,
                     colorId: createCaseDesign.color?.id,
                     materialId: createCaseDesign.material?.id,

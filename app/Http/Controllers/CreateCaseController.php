@@ -41,7 +41,7 @@ class CreateCaseController extends Controller
     {
         $id = $request->query("id");
 
-        $caseDesign = CaseDesign::query()->with("originalImage")->findOrFail($id);
+        $caseDesign = CaseDesign::query()->findOrFail($id);
         $originalImage = $caseDesign->originalImage;
 
         $colors = Color::query()->get(["id", "label", "name", "value"]);
@@ -52,7 +52,14 @@ class CreateCaseController extends Controller
         $basePrice = Option::query()->where("name", "=", "CASE_BASE_PRICE")->first()->value;
 
         return inertia("createCase/Design", [
-            "id" => $caseDesign->id,
+            "caseDesign" => [
+                "id" => $caseDesign->id,
+                "userId" => $caseDesign->user_id,
+                "modelId" => $caseDesign->phone_model_id,
+                "colorId" => $caseDesign->color_id,
+                "materialId" => $caseDesign->material_id,
+                "finishId" => $caseDesign->finish_id,
+            ],
             "image" => [
                 "url" => $originalImage->fullurl(),
                 "alt" => $originalImage->alt,

@@ -2,20 +2,20 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 export type TColor = {
-    id: string;
+    id: number;
     label: string;
     name: string;
     value: string;
 };
 
 export type TModel = {
-    id: string;
+    id: number;
     label: string;
     value: string;
 };
 
 export type TMaterial = {
-    id: string;
+    id: number;
     label: string;
     value: string;
     description: string;
@@ -23,7 +23,7 @@ export type TMaterial = {
 };
 
 export type TFinish = {
-    id: string;
+    id: number;
     label: string;
     value: string;
     description: string;
