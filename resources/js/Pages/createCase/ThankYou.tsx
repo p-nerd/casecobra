@@ -195,6 +195,16 @@ const ThankYou = (props: {
                                 </p>
                             </div>
                         </div>
+                        <div className="mt-10 flex flex-col items-center justify-center">
+                            <Link
+                                href="/profile/orders"
+                                className={buttonVariants({
+                                    size: "lg",
+                                })}
+                            >
+                                See your all orders
+                            </Link>
+                        </div>
                     </div>
                 </div>
             )}

@@ -28,8 +28,22 @@ class Option extends Model
         }
     }
 
+    protected const CASE_BASE_PRICE = "case-base-price";
+
     public static function caseBasePrice()
     {
-        return self::where('name', 'CASE_BASE_PRICE')->first()->value;
+        return self::query()
+            ->where('name', self::CASE_BASE_PRICE)
+            ->first()
+            ->value;
+    }
+
+    public static function setCaseBasePrice(int $price)
+    {
+        self::create([
+            "name" => self::CASE_BASE_PRICE,
+            "value" => $price,
+            "type" => "integer",
+        ]);
     }
 }

@@ -35,11 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->materials($adminUser->id);
         $this->finishes($adminUser->id);
 
-        Option::create([
-            "name" => "CASE_BASE_PRICE",
-            "value" => 1400,
-            "type" => "integer",
-        ]);
+        Option::setCaseBasePrice(1500);
     }
 
     private function phoneModels(int $user_id)
