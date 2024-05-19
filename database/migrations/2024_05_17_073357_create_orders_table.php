@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum("charge_method", ["stripe", "free"])->default("stripe");
             $table->string("charge_id")->nullable();
 
+            $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('address_1')->nullable();

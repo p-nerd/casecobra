@@ -6,7 +6,7 @@ import { Container } from "@/components/ui2/misc";
 
 import images from "@/lib/images";
 
-import Layout from "./Layout";
+import SiteLayout from "./SiteLayout";
 
 const STEPS = [
     {
@@ -113,12 +113,12 @@ const Steps = () => {
 
 const CreateCaseLayout = (props: { title: string; children: ReactNode }) => {
     return (
-        <Layout title={props.title}>
+        <SiteLayout title={props.title}>
             <Container className="flex flex-1 flex-col">
                 <Steps />
                 {props.children}
             </Container>
-        </Layout>
+        </SiteLayout>
     );
 };
 

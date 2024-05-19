@@ -7,12 +7,12 @@ import { ArrowRight, Check, Star } from "lucide-react";
 
 import images from "@/lib/images";
 
-import Layout from "@/layouts/Layout";
+import SiteLayout from "@/layouts/SiteLayout";
 import Reviews from "@/components/home/Reviews";
 
 const Home = () => {
     return (
-        <Layout title="Make Your Image on a Custom Phone Case">
+        <SiteLayout title="Make Your Image on a Custom Phone Case">
             <section>
                 <Container className="pb-24 pt-10 sm:pb-32 lg:grid lg:grid-cols-3 lg:gap-x-0 lg:pb-52 lg:pt-24 xl:gap-x-8 xl:pt-32">
                     <div className="col-span-2 px-6 lg:px-0 lg:pt-4">
@@ -276,7 +276,7 @@ const Home = () => {
                     </ul>
                 </Container>
             </section>
-        </Layout>
+        </SiteLayout>
     );
 };
 

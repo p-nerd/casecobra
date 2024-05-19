@@ -22,7 +22,8 @@ Route::prefix("/create-case")->group(function () {
     Route::post("/preview", [CreateCaseController::class, "previewStore"])->middleware("auth");
 
     Route::get("/checkout", [CreateCaseController::class, "checkoutCreate"])->middleware("auth");
-    Route::post("/checkout", [CreateCaseController::class, "checkoutStore"])->middleware("auth");
+
+    Route::get("/thank-you", [CreateCaseController::class, "thankYouCreate"])->middleware("auth");
 });
 
 Route::get('/dashboard', function () {

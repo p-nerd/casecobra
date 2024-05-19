@@ -8,12 +8,14 @@ use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
 use App\Models\Option;
+use App\Models\Order;
 use App\Models\PhoneModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Response;
+use Laravel\Cashier\Cashier;
 
 class CreateCaseController extends Controller
 {
@@ -172,7 +174,7 @@ class CreateCaseController extends Controller
         return redirect("create-case/checkout?id={$caseDesign->id}");
     }
 
-    public function checkoutCreate(Request $request): Response
+    public function checkoutCreate(Request $request)
     {
         $caseDesignId = $request->query('id');
         $userId = auth()->id();
@@ -182,12 +184,19 @@ class CreateCaseController extends Controller
             ->where('user_id', $userId)
             ->firstOrFail();
 
-        if (!$caseDesign->order) {
+        if (! $caseDesign->order) {
             $order = $caseDesign->order()->create([
                 'user_id' => $userId,
                 'amount' => $caseDesign->price(),
+                'email' => auth()->user()->email,
+                // @TODO add user profile phone number
+                'phone' => "01758776344",
             ]);
             $caseDesign->setRelation('order', $order);
+        } else {
+            if ($caseDesign->order->paid) {
+                return redirect("/dashboard")->withErrors(["message" => "You already paid, checkout your orders"]);
+            }
         }
 
         $checkoutCharge = $request->user()->checkoutCharge(
@@ -204,7 +213,7 @@ class CreateCaseController extends Controller
                 'shipping_address_collection' => [
                     'allowed_countries' => ["BD", 'US'],
                 ],
-                'return_url' => config("app.url") . '/return?session_id={CHECKOUT_SESSION_ID}',
+                'return_url' => config("app.url").'/create-case/thank-you?session_id={CHECKOUT_SESSION_ID}',
             ]
         );
 
@@ -230,5 +239,60 @@ class CreateCaseController extends Controller
             ],
             'clientSecret' => $checkoutCharge->client_secret,
         ]);
+    }
+
+    public function thankYouCreate(Request $request)
+    {
+        $sessionId = $request->query("session_id");
+        $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
+
+        $orderId = $session->metadata->order_id;
+        $order = Order::findOrFail($orderId);
+
+        if ($order->paid) {
+            return redirect("/dashboard")->withErrors(["message" => "Your order is done, checkout your orders"]);
+        }
+
+        $order->update([
+            'name' => $session->shipping_details->name,
+            'address_1' => $session->shipping_details->address->line1,
+            'address_2' => $session->shipping_details->address->line2,
+            'city' => $session->shipping_details->address->city,
+            'state' => $session->shipping_details->address->state,
+            'zip' => $session->shipping_details->address->postal_code,
+            'country' => $session->shipping_details->address->country,
+        ]);
+
+        switch ($session->status) {
+            case 'open':
+                return redirect("/create-case/checkout?id={$order->caseDesign->id}");
+            case 'complete':
+                $order->update([
+                    "paid" => true,
+                ]);
+
+                return inertia("createCase/ThankYou", [
+                    "successful" => true,
+                    "croppedImage" => [
+                        "url" => $order->caseDesign->croppedImage->fullurl(),
+                    ],
+                    "color" => [
+                        "value" => $order->caseDesign->color->value,
+                    ],
+                    "order" => [
+                        "id" => $order->id,
+                        "amount" => $order->amount,
+                        "name" => $order->name,
+                        "address_1" => $order->address_1,
+                        "zip" => $order->zip,
+                        "city" => $order->city,
+                    ],
+                ]);
+            default:
+                return inertia("createCase/ThankYou", [
+                    "successful" => false,
+                    "checkoutUrl" => "/create-case/checkout?id={$order->caseDesign->id}",
+                ]);
+        }
     }
 }

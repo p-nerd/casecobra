@@ -18,6 +18,7 @@ class Order extends Model
         'status',
         'charge_method',
         'charge_id',
+        'name',
         'email',
         'phone',
         'address_1',

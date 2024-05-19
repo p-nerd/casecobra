@@ -9,7 +9,7 @@ import { Container } from "@/components/ui2/misc";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 
-import Layout from "@/layouts/Layout";
+import SiteLayout from "@/layouts/SiteLayout";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
@@ -33,7 +33,7 @@ type TPreviewProps = TProps<{
 
 const Checkout = (p: TPreviewProps) => {
     return (
-        <Layout title="Checkout Phone Case">
+        <SiteLayout title="Checkout Phone Case">
             <Container className="flex flex-1 flex-col text-sm lg:flex-row">
                 <div className="my-10 w-full space-y-6 lg:w-2/5">
                     <h3 className="text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -53,7 +53,7 @@ const Checkout = (p: TPreviewProps) => {
                     <EmbeddedForm clientSecret={p.clientSecret} />
                 </ScrollArea>
             </Container>
-        </Layout>
+        </SiteLayout>
     );
 };
 
