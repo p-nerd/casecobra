@@ -1,6 +1,6 @@
 # casecobra
 
-Perfect E-Commerce-Store for Custom Phone Cases
+Perfect E-Commerce Store for Custom Phone Cases
 
 ## Models
 
