@@ -25,20 +25,15 @@ const EmbeddedForm = (props: { clientSecret: string }) => {
 };
 
 type TPreviewProps = TProps<{
-    orderId: TID;
-    originalImage: TImage;
     croppedImage: TImage;
     color: { value: string };
     model: { label: string };
-    material: { label: string; price: number };
-    finish: { label: string; price: number };
-    basePrice: number;
     clientSecret: string;
 }>;
 
 const Checkout = (p: TPreviewProps) => {
     return (
-        <Layout title="checkout">
+        <Layout title="Checkout Phone Case">
             <Container className="flex flex-1 flex-col text-sm lg:flex-row">
                 <div className="my-10 w-full space-y-6 lg:w-2/5">
                     <h3 className="text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -54,7 +49,7 @@ const Checkout = (p: TPreviewProps) => {
                         />
                     </div>
                 </div>
-                <ScrollArea className="h-[42.7rem] flex-1 overflow-auto bg-white px-6 py-2 text-base lg:w-3/5 lg:px-8">
+                <ScrollArea className="h-[42.7rem] bg-white lg:w-3/5">
                     <EmbeddedForm clientSecret={p.clientSecret} />
                 </ScrollArea>
             </Container>

@@ -32,4 +32,9 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function caseDesign(): BelongsTo
+    {
+        return $this->belongsTo(CaseDesign::class);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CaseDesign extends Model
 {
@@ -53,5 +54,15 @@ class CaseDesign extends Model
     public function finish(): BelongsTo
     {
         return $this->belongsTo(Finish::class);
+    }
+
+    public function order(): HasOne
+    {
+        return $this->hasOne(Order::class);
+    }
+
+    public function price(): int
+    {
+        return Option::caseBasePrice() + $this->material->price + $this->finish->price;
     }
 }
