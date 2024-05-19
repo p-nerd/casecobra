@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Billable, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,13 +48,18 @@ class User extends Authenticatable
         ];
     }
 
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class);
+    }
+
     public function caseDesigns(): HasMany
     {
         return $this->hasMany(CaseDesign::class);
     }
 
-    public function profile(): HasOne
+    public function orders(): HasMany
     {
-        return $this->hasOne(Profile::class);
+        return $this->hasMany(Order::class);
     }
 }

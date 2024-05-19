@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -15,13 +16,20 @@ class Order extends Model
         'amount',
         'paid',
         'status',
+        'charge_method',
+        'charge_id',
         'email',
         'phone',
         'address_1',
         'address_2',
         'city',
         'state',
-        'country',
         'zip',
+        'country',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

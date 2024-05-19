@@ -179,8 +179,67 @@ class CreateCaseController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
+        $originalImage = $caseDesign->originalImage;
+        $croppedImage = $caseDesign->croppedImage;
+
+        $basePrice = Option::caseBasePrice();
+        $color = $caseDesign->color;
+        $phoneModel = $caseDesign->phoneModel;
+        $material = $caseDesign->material;
+        $finish = $caseDesign->finish;
+
+        $order = $request->user()->orders()->create([
+            "case_design_id" => $caseDesign->id,
+            "amount" => 5000,
+        ]);
+
+        $checkoutCharge = $request->user()->checkoutCharge(2000, "Custom Phone Case", 1, [
+            'ui_mode' => 'embedded',
+            'mode' => 'payment',
+            'metadata' => [
+                'order_id' => $order->id,
+            ],
+            'shipping_address_collection' => [
+                'allowed_countries' => ["BD", 'US'],
+            ],
+            'return_url' => config("app.url").'/return?session_id={CHECKOUT_SESSION_ID}',
+        ]);
+
+        $order->update([
+            "charge_id" => $checkoutCharge->id,
+            "charge_method" => "stripe",
+        ]);
+
         return inertia("createCase/Checkout", [
-            'caseDesignId' => $caseDesign->id,
+            'orderId' => $order->id,
+            'originalImage' => [
+                'url' => $originalImage->fullurl(),
+                'alt' => $originalImage->alt,
+                'height' => $originalImage->height,
+                'width' => $originalImage->width,
+            ],
+            'croppedImage' => [
+                'url' => $croppedImage->fullurl(),
+                'alt' => $croppedImage->alt,
+                'height' => $croppedImage->height,
+                'width' => $croppedImage->width,
+            ],
+            'color' => [
+                'value' => $color->value,
+            ],
+            'model' => [
+                'label' => $phoneModel->label,
+            ],
+            'material' => [
+                'label' => $material->label,
+                'price' => $material->price,
+            ],
+            'finish' => [
+                'label' => $finish->label,
+                'price' => $finish->price,
+            ],
+            'basePrice' => $basePrice,
+            "clientSecret" => $checkoutCharge->client_secret,
         ]);
     }
 }

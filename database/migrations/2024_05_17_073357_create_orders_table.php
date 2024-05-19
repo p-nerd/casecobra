@@ -17,17 +17,23 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(CaseDesign::class);
+
             $table->decimal('amount', 8, 2);
             $table->boolean('paid')->default(false);
             $table->enum("status", ["awaiting", 'shipped', 'fullfilled'])->default('awaiting');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('address_1');
+
+            $table->enum("charge_method", ["stripe", "free"])->default("stripe");
+            $table->string("charge_id")->nullable();
+
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address_1')->nullable();
             $table->string('address_2')->nullable();
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
-            $table->string('zip');
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->string('zip')->nullable();
+
             $table->timestamps();
         });
     }
