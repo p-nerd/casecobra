@@ -200,6 +200,7 @@ class CreateCaseController extends Controller
                 'metadata' => [
                     'order_id' => $caseDesign->order->id,
                 ],
+                'billing_address_collection' => 'required',
                 'shipping_address_collection' => [
                     'allowed_countries' => ["BD", 'US'],
                 ],
