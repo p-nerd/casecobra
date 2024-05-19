@@ -15,6 +15,7 @@ class Order extends Model
         'case_design_id',
         'amount',
         'paid',
+        'end',
         'status',
         'charge_method',
         'charge_id',

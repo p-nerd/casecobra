@@ -32,20 +32,32 @@ class CreateCaseController extends Controller
             'width' => ['required', 'int', 'min:0'],
         ]);
 
-        $image = Image::store($payload['image'], $payload['height'], $payload['width']);
+        $originalImage = Image::store(
+            $payload['image'],
+            $payload['height'],
+            $payload['width']
+        );
+
         $caseDesign = CaseDesign::create([
             'user_id' => Auth::id(),
-            'original_image_id' => $image->id,
+            'original_image_id' => $originalImage->id,
         ]);
 
         return redirect("/create-case/design?id={$caseDesign->id}");
     }
 
-    public function designCreate(Request $request): Response
+    public function designCreate(Request $request)
     {
-        $id = $request->query('id');
+        $caseDesignID = $request->query('id');
+        $caseDesign = CaseDesign::findOrFail($caseDesignID);
 
-        $caseDesign = CaseDesign::findOrFail($id);
+        $order = $caseDesign->order;
+        if ($order && $order->paid) {
+            return redirect("/dashboard")->withErrors(["message" => "You order is done, checkout your orders"]);
+        } elseif ($order) {
+            return redirect("/create-case/preview?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
+        }
+
         $originalImage = $caseDesign->originalImage;
 
         $colors = Color::all(['id', 'label', 'name', 'value']);
@@ -90,11 +102,20 @@ class CreateCaseController extends Controller
             'width' => ['required', 'int', 'min:0'],
         ]);
 
-        $croppedImage = Image::store($payload['croppedImage'], $payload['height'], $payload['width']);
-        $caseDesign = CaseDesign::findOrFail($payload['caseDesignId']);
+        $croppedImage = Image::store(
+            $payload['croppedImage'],
+            $payload['height'],
+            $payload['width']
+        );
+
+        $caseDesign = CaseDesign::findOrFail(
+            $payload['caseDesignId']
+        );
 
         if ($caseDesign->cropped_image_id) {
-            $caseDesign->croppedImage->update(['removable' => true]);
+            $caseDesign->croppedImage->update(
+                ['removable' => true]
+            );
         }
 
         $caseDesign->update([
@@ -105,14 +126,24 @@ class CreateCaseController extends Controller
             'cropped_image_id' => $croppedImage->id,
         ]);
 
-        return redirect("/create-case/preview?id={$caseDesign->id}");
+        $order = $caseDesign->order()->create([
+            'amount' => $caseDesign->price(),
+        ]);
+
+        return redirect("/create-case/preview?id={$order->id}");
     }
 
-    public function previewCreate(Request $request): Response
+    public function previewCreate(Request $request)
     {
-        $id = $request->query('id');
+        $orderId = $request->query('id');
+        $order = Order::findOrFail($orderId);
 
-        $caseDesign = CaseDesign::findOrFail($id);
+        if ($order->paid) {
+            return redirect("/dashboard")->withErrors(["message" => "You order is done, checkout your orders"]);
+        }
+
+        $caseDesign = $order->caseDesign;
+
         $originalImage = $caseDesign->originalImage;
         $croppedImage = $caseDesign->croppedImage;
 
@@ -123,7 +154,7 @@ class CreateCaseController extends Controller
         $finish = $caseDesign->finish;
 
         return inertia("createCase/Preview", [
-            'id' => $caseDesign->id,
+            'orderId' => $order->id,
             'originalImage' => [
                 'url' => $originalImage->fullurl(),
                 'alt' => $originalImage->alt,
@@ -157,71 +188,67 @@ class CreateCaseController extends Controller
     public function previewStore(Request $request): RedirectResponse
     {
         $payload = $request->validate([
-            'caseDesignId' => ['required', 'numeric'],
+            'orderId' => ['required', 'numeric'],
         ]);
 
-        $caseDesign = CaseDesign::findOrFail($payload['caseDesignId']);
+        $order = Order::findOrFail(
+            $payload['orderId']
+        );
 
-        if ($caseDesign->user_id && $caseDesign->user_id !== Auth::id()) {
+        $caseDesign = $order->caseDesign;
+
+        if ($caseDesign->user_id && $caseDesign->user_id !== auth()->id()) {
             throw ValidationException::withMessages([
                 'message' => 'This is not your order',
                 'to' => '/create-case/upload',
             ]);
         }
 
-        $caseDesign->update(['user_id' => Auth::id()]);
+        $caseDesign->update(['user_id' => auth()->id()]);
+        $order->update([
+            'user_id' => auth()->id(),
+            'email' => auth()->user()->email,
+        ]);
 
-        return redirect("create-case/checkout?id={$caseDesign->id}");
+        return redirect("create-case/checkout?id={$order->id}");
     }
 
     public function checkoutCreate(Request $request)
     {
-        $caseDesignId = $request->query('id');
-        $userId = auth()->id();
-
-        $caseDesign = CaseDesign::query()
-            ->where('id', $caseDesignId)
-            ->where('user_id', $userId)
+        $orderId = $request->query('id');
+        $order = Order::query()
+            ->where('id', $orderId)
+            ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        if (! $caseDesign->order) {
-            $order = $caseDesign->order()->create([
-                'user_id' => $userId,
-                'amount' => $caseDesign->price(),
-                'email' => auth()->user()->email,
-                // @TODO add user profile phone number
-                'phone' => "01758776344",
-            ]);
-            $caseDesign->setRelation('order', $order);
-        } else {
-            if ($caseDesign->order->paid) {
-                return redirect("/dashboard")->withErrors(["message" => "You already paid, checkout your orders"]);
-            }
+        if ($order->paid) {
+            return redirect("/dashboard")->withErrors(["message" => "You already paid, checkout your orders"]);
         }
 
+        $appUrl = config("app.url");
+
         $checkoutCharge = $request->user()->checkoutCharge(
-            $caseDesign->order->amount,
+            $order->amount,
             "Custom Phone Case",
             1,
             [
                 'ui_mode' => 'embedded',
                 'mode' => 'payment',
-                'metadata' => [
-                    'order_id' => $caseDesign->order->id,
-                ],
+                'metadata' => ['order_id' => $order->id],
                 'billing_address_collection' => 'required',
-                'shipping_address_collection' => [
-                    'allowed_countries' => ["BD", 'US'],
-                ],
-                'return_url' => config("app.url").'/create-case/thank-you?session_id={CHECKOUT_SESSION_ID}',
+                'shipping_address_collection' => ['allowed_countries' => ["BD", 'US']],
+                'customer' => auth()->user()->stripe_id,
+                'phone_number_collection' => ['enabled' => true],
+                'return_url' => "$appUrl/create-case/thank-you?session_id={CHECKOUT_SESSION_ID}",
             ]
         );
 
-        $caseDesign->order->update([
+        $order->update([
             'charge_id' => $checkoutCharge->id,
             'charge_method' => 'stripe',
         ]);
 
+        $caseDesign = $order->caseDesign;
         $croppedImage = $caseDesign->croppedImage;
 
         return inertia("createCase/Checkout", [
@@ -261,6 +288,8 @@ class CreateCaseController extends Controller
             'state' => $session->shipping_details->address->state,
             'zip' => $session->shipping_details->address->postal_code,
             'country' => $session->shipping_details->address->country,
+            'phone' => $session->customer_details->phone,
+            'end' => true,
         ]);
 
         switch ($session->status) {

@@ -1,4 +1,4 @@
-import type { TProps } from "@/types";
+import type { TID, TProps } from "@/types";
 import type { TImage } from "@/types/createCase";
 
 import { useState } from "react";
@@ -14,7 +14,7 @@ import toast from "@/lib/toast";
 import LoginModal from "@/components/createCase/LoginModal";
 import CreateCaseLayout from "@/layouts/CreateCaseLayout";
 
-const Checkout = (props: { caseDesignId: number }) => {
+const Checkout = (props: { orderId: number }) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState<boolean>(false);
 
@@ -31,7 +31,7 @@ const Checkout = (props: { caseDesignId: number }) => {
             router.post(
                 "/create-case/preview",
                 {
-                    caseDesignId: props.caseDesignId,
+                    orderId: props.orderId,
                 },
                 {
                     onError: e => {
@@ -57,7 +57,7 @@ const Checkout = (props: { caseDesignId: number }) => {
 
     return (
         <>
-            <LoginModal caseDesignId={props.caseDesignId} isOpen={open} setIsOpen={setOpen} />
+            <LoginModal orderId={props.orderId} isOpen={open} setIsOpen={setOpen} />
             <Button isLoading={loading} onClick={handleCheckout} className="px-4 sm:px-6 lg:px-8">
                 Checkout <ArrowRight className="ml-1.5 inline h-4 w-4" />
             </Button>
@@ -66,7 +66,7 @@ const Checkout = (props: { caseDesignId: number }) => {
 };
 
 type TPreviewProps = TProps<{
-    id: number;
+    orderId: TID;
     originalImage: TImage;
     croppedImage: TImage;
     color: { value: string };
@@ -158,7 +158,7 @@ const Preview = (p: TPreviewProps) => {
                         </div>
 
                         <div className="mt-8 flex justify-end pb-12">
-                            <Checkout caseDesignId={p.id} />
+                            <Checkout orderId={p.orderId} />
                         </div>
                     </div>
                 </div>

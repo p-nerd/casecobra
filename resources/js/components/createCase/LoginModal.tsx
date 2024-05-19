@@ -9,11 +9,11 @@ import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog
 import images from "@/lib/images";
 
 const LoginModal = ({
-    caseDesignId,
+    orderId,
     isOpen,
     setIsOpen,
 }: {
-    caseDesignId: number;
+    orderId: number;
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -36,13 +36,13 @@ const LoginModal = ({
                 <div className="grid grid-cols-2 gap-6 divide-x divide-gray-200">
                     <Link
                         className={buttonVariants({ variant: "outline" })}
-                        href={`/login?to=/create-case/preview?id=${caseDesignId}`}
+                        href={`/login?to=/create-case/preview?id=${orderId}`}
                     >
                         Login
                     </Link>
                     <Link
                         className={buttonVariants({ variant: "default" })}
-                        href={`/register?to=/create-case/preview?id=${caseDesignId}`}
+                        href={`/register?to=/create-case/preview?id=${orderId}`}
                     >
                         Sign up
                     </Link>

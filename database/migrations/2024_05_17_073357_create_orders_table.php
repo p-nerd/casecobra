@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->nullable();
             $table->foreignIdFor(CaseDesign::class);
 
             $table->decimal('amount', 8, 2);
             $table->boolean('paid')->default(false);
+            $table->boolean('end')->default(false);
             $table->enum("status", ["awaiting", 'shipped', 'fullfilled'])->default('awaiting');
 
             $table->enum("charge_method", ["stripe", "free"])->default("stripe");
