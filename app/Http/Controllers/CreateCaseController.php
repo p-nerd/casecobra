@@ -174,33 +174,42 @@ class CreateCaseController extends Controller
 
     public function checkoutCreate(Request $request): Response
     {
+        $caseDesignId = $request->query('id');
+        $userId = auth()->id();
+
         $caseDesign = CaseDesign::query()
-            ->where('id', $request->query('id'))
-            ->where('user_id', Auth::id())
+            ->where('id', $caseDesignId)
+            ->where('user_id', $userId)
             ->firstOrFail();
 
-        if (! $caseDesign->order) {
-            $caseDesign = $caseDesign
-                ->order()
-                ->create(["user_id" => Auth::id(), "amount" => $caseDesign->price()])
-                ->caseDesign;
+        if (!$caseDesign->order) {
+            $order = $caseDesign->order()->create([
+                'user_id' => $userId,
+                'amount' => $caseDesign->price(),
+            ]);
+            $caseDesign->setRelation('order', $order);
         }
 
-        $checkoutCharge = $request->user()->checkoutCharge($caseDesign->order->amount, "Custom Phone Case", 1, [
-            'ui_mode' => 'embedded',
-            'mode' => 'payment',
-            'metadata' => [
-                'order_id' => $caseDesign->order->id,
-            ],
-            'shipping_address_collection' => [
-                'allowed_countries' => ["BD", 'US'],
-            ],
-            'return_url' => config("app.url").'/return?session_id={CHECKOUT_SESSION_ID}',
-        ]);
+        $checkoutCharge = $request->user()->checkoutCharge(
+            $caseDesign->order->amount,
+            "Custom Phone Case",
+            1,
+            [
+                'ui_mode' => 'embedded',
+                'mode' => 'payment',
+                'metadata' => [
+                    'order_id' => $caseDesign->order->id,
+                ],
+                'shipping_address_collection' => [
+                    'allowed_countries' => ["BD", 'US'],
+                ],
+                'return_url' => config("app.url") . '/return?session_id={CHECKOUT_SESSION_ID}',
+            ]
+        );
 
         $caseDesign->order->update([
-            "charge_id" => $checkoutCharge->id,
-            "charge_method" => "stripe",
+            'charge_id' => $checkoutCharge->id,
+            'charge_method' => 'stripe',
         ]);
 
         $croppedImage = $caseDesign->croppedImage;
@@ -218,7 +227,7 @@ class CreateCaseController extends Controller
             'model' => [
                 'label' => $caseDesign->phoneModel->label,
             ],
-            "clientSecret" => $checkoutCharge->client_secret,
+            'clientSecret' => $checkoutCharge->client_secret,
         ]);
     }
 }
