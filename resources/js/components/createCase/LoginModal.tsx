@@ -1,3 +1,4 @@
+import type { TID } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -9,11 +10,11 @@ import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog
 import images from "@/lib/images";
 
 const LoginModal = ({
-    orderId,
+    caseDesignID,
     isOpen,
     setIsOpen,
 }: {
-    orderId: number;
+    caseDesignID: TID;
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -36,13 +37,13 @@ const LoginModal = ({
                 <div className="grid grid-cols-2 gap-6 divide-x divide-gray-200">
                     <Link
                         className={buttonVariants({ variant: "outline" })}
-                        href={`/login?to=/create-case/preview?id=${orderId}`}
+                        href={`/login?to=/create-case/preview?id=${caseDesignID}`}
                     >
                         Login
                     </Link>
                     <Link
                         className={buttonVariants({ variant: "default" })}
-                        href={`/register?to=/create-case/preview?id=${orderId}`}
+                        href={`/register?to=/create-case/preview?id=${caseDesignID}`}
                     >
                         Sign up
                     </Link>

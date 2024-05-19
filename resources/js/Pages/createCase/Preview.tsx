@@ -14,7 +14,7 @@ import toast from "@/lib/toast";
 import LoginModal from "@/components/createCase/LoginModal";
 import CreateCaseLayout from "@/layouts/CreateCaseLayout";
 
-const Checkout = (props: { orderId: number }) => {
+const Checkout = (props: { caseDesignID: number }) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState<boolean>(false);
 
@@ -31,7 +31,7 @@ const Checkout = (props: { orderId: number }) => {
             router.post(
                 "/create-case/preview",
                 {
-                    orderId: props.orderId,
+                    caseDesignID: props.caseDesignID,
                 },
                 {
                     onError: e => {
@@ -57,7 +57,7 @@ const Checkout = (props: { orderId: number }) => {
 
     return (
         <>
-            <LoginModal orderId={props.orderId} isOpen={open} setIsOpen={setOpen} />
+            <LoginModal caseDesignID={props.caseDesignID} isOpen={open} setIsOpen={setOpen} />
             <Button isLoading={loading} onClick={handleCheckout} className="px-4 sm:px-6 lg:px-8">
                 Checkout <ArrowRight className="ml-1.5 inline h-4 w-4" />
             </Button>
@@ -66,7 +66,7 @@ const Checkout = (props: { orderId: number }) => {
 };
 
 type TPreviewProps = TProps<{
-    orderId: TID;
+    caseDesignID: TID;
     originalImage: TImage;
     croppedImage: TImage;
     color: { value: string };
@@ -158,7 +158,7 @@ const Preview = (p: TPreviewProps) => {
                         </div>
 
                         <div className="mt-8 flex justify-end pb-12">
-                            <Checkout orderId={p.orderId} />
+                            <Checkout caseDesignID={p.caseDesignID} />
                         </div>
                     </div>
                 </div>

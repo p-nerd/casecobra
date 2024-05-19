@@ -55,7 +55,7 @@ class CreateCaseController extends Controller
         if ($order && $order->paid) {
             return redirect("/dashboard")->withErrors(["message" => "You order is done, checkout your orders"]);
         } elseif ($order) {
-            return redirect("/create-case/preview?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
+            return redirect("/create-case/checkout?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
         }
 
         $originalImage = $caseDesign->originalImage;
@@ -102,14 +102,21 @@ class CreateCaseController extends Controller
             'width' => ['required', 'int', 'min:0'],
         ]);
 
+        $caseDesign = CaseDesign::findOrFail(
+            $payload['caseDesignId']
+        );
+
+        $order = $caseDesign->order;
+        if ($order && $order->paid) {
+            return redirect("/dashboard")->withErrors(["message" => "You order is done, checkout your orders"]);
+        } elseif ($order) {
+            return redirect("/create-case/checkout?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
+        }
+
         $croppedImage = Image::store(
             $payload['croppedImage'],
             $payload['height'],
             $payload['width']
-        );
-
-        $caseDesign = CaseDesign::findOrFail(
-            $payload['caseDesignId']
         );
 
         if ($caseDesign->cropped_image_id) {
@@ -126,23 +133,19 @@ class CreateCaseController extends Controller
             'cropped_image_id' => $croppedImage->id,
         ]);
 
-        $order = $caseDesign->order()->create([
-            'amount' => $caseDesign->price(),
-        ]);
-
-        return redirect("/create-case/preview?id={$order->id}");
+        return redirect("/create-case/preview?id={$caseDesign->id}");
     }
 
     public function previewCreate(Request $request)
     {
-        $orderId = $request->query('id');
-        $order = Order::findOrFail($orderId);
+        $caseDesignID = $request->query('id');
+        $caseDesign = CaseDesign::findOrFail($caseDesignID);
 
-        if ($order->paid) {
+        if ($caseDesign->order && $caseDesign->order->paid) {
             return redirect("/dashboard")->withErrors(["message" => "You order is done, checkout your orders"]);
+        } elseif ($caseDesign->order) {
+            return redirect("/create-case/checkout?id={$caseDesign->order->id}")->withErrors(["message" => "You already previewed your case"]);
         }
-
-        $caseDesign = $order->caseDesign;
 
         $originalImage = $caseDesign->originalImage;
         $croppedImage = $caseDesign->croppedImage;
@@ -154,7 +157,7 @@ class CreateCaseController extends Controller
         $finish = $caseDesign->finish;
 
         return inertia("createCase/Preview", [
-            'orderId' => $order->id,
+            'caseDesignID' => $caseDesign->id,
             'originalImage' => [
                 'url' => $originalImage->fullurl(),
                 'alt' => $originalImage->alt,
@@ -187,15 +190,14 @@ class CreateCaseController extends Controller
 
     public function previewStore(Request $request): RedirectResponse
     {
+
         $payload = $request->validate([
-            'orderId' => ['required', 'numeric'],
+            'caseDesignID' => ['required', 'numeric'],
         ]);
 
-        $order = Order::findOrFail(
-            $payload['orderId']
+        $caseDesign = CaseDesign::findOrFail(
+            $payload['caseDesignID']
         );
-
-        $caseDesign = $order->caseDesign;
 
         if ($caseDesign->user_id && $caseDesign->user_id !== auth()->id()) {
             throw ValidationException::withMessages([
@@ -205,12 +207,20 @@ class CreateCaseController extends Controller
         }
 
         $caseDesign->update(['user_id' => auth()->id()]);
-        $order->update([
-            'user_id' => auth()->id(),
+
+        if ($caseDesign->order && $caseDesign->order->paid) {
+            return redirect("/dashboard")->withErrors(["message" => "You order is done, checkout your orders"]);
+        } elseif ($caseDesign->order) {
+            return redirect("/create-case/checkout?id={$caseDesign->order->id}")->withErrors(["message" => "You already previewed your case"]);
+        }
+
+        $order = $caseDesign->order()->create([
             'email' => auth()->user()->email,
+            'amount' => $caseDesign->price(),
+            'user_id' => auth()->id(),
         ]);
 
-        return redirect("create-case/checkout?id={$order->id}");
+        return redirect("/create-case/checkout?id={$order->id}");
     }
 
     public function checkoutCreate(Request $request)
