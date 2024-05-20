@@ -9,9 +9,15 @@ export type TUser = {
     email_verified_at: string;
 };
 
+export type TProfile = {
+    avatar?: string;
+};
+
 export type TProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
-        user: TUser;
+        user?: TUser;
+        profile?: TProfile;
+        admin?: boolean;
     };
     ziggy: Config & { location: string };
 };
