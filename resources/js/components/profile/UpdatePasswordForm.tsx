@@ -4,8 +4,8 @@ import { useRef } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
-import { Transition } from "@headlessui/react";
 import { TextField } from "@/components/ui2/form";
+import { Transition } from "@headlessui/react";
 
 export default function UpdatePasswordForm({ className = "" }: { className?: string }) {
     const passwordInput = useRef<HTMLInputElement>(null);
