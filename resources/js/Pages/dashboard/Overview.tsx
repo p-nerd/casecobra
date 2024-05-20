@@ -4,7 +4,7 @@ import SiteLayout from "@/layouts/SiteLayout";
 
 const Overview = () => {
     return (
-        <SiteLayout title="Profile">
+        <SiteLayout title="Overview of Sells">
             <Container className="py-12">
                 <div className="mx-auto space-y-6">
                     <Header>Overview</Header>

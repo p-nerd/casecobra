@@ -25,7 +25,7 @@ const Navbar = () => {
 
                     <div className="flex h-full items-center space-x-4">
                         {user ? (
-                            <>
+                            <div className="flex h-full items-center">
                                 {admin && <DashboardDropdown />}
                                 <ProfileDropdown
                                     user={{
@@ -34,7 +34,7 @@ const Navbar = () => {
                                         avatar: profile?.avatar,
                                     }}
                                 />
-                            </>
+                            </div>
                         ) : (
                             <>
                                 <Link

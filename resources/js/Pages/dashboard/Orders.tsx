@@ -4,7 +4,7 @@ import SiteLayout from "@/layouts/SiteLayout";
 
 const Orders = () => {
     return (
-        <SiteLayout title="Profile">
+        <SiteLayout title="Manage Orders">
             <Container className="py-12">
                 <div className="mx-auto space-y-6">
                     <Header>Manage Orders (your are admin)</Header>
