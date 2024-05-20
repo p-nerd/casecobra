@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CreateCaseController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserOrderController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -9,9 +10,12 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name("home");
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix("/dashboard")->group(function () {
+    Route::get('/', fn () => redirect(route("dashboard.overview")));
+    Route::get('/overview', fn () => inertia('dashboard/Overview'))->name('dashboard.overview');
+    Route::get('/orders', fn () => inertia('dashboard/Orders'))->name('dashboard.orders');
+    Route::get('/settings', fn () => inertia('dashboard/Settings'))->name('dashboard.settings');
+})->middleware(['auth', 'verified']);
 
 Route::prefix("/create-case")->group(function () {
     Route::get("/", fn () => redirect("/create-case/upload"));
@@ -34,6 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/orders', [UserOrderController::class, 'index'])->name('user-orders.index');
 });
 
 require __DIR__.'/auth.php';

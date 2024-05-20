@@ -1,5 +1,5 @@
+import type { TProps } from "@/types";
 import type { TImage } from "@/types/createCase";
-import type { TID, TProps } from "@/types";
 
 import { cn } from "@/lib/utils";
 import { loadStripe } from "@stripe/stripe-js";

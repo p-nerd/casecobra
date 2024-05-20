@@ -60,4 +60,25 @@ export const Icons = {
             </g>
         </svg>
     ),
+    Down: (props: LucideProps) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+            />
+        </svg>
+    ),
+};
+
+export const Header = (props: { children: ReactNode }) => {
+    return (
+        <header className="bg-white shadow lg:rounded-lg">
+            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    {props.children}
+                </h2>
+            </div>
+        </header>
+    );
 };
