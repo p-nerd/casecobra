@@ -9,6 +9,10 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name("home");
 
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::prefix("/create-case")->group(function () {
     Route::get("/", fn () => redirect("/create-case/upload"));
 
@@ -25,10 +29,6 @@ Route::prefix("/create-case")->group(function () {
 
     Route::get("/thank-you", [CreateCaseController::class, "thankYouCreate"])->middleware("auth");
 });
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

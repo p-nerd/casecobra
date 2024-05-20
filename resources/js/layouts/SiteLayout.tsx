@@ -8,7 +8,7 @@ import { Link } from "@inertiajs/react";
 import { Container } from "@/components/ui2/misc";
 import { ArrowRight } from "lucide-react";
 
-import Layout from "@/layouts/Layout";
+import BaseLayout from "@/layouts/BaseLayout";
 import ProfileDropdown from "@/components/layout/ProfileDropdown";
 import DashboardDropdown from "@/components/layout/DashboardDropdown";
 
@@ -20,7 +20,7 @@ const Navbar = () => {
             <Container>
                 <div className="flex h-14 items-center justify-between border-b border-zinc-200">
                     <Link href="/" className="z-40 flex font-semibold">
-                        case<span className="text-green-600">cobra</span>
+                        Case<span className="text-green-600">Cobra</span>
                     </Link>
 
                     <div className="flex h-full items-center space-x-4">
@@ -119,13 +119,13 @@ const Footer = () => {
 
 const SiteLayout = (props: { children: ReactNode; title: string }) => {
     return (
-        <Layout title={props.title}>
+        <BaseLayout title={props.title}>
             <Navbar />
             <main className="grainy-light flex min-h-[calc(100vh-3.5rem-1px)] flex-col">
                 <div className="flex h-full flex-1 flex-col">{props.children}</div>
                 <Footer />
             </main>
-        </Layout>
+        </BaseLayout>
     );
 };
 

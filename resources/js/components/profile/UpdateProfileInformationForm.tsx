@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui2/form";
 import { Transition } from "@headlessui/react";
 
-export default function UpdateProfileInformation({
+export default function UpdateProfileInformationForm({
     mustVerifyEmail,
     status,
     className = "",
@@ -20,8 +20,8 @@ export default function UpdateProfileInformation({
     const user = usePage<TProps>().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: user.name,
-        email: user.email,
+        name: user?.name || "",
+        email: user?.email || "",
     });
 
     const submit: FormEventHandler = e => {
@@ -64,7 +64,7 @@ export default function UpdateProfileInformation({
                     error={errors.email}
                 />
 
-                {mustVerifyEmail && user.email_verified_at === null && (
+                {mustVerifyEmail && user?.email_verified_at === null && (
                     <div>
                         <p className="mt-2 text-sm text-gray-800">
                             Your email address is unverified.

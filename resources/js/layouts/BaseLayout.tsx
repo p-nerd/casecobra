@@ -1,12 +1,15 @@
 import type { TProps } from "@/types";
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { Head, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
+import { usePage } from "@inertiajs/react";
+
+import { Head } from "@inertiajs/react";
 import { Toaster } from "@/components/ui/sonner";
 
 import toast from "@/lib/toast";
 
-const Layout = (props: { children: ReactNode; title: string }) => {
+const BaseLayout = (props: { children: ReactNode; title: string }) => {
     const errors = usePage<TProps<{ errors: { [key: string]: string } }>>().props.errors;
 
     useEffect(() => {
@@ -24,4 +27,4 @@ const Layout = (props: { children: ReactNode; title: string }) => {
     );
 };
 
-export default Layout;
+export default BaseLayout;
