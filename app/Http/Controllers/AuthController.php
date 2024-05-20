@@ -12,10 +12,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -268,7 +268,7 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password' => ['required', \Illuminate\Validation\Rules\Password::defaults(), 'confirmed'],
         ]);
 
         $request->user()->update([

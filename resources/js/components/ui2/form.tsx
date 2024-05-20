@@ -50,7 +50,7 @@ export const TextField = (props: {
     return (
         <div>
             {props.label ? (
-                <Label htmlFor={props.name} className="mb-1">
+                <Label htmlFor={props.name} className="mb-2">
                     {props.label}
                 </Label>
             ) : (
@@ -59,7 +59,7 @@ export const TextField = (props: {
             <Input
                 id={props.name}
                 name={props.name}
-                type={props.type}
+                type={props.type || "text"}
                 value={props.value}
                 className={cn("block w-full", props.className)}
                 autoFocus={props.autoFocus}

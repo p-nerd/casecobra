@@ -10,12 +10,12 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name("home");
 
-Route::prefix("/dashboard")->group(function () {
+Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(function () {
     Route::get('/', fn () => redirect(route("dashboard.overview")));
     Route::get('/overview', fn () => inertia('dashboard/Overview'))->name('dashboard.overview');
     Route::get('/orders', fn () => inertia('dashboard/Orders'))->name('dashboard.orders');
     Route::get('/settings', fn () => inertia('dashboard/Settings'))->name('dashboard.settings');
-})->middleware(['auth', 'verified']);
+});
 
 Route::prefix("/create-case")->group(function () {
     Route::get("/", fn () => redirect("/create-case/upload"));

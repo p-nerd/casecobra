@@ -82,3 +82,11 @@ export const Header = (props: { children: ReactNode }) => {
         </header>
     );
 };
+
+export const Section = (props: { children: ReactNode; className?: string }) => {
+    return (
+        <div className={cn("bg-white p-4 shadow sm:rounded-lg sm:p-8", props.className)}>
+            {props.children}
+        </div>
+    );
+};

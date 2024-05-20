@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Role;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -32,30 +33,28 @@ class HandleInertiaRequests extends Middleware
     {
         $user = auth()->user();
 
-        $userData = null;
-        if ($user) {
-            $userData = [
-                "id" => $user->id,
-                "name" => $user->name,
-                "email" => $user->email,
-            ];
-        }
+        $_user = null;
+        $_profile = null;
+        $_admin = false;
 
-        $profileData = null;
         if ($user) {
-            $profile = $user->profile;
-
-            $profileData = [
-                "avatar" => $profile->avatar,
+            $_user = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
             ];
+            $_profile = [
+                'avatar' => $user->profile->avatar,
+            ];
+            $_admin = $user->role === Role::ADMIN->value;
         }
 
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $userData,
-                'profile' => $profileData,
-                'admin' => true,
+                'user' => $_user,
+                'profile' => $_profile,
+                'admin' => $_admin,
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
