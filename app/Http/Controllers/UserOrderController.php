@@ -20,6 +20,8 @@ class UserOrderController extends Controller
                 "croppedImageUrl" => $order->caseDesign->croppedImage->fullurl(),
                 "colorValue" => $order->caseDesign->color->value,
                 "modelLabel" => $order->caseDesign->phoneModel->label,
+                "materialLabel" => $order->caseDesign->material->label,
+                "finishLabel" => $order->caseDesign->finish->label,
             ]);
 
         return inertia("user/orders/Index", [
@@ -40,6 +42,10 @@ class UserOrderController extends Controller
             "city" => $order->city,
             "croppedImageUrl" => $order->caseDesign->croppedImage->fullurl(),
             "colorValue" => $order->caseDesign->color->value,
+            "modelLabel" => $order->caseDesign->phoneModel->label,
+            "materialLabel" => $order->caseDesign->material->label,
+            "finishLabel" => $order->caseDesign->finish->label,
+
         ];
 
         return inertia("user/orders/Show", [

@@ -14,6 +14,8 @@ type TOrder = {
     croppedImageUrl: string;
     colorValue: string;
     modelLabel: string;
+    materialLabel: string;
+    finishLabel: string;
 };
 
 const Item = (props: { label: string; value: string }) => {
@@ -34,14 +36,16 @@ const Orders = (props: { orders: TOrder[] }) => {
                         {props.orders.map(order => (
                             <Section className="flex items-center gap-5 py-4">
                                 <Phone
-                                    className="w-[150px]"
+                                    className="w-[120px] lg:w-[150px]"
                                     style={{ backgroundColor: order.colorValue }}
                                     imgSrc={order.croppedImageUrl}
                                 />
-                                <div className="space-y-4 text-xl">
+                                <div className="space-y-4 ">
                                     <div className="space-y-1">
-                                        <Item label="Order ID" value={`#${order.id}`} />
+                                        <Item label="ID" value={`#${order.id}`} />
                                         <Item label="Model" value={order.modelLabel} />
+                                        <Item label="Material" value={order.materialLabel} />
+                                        <Item label="Finish" value={order.finishLabel} />
                                         <Item
                                             label="Total"
                                             value={formatPrice(order.amount / 100)}

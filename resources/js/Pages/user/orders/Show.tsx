@@ -20,10 +20,13 @@ const Order = (props: {
         city: string;
         croppedImageUrl: string;
         colorValue: string;
+        modelLabel: string;
+        materialLabel: string;
+        finishLabel: string;
     };
 }) => {
     return (
-        <SiteLayout title="Thank You">
+        <SiteLayout title={`Order #${props.order.id}`}>
             <div className="bg-white">
                 <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
                     <div className="max-w-xl">
@@ -59,6 +62,30 @@ const Order = (props: {
                                             {props.order.zip} {props.order.city}
                                         </span>
                                     </address>
+                                </div>
+                            </div>
+                            <div className="flex flex-col justify-center">
+                                <div className="mt-2 text-zinc-700">
+                                    <div className="not-italic">
+                                        <div>
+                                            <span className="font-medium text-gray-900">
+                                                Model:{" "}
+                                            </span>
+                                            {props.order.modelLabel}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium text-gray-900">
+                                                Material:{" "}
+                                            </span>
+                                            {props.order.materialLabel}
+                                        </div>
+                                        <div>
+                                            <span className="font-medium text-gray-900">
+                                                Finish:{" "}
+                                            </span>
+                                            {props.order.finishLabel}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -139,7 +139,7 @@ const ThankYou = (props: {
                         </div>
                         <div className="mt-10 flex flex-col items-center justify-center">
                             <Link
-                                href="/profile/orders"
+                                href="/orders"
                                 className={buttonVariants({
                                     size: "lg",
                                 })}
