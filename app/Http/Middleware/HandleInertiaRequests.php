@@ -44,7 +44,7 @@ class HandleInertiaRequests extends Middleware
                 'email' => $user->email,
             ];
             $_profile = [
-                'avatar' => $user->profile->image->fullurl(),
+                'avatar' => $user->profile?->image?->fullurl(),
             ];
             $_admin = $user->role === Role::ADMIN->value;
         }

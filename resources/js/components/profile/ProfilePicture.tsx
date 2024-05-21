@@ -40,7 +40,9 @@ const ProfilePicture = (props: { avatar?: string; name: string }) => {
         <div className="group relative">
             <Avatar className="h-48 w-48">
                 <AvatarImage src={props?.avatar} alt={props?.name} className="object-contain" />
-                <AvatarFallback>{props?.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="text-3xl">
+                    {props?.name?.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
             </Avatar>
 
             {!loading && (
