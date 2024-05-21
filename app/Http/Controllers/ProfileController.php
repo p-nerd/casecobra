@@ -16,7 +16,6 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
-        $profile = $user->profile;
 
         return inertia('profile/Edit', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
@@ -26,15 +25,7 @@ class ProfileController extends Controller
                 "email" => $user->email,
                 "email_verified_at" => $user->email_verified_at,
             ],
-            'profile' => [
-                "phone" => $profile->phone,
-                "address_1" => $profile->address_1,
-                "address_2" => $profile->address_2,
-                "city" => $profile->city,
-                "state" => $profile->state,
-                "country" => $profile->country,
-                "zip" => $profile->zip,
-            ],
+            'profile' => $user->profile->only(['phone', 'address_1', 'address_2', 'city', 'state', 'country', 'zip']),
         ]);
     }
 
@@ -53,7 +44,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return redirect(route('profile.edit'));
+        return redirect()->route('profile.edit');
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -71,7 +62,7 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect(route('home'));
+        return redirect()->route('home');
     }
 
     public function updatePicture(Request $request): RedirectResponse
@@ -88,11 +79,11 @@ class ProfileController extends Controller
             $payload['width']
         );
 
-        $profile = auth()->user()->profile;
+        $profile = $request->user()->profile;
         $profile->image?->makeRemovable();
         $profile->update(["image_id" => $image->id]);
 
-        return redirect(route("profile.edit"));
+        return redirect()->route("profile.edit");
     }
 
     public function updateBilling(Request $request)
@@ -107,8 +98,8 @@ class ProfileController extends Controller
             'zip' => ['required', 'string', 'max:20'],
         ]);
 
-        auth()->user()->profile->update($payload);
+        $request->user()->profile->update($payload);
 
-        return redirect(route("profile.edit"));
+        return redirect()->route("profile.edit");
     }
 }
