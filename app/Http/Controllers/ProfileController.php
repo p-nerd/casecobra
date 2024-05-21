@@ -93,7 +93,7 @@ class ProfileController extends Controller
             'address_1' => ['required', 'string', 'max:255'],
             'address_2' => ['nullable', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:100'],
-            'state' => ['required', 'string', 'max:100'],
+            'state' => ['nullable', 'string', 'max:100'],
             'country' => ['required', 'string', 'max:100'],
             'zip' => ['required', 'string', 'max:20'],
         ]);
