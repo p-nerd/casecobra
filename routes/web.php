@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/orders', [UserOrderController::class, 'index'])->name('user-orders.index');
+    Route::get('/orders/{order}', [UserOrderController::class, 'show'])->name('user-orders.show');
 });
 
 require __DIR__.'/auth.php';
