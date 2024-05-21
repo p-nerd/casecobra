@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Image;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,7 @@ class ProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'avatar' => fake()->optional()->imageUrl(),
+            'image_id' => Image::factory(),
             'phone' => fake()->optional(0.3)->phoneNumber(),
             'address_1' => fake()->streetAddress(),
             'address_2' => fake()->optional(0.5)->secondaryAddress(),

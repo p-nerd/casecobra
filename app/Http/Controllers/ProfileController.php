@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Image;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,5 +60,34 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function uploadPic(Request $request): RedirectResponse
+    {
+        $payload = $request->validate([
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg'],
+            'height' => ['required', 'int', 'min:0'],
+            'width' => ['required', 'int', 'min:0'],
+        ]);
+
+        $pic = Image::store(
+            $payload['image'],
+            $payload['height'],
+            $payload['width']
+        );
+
+        $profile = auth()->user()->profile;
+
+        if ($profile->image) {
+            $profile->image->update([
+                "removable" => true,
+            ]);
+        }
+
+        $profile->update([
+            "image_id" => $pic->id,
+        ]);
+
+        return redirect("/profile");
     }
 }

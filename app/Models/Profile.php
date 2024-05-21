@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Profile extends Model
 {
@@ -11,7 +12,7 @@ class Profile extends Model
 
     protected $fillable = [
         'user_id',
-        'avatar',
+        'image_id',
         'phone',
         'address_1',
         'address_2',
@@ -20,4 +21,9 @@ class Profile extends Model
         'country',
         'zip',
     ];
+
+    public function image(): BelongsTo
+    {
+        return $this->belongsTo(Image::class);
+    }
 }

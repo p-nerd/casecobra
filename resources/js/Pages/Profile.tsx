@@ -18,8 +18,8 @@ const Profile = (props: TProps<{ mustVerifyEmail: boolean; status?: string }>) =
                 <div className="mx-auto space-y-6">
                     <Section className="flex flex-col items-center justify-center gap-4 lg:flex-row">
                         <ProfilePicture avatar={profile?.avatar} name={user?.name || ""} />
-                        <div className="hidden lg:block">
-                            <div className="text-lg font-semibold">{user?.name}</div>
+                        <div className="hidden text-xl lg:block">
+                            <div className="text-2xl font-semibold">{user?.name}</div>
                             <div>{user?.email}</div>
                         </div>
                     </Section>

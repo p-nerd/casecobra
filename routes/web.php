@@ -38,9 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post("/profiles/upload-pic", [ProfileController::class, "uploadPic"]);
 
     Route::get('/orders', [UserOrderController::class, 'index'])->name('user-orders.index');
     Route::get('/orders/{order}', [UserOrderController::class, 'show'])->name('user-orders.show');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
