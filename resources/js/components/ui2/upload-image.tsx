@@ -5,23 +5,21 @@ import type { ImageType } from "react-images-uploading";
 
 import { useState, useRef } from "react";
 
-import { Cropper } from "react-advanced-cropper";
+import { CircleStencil, Cropper } from "react-advanced-cropper";
 
 import ImageUploading from "react-images-uploading";
 
-const ImageUploadingButton = ({
-    value,
-    onChange,
-    children,
-}: {
+const ImageUploadingButton = (props: {
     value: ImageType[];
     onChange: (x: ImageType[]) => void;
     children: ReactNode;
 }) => {
     return (
-        <ImageUploading value={value} onChange={onChange}>
+        <ImageUploading value={props.value} onChange={props.onChange}>
             {({ onImageUpload, onImageUpdate }) => (
-                <div onClick={value ? onImageUpload : () => onImageUpdate(0)}>{children}</div>
+                <div onClick={props.value ? onImageUpload : () => onImageUpdate(0)}>
+                    {props.children}
+                </div>
             )}
         </ImageUploading>
     );
@@ -52,7 +50,7 @@ const dataURLtoFile = (dataURL: string) => {
     return new File([uint8Array], filename);
 };
 
-export const Show = (p: {
+const Show = (p: {
     when?: boolean | string | number;
     children: ReactNode;
     fallback?: ReactNode;
@@ -60,16 +58,13 @@ export const Show = (p: {
     return p.when ? <>{p.children}</> : <>{p.fallback || ""}</>;
 };
 
-const ImageCropper = ({
-    open,
-    image,
-    onComplete,
-    onClose,
-}: {
+const ImageCropper = (props: {
     open: boolean;
     image?: string;
     onComplete: (filePromise: Promise<File>) => void;
     onClose: () => void;
+    circle?: boolean;
+    mustCrop?: boolean;
 }) => {
     const [isEdit, setIsEdit] = useState(false);
 
@@ -80,7 +75,7 @@ const ImageCropper = ({
         if (canvas) {
             canvas.toBlob(blob => {
                 if (blob) {
-                    onComplete(Promise.resolve(new File([blob], "pic.png")));
+                    props.onComplete(Promise.resolve(new File([blob], "pic.png")));
                     setIsEdit(false);
                 }
             }, "image/png");
@@ -88,17 +83,20 @@ const ImageCropper = ({
     };
 
     return (
-        <Show when={open}>
+        <Show when={props.open}>
             <div className="fixed inset-0 z-[200] overflow-auto bg-gray-900 bg-opacity-50">
                 <div className="flex min-h-screen items-center justify-center">
                     <div className="mx-auto w-[95%] overflow-hidden rounded-lg bg-white shadow-lg lg:w-[600px]">
                         <div className="p-4">
                             <Show
-                                when={isEdit}
+                                when={isEdit || props.mustCrop}
                                 fallback={
                                     <>
                                         <div className="flex w-full flex-col items-center justify-center rounded-lg p-3  pt-10 lg:min-h-[360px] ">
-                                            <img src={image} className="h-[360px] lg:h-[460px]" />
+                                            <img
+                                                src={props.image}
+                                                className="h-[360px] lg:h-[460px]"
+                                            />
                                         </div>
                                         <div className="mt-4 flex justify-between">
                                             <div
@@ -110,9 +108,11 @@ const ImageCropper = ({
                                             <div
                                                 className="cursor-pointer rounded-lg bg-primary px-4 py-2 text-white"
                                                 onClick={() => {
-                                                    if (image) {
-                                                        onComplete(
-                                                            Promise.resolve(dataURLtoFile(image)),
+                                                    if (props.image) {
+                                                        props.onComplete(
+                                                            Promise.resolve(
+                                                                dataURLtoFile(props.image),
+                                                            ),
                                                         );
                                                     }
                                                     setIsEdit(false);
@@ -129,15 +129,18 @@ const ImageCropper = ({
                                     <div className="relative h-[265px] w-full rounded-lg p-2 lg:h-[360px]">
                                         <Cropper
                                             ref={cropperRef}
-                                            src={image}
+                                            src={props.image}
                                             stencilProps={{ grid: true }}
+                                            stencilComponent={
+                                                props.circle ? CircleStencil : undefined
+                                            }
                                             className="cropper rounded-lg bg-white"
                                         />
                                     </div>
                                     <div className="mt-4 flex justify-between">
                                         <div
                                             onClick={() => {
-                                                onClose();
+                                                props.onClose();
                                                 setIsEdit(false);
                                             }}
                                             className="cursor-pointer rounded-lg bg-gray-900 px-4 py-2 text-white"
@@ -161,12 +164,11 @@ const ImageCropper = ({
     );
 };
 
-export const UploadImage = ({
-    onComplete,
-    children,
-}: {
+export const UploadImage = (props: {
     onComplete: (imageFile: File) => void;
     children: ReactNode;
+    circle?: boolean;
+    mustCrop?: boolean;
 }) => {
     const [images, setImages] = useState<ImageType[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -180,18 +182,20 @@ export const UploadImage = ({
                     setImages(newImages);
                 }}
             >
-                {children}
+                {props.children}
             </ImageUploadingButton>
             <ImageCropper
                 open={dialogOpen}
                 image={images.length > 0 ? images[0].dataURL : ""}
                 onComplete={imagePromises => {
                     imagePromises.then(image => {
-                        onComplete(image);
+                        props.onComplete(image);
                         setDialogOpen(false);
                     });
                 }}
                 onClose={() => setDialogOpen(false)}
+                circle={props.circle}
+                mustCrop={props.mustCrop}
             />
         </>
     );

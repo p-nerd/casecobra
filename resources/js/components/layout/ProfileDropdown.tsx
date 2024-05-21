@@ -22,7 +22,11 @@ const ProfileDropdown = (props: {
                 <Button variant="ghost" className="relative h-8 rounded-full">
                     {props.user.avatar ? (
                         <Avatar className="mr-2 h-5 w-5">
-                            <AvatarImage src={props.user.avatar} alt={props.user.name} />
+                            <AvatarImage
+                                src={props.user.avatar}
+                                alt={props.user.name}
+                                className="object-contain"
+                            />
                         </Avatar>
                     ) : (
                         <></>
@@ -32,7 +36,18 @@ const ProfileDropdown = (props: {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="z-[150] w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
+                <DropdownMenuLabel className="flex items-center gap-2 font-normal">
+                    {props.user.avatar ? (
+                        <Avatar className="h-10 w-10">
+                            <AvatarImage
+                                src={props.user.avatar}
+                                alt={props.user.name}
+                                className="object-contain"
+                            />
+                        </Avatar>
+                    ) : (
+                        <></>
+                    )}
                     <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">{props.user.name}</p>
                         <p className="text-xs leading-none text-muted-foreground">

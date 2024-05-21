@@ -2,14 +2,14 @@ import type { Config } from "ziggy-js";
 
 export type TID = number;
 
-export type TUser = {
+type TUser = {
     id: TID;
     name: string;
     email: string;
     email_verified_at: string;
 };
 
-export type TProfile = {
+type TProfile = {
     avatar?: string;
 };
 

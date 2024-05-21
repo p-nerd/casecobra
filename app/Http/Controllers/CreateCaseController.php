@@ -53,7 +53,7 @@ class CreateCaseController extends Controller
 
         $order = $caseDesign->order;
         if ($order && $order->paid) {
-            return redirect(route("user-orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
+            return redirect(route("orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
         } elseif ($order) {
             return redirect("/create-case/checkout?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
         }
@@ -108,7 +108,7 @@ class CreateCaseController extends Controller
 
         $order = $caseDesign->order;
         if ($order && $order->paid) {
-            return redirect(route("user-orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
+            return redirect(route("orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
         } elseif ($order) {
             return redirect("/create-case/checkout?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
         }
@@ -142,7 +142,7 @@ class CreateCaseController extends Controller
         $caseDesign = CaseDesign::findOrFail($caseDesignID);
 
         if ($caseDesign->order && $caseDesign->order->paid) {
-            return redirect(route("user-orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
+            return redirect(route("orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
         } elseif ($caseDesign->order) {
             return redirect("/create-case/checkout?id={$caseDesign->order->id}")->withErrors(["message" => "You already previewed your case"]);
         }
@@ -209,7 +209,7 @@ class CreateCaseController extends Controller
         $caseDesign->update(['user_id' => auth()->id()]);
 
         if ($caseDesign->order && $caseDesign->order->paid) {
-            return redirect(route("user-orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
+            return redirect(route("orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
         } elseif ($caseDesign->order) {
             return redirect("/create-case/checkout?id={$caseDesign->order->id}")->withErrors(["message" => "You already previewed your case"]);
         }
@@ -232,7 +232,7 @@ class CreateCaseController extends Controller
             ->firstOrFail();
 
         if ($order->paid) {
-            return redirect(route("user-orders.index"))->withErrors(["message" => "You already paid, checkout your orders"]);
+            return redirect(route("orders.index"))->withErrors(["message" => "You already paid, checkout your orders"]);
         }
 
         $appUrl = config("app.url");
@@ -287,7 +287,7 @@ class CreateCaseController extends Controller
         $order = Order::findOrFail($orderId);
 
         if ($order->paid) {
-            return redirect(route("user-orders.index"))->withErrors(["message" => "Your order is done, checkout your orders"]);
+            return redirect(route("orders.index"))->withErrors(["message" => "Your order is done, checkout your orders"]);
         }
 
         $order->update([

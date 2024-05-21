@@ -1,13 +1,12 @@
-import type { FormEventHandler } from "react";
-
 import { useRef } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
-import { TextField } from "@/components/ui2/form";
+import { Form, TextField } from "@/components/ui2/form";
 import { Transition } from "@headlessui/react";
+import { Section } from "@/components/ui2/misc";
 
-export default function UpdatePasswordForm({ className = "" }: { className?: string }) {
+const UpdatePassword = () => {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
@@ -17,9 +16,7 @@ export default function UpdatePasswordForm({ className = "" }: { className?: str
         password_confirmation: "",
     });
 
-    const updatePassword: FormEventHandler = e => {
-        e.preventDefault();
-
+    const updatePassword = () => {
         put(route("password.update"), {
             preserveScroll: true,
             onSuccess: () => reset(),
@@ -38,7 +35,7 @@ export default function UpdatePasswordForm({ className = "" }: { className?: str
     };
 
     return (
-        <section className={className}>
+        <Section>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">Update Password</h2>
 
@@ -47,7 +44,7 @@ export default function UpdatePasswordForm({ className = "" }: { className?: str
                 </p>
             </header>
 
-            <form onSubmit={updatePassword} className="mt-6 flex flex-col space-y-6">
+            <Form onSubmit={updatePassword} className="mt-6 max-w-xl">
                 <TextField
                     label="Current Password"
                     ref={currentPasswordInput}
@@ -77,10 +74,8 @@ export default function UpdatePasswordForm({ className = "" }: { className?: str
                     autoComplete="new-password"
                     error={errors.password_confirmation}
                 />
-
                 <div className="flex items-center gap-4">
                     <Button disabled={processing}>Save</Button>
-
                     <Transition
                         show={recentlySuccessful}
                         enter="transition ease-in-out"
@@ -91,7 +86,9 @@ export default function UpdatePasswordForm({ className = "" }: { className?: str
                         <p className="text-sm text-gray-600">Saved.</p>
                     </Transition>
                 </div>
-            </form>
-        </section>
+            </Form>
+        </Section>
     );
-}
+};
+
+export default UpdatePassword;

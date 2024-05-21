@@ -2,35 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Image;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Inertia\Inertia;
+use Illuminate\Validation\Rule;
 use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function edit(Request $request): Response
     {
-        return Inertia::render('Profile', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+        $user = $request->user();
+        $profile = $user->profile;
+
+        return inertia('profile/Edit', [
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
+            'user' => [
+                "name" => $user->name,
+                "email" => $user->email,
+                "email_verified_at" => $user->email_verified_at,
+            ],
+            'profile' => [
+                "phone" => $profile->phone,
+                "address_1" => $profile->address_1,
+                "address_2" => $profile->address_2,
+                "city" => $profile->city,
+                "state" => $profile->state,
+                "country" => $profile->country,
+                "zip" => $profile->zip,
+            ],
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $payload = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($request->user()->id)],
+        ]);
+
+        $request->user()->fill($payload);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
@@ -38,12 +53,9 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return redirect(route('profile.edit'));
     }
 
-    /**
-     * Delete the user's account.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validate([
@@ -59,10 +71,10 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect(route('home'));
     }
 
-    public function uploadPic(Request $request): RedirectResponse
+    public function updatePicture(Request $request): RedirectResponse
     {
         $payload = $request->validate([
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg'],
@@ -88,6 +100,23 @@ class ProfileController extends Controller
             "image_id" => $pic->id,
         ]);
 
-        return redirect("/profile");
+        return redirect(route("profile.edit"));
+    }
+
+    public function updateBilling(Request $request)
+    {
+        $payload = $request->validate([
+            'phone' => ['required', 'string', 'max:15'],
+            'address_1' => ['required', 'string', 'max:255'],
+            'address_2' => ['nullable', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:100'],
+            'state' => ['required', 'string', 'max:100'],
+            'country' => ['required', 'string', 'max:100'],
+            'zip' => ['required', 'string', 'max:20'],
+        ]);
+
+        auth()->user()->profile->update($payload);
+
+        return redirect(route("profile.edit"));
     }
 }

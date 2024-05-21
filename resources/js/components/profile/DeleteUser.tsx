@@ -1,13 +1,15 @@
-import { useRef, useState, FormEventHandler } from "react";
+import { useRef, useState } from "react";
+import { useForm } from "@inertiajs/react";
+
+import { Button } from "@/components/ui/button";
+import { Section } from "@/components/ui2/misc";
+import { Form, TextField } from "@/components/ui2/form";
 
 import Modal from "@/components/Modal";
 
-import { useForm } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { TextField } from "@/components/ui2/form";
-
-export default function DeleteUserForm({ className = "" }: { className?: string }) {
+const DeleteUser = () => {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
+
     const passwordInput = useRef<HTMLInputElement>(null);
 
     const {
@@ -25,9 +27,7 @@ export default function DeleteUserForm({ className = "" }: { className?: string 
         setConfirmingUserDeletion(true);
     };
 
-    const deleteUser: FormEventHandler = e => {
-        e.preventDefault();
-
+    const deleteUser = () => {
         destroy(route("profile.destroy"), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
@@ -43,7 +43,7 @@ export default function DeleteUserForm({ className = "" }: { className?: string 
     };
 
     return (
-        <section className={`space-y-6 ${className}`}>
+        <Section className="space-y-6">
             <header>
                 <h2 className="text-lg font-medium text-gray-900">Delete Account</h2>
 
@@ -59,7 +59,7 @@ export default function DeleteUserForm({ className = "" }: { className?: string 
             </Button>
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
-                <form onSubmit={deleteUser} className="p-6">
+                <Form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
                         Are you sure you want to delete your account?
                     </h2>
@@ -89,8 +89,10 @@ export default function DeleteUserForm({ className = "" }: { className?: string 
                             Delete Account
                         </Button>
                     </div>
-                </form>
+                </Form>
             </Modal>
-        </section>
+        </Section>
     );
-}
+};
+
+export default DeleteUser;

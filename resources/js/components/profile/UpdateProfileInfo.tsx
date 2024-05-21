@@ -1,91 +1,37 @@
-import type { TProps } from "@/types";
+import { useForm } from "@inertiajs/react";
 
-import { useForm, usePage } from "@inertiajs/react";
-
-import { Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
+import { Section } from "@/components/ui2/misc";
 import { Transition } from "@headlessui/react";
 import { Form, TextField } from "@/components/ui2/form";
 
-const UpdateProfileInformationForm = ({
-    mustVerifyEmail,
-    status,
-    className = "",
-}: {
-    mustVerifyEmail: boolean;
-    status?: string;
-    className?: string;
-}) => {
-    const user = usePage<TProps>().props.auth.user;
+export type TUpdateProfile = {
+    phone: string;
+    address_1: string;
+    address_2: string;
+    city: string;
+    state: string;
+    country: string;
+    zip: string;
+};
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: user?.name || "",
-        email: user?.email || "",
-        phone: "",
-        address_1: "",
-        address_2: "",
-        city: "",
-        state: "",
-        country: "",
-        zip: "",
-    });
-
-    const submit = () => {
-        patch(route("profile.update"));
-    };
+const UpdateProfileInfo = (props: { profile: TUpdateProfile }) => {
+    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm(props.profile);
 
     return (
-        <section className={className}>
+        <Section>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">Profile Information</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
+                    Update your account's profile information.
                 </p>
             </header>
 
-            <Form onSubmit={submit} className="mt-6 gap-6">
-                <TextField
-                    label="Name"
-                    name="name"
-                    value={data.name}
-                    onChange={name => setData("name", name)}
-                    required={true}
-                    autoFocus={true}
-                    autoComplete="name"
-                    error={errors.name}
-                />
-                <TextField
-                    label="Email"
-                    name="email"
-                    type="email"
-                    value={data.email}
-                    onChange={value => setData("email", value)}
-                    required={true}
-                    autoComplete="username"
-                    error={errors.email}
-                />
-                {mustVerifyEmail && user?.email_verified_at === null && (
-                    <div>
-                        <p className="mt-2 text-sm text-gray-800">
-                            Your email address is unverified.
-                            <Link
-                                href={route("verification.send")}
-                                method="post"
-                                as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                                Click here to re-send the verification email.
-                            </Link>
-                        </p>
-
-                        {status === "verification-link-sent" && (
-                            <div className="mt-2 text-sm font-medium text-green-600">
-                                A new verification link has been sent to your email address.
-                            </div>
-                        )}
-                    </div>
-                )}
+            <Form
+                onSubmit={() => patch(route("profile.billing.update"))}
+                className=" mt-6 max-w-xl gap-6"
+            >
                 <TextField
                     label="Phone"
                     name="phone"
@@ -156,8 +102,8 @@ const UpdateProfileInformationForm = ({
                     </Transition>
                 </div>
             </Form>
-        </section>
+        </Section>
     );
 };
 
-export default UpdateProfileInformationForm;
+export default UpdateProfileInfo;

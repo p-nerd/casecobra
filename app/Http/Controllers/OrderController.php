@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 
-class UserOrderController extends Controller
+class OrderController extends Controller
 {
     public function index()
     {
@@ -24,7 +24,7 @@ class UserOrderController extends Controller
                 "finishLabel" => $order->caseDesign->finish->label,
             ]);
 
-        return inertia("user/orders/Index", [
+        return inertia("orders/Index", [
             "orders" => $orders,
         ]);
     }
@@ -48,7 +48,7 @@ class UserOrderController extends Controller
 
         ];
 
-        return inertia("user/orders/Show", [
+        return inertia("orders/Show", [
             "order" => $order,
         ]);
     }
