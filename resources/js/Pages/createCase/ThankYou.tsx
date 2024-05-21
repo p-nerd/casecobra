@@ -46,7 +46,7 @@ const PhonePreview = ({ imageUrl, color }: { imageUrl: string; color: { value: s
                 <img
                     width={renderedDimensions.width / (3000 / 637)}
                     className={cn(
-                        "phone-skew relative z-20 rounded-b-[10px] rounded-t-[15px] md:rounded-b-[20px] md:rounded-t-[30px]",
+                        "phone-skew relative z-20 rounded-b-[10px] rounded-t-[15px] lg:rounded-b-[20px] lg:rounded-t-[30px]",
                     )}
                     src={imageUrl}
                     style={{
