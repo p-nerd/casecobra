@@ -47,6 +47,13 @@ class Image extends Model
         return $url;
     }
 
+    public function makeRemovable()
+    {
+        self::update([
+            "removable" => true,
+        ]);
+    }
+
     private static function humanifyFilename($filename): string
     {
         $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);

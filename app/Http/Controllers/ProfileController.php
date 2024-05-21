@@ -82,23 +82,15 @@ class ProfileController extends Controller
             'width' => ['required', 'int', 'min:0'],
         ]);
 
-        $pic = Image::store(
+        $image = Image::store(
             $payload['image'],
             $payload['height'],
             $payload['width']
         );
 
         $profile = auth()->user()->profile;
-
-        if ($profile->image) {
-            $profile->image->update([
-                "removable" => true,
-            ]);
-        }
-
-        $profile->update([
-            "image_id" => $pic->id,
-        ]);
+        $profile->image?->makeRemovable();
+        $profile->update(["image_id" => $image->id]);
 
         return redirect(route("profile.edit"));
     }
