@@ -8,28 +8,28 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn () => inertia('Home'))->name("home");
 
 Route::prefix("/create-case")->group(function () {
-    Route::get("/", fn () => redirect("/create-case/upload"));
+    Route::get("/", fn () => redirect()->route("create-case.upload.create"));
 
-    Route::get("/upload", [CreateCaseController::class, "uploadCreate"]);
-    Route::post("/upload", [CreateCaseController::class, "uploadStore"]);
+    Route::get("/upload", [CreateCaseController::class, "uploadCreate"])->name("create-case.upload.create");
+    Route::post("/upload", [CreateCaseController::class, "uploadStore"])->name("create-case.upload.store");
 
-    Route::get("/design", [CreateCaseController::class, "designCreate"]);
-    Route::post("/design", [CreateCaseController::class, "designStore"]);
+    Route::get("/design", [CreateCaseController::class, "designCreate"])->name("create-case.design.create");
+    Route::post("/design", [CreateCaseController::class, "designStore"])->name("create-case.design.store");
 
-    Route::get("/preview", [CreateCaseController::class, "previewCreate"]);
-    Route::post("/preview", [CreateCaseController::class, "previewStore"])->middleware("auth");
+    Route::get("/preview", [CreateCaseController::class, "previewCreate"])->name("create-case.preview.create");
+    Route::post("/preview", [CreateCaseController::class, "previewStore"])->middleware("auth")->name("create-case.preview.store");
 
-    Route::get("/checkout", [CreateCaseController::class, "checkoutCreate"])->middleware("auth");
+    Route::get("/checkout", [CreateCaseController::class, "checkoutCreate"])->middleware("auth")->name("create-case.checkout.create");
 
-    Route::get("/thank-you", [CreateCaseController::class, "thankYouCreate"])->middleware("auth");
+    Route::get("/thank-you", [CreateCaseController::class, "thankYouCreate"])->middleware("auth")->name("create-case.thank-you.create");
 });
 
 Route::middleware('auth')->prefix("/profile")->group(function () {
     Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post("/picture", [ProfileController::class, "updatePicture"])->name("profile.picture.save");
-    Route::patch("/billing", [ProfileController::class, "updateBilling"])->name("profile.billing.update");
+    Route::post("/picture", [ProfileController::class, "pictureStore"])->name("profile.picture.store");
+    Route::patch("/billing", [ProfileController::class, "billingUpdate"])->name("profile.billing.update");
 });
 
 Route::middleware('auth')->prefix("/orders")->group(function () {

@@ -18,7 +18,7 @@ const Upload = () => {
         try {
             const { height, width } = await getImageDimensions(image);
             router.post(
-                "/create-case/upload",
+                route("create-case.upload.store"),
                 {
                     image,
                     height,

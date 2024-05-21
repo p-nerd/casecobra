@@ -14,7 +14,7 @@ const ProfilePicture = (props: { avatar?: string; name: string }) => {
         try {
             const { height, width } = await getImageDimensions(image);
             router.post(
-                route("profile.picture.save"),
+                route("profile.picture.store"),
                 {
                     image,
                     height,

@@ -1,4 +1,4 @@
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 import { Link } from "@inertiajs/react";
@@ -29,9 +29,19 @@ const Item = (props: { label: string; value: string }) => {
 const Orders = (props: { orders: TOrder[] }) => {
     return (
         <SiteLayout title={`Orders (${props.orders?.length || 0})`}>
-            <Container className="py-12">
-                <div className="mx-auto space-y-6">
-                    <Header>Your Orders ({props.orders?.length || 0})</Header>
+            <Container className="mx-auto space-y-6 py-12">
+                <Header>Your Orders ({props.orders?.length || 0})</Header>
+                {props.orders.length === 0 ? (
+                    <Section className="text-center">
+                        You have no order yet
+                        <Link
+                            href={route("create-case.upload.create")}
+                            className={cn(buttonVariants({ variant: "link" }), "px-1")}
+                        >
+                            make a order Now
+                        </Link>
+                    </Section>
+                ) : (
                     <div className="grid gap-5 lg:grid-cols-2">
                         {props.orders.map(order => (
                             <Section className="flex items-center gap-5 py-4">
@@ -60,7 +70,7 @@ const Orders = (props: { orders: TOrder[] }) => {
                             </Section>
                         ))}
                     </div>
-                </div>
+                )}
             </Container>
         </SiteLayout>
     );

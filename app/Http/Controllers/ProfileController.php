@@ -65,7 +65,7 @@ class ProfileController extends Controller
         return redirect()->route('home');
     }
 
-    public function updatePicture(Request $request): RedirectResponse
+    public function pictureStore(Request $request): RedirectResponse
     {
         $payload = $request->validate([
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg'],
@@ -86,7 +86,7 @@ class ProfileController extends Controller
         return redirect()->route("profile.edit");
     }
 
-    public function updateBilling(Request $request)
+    public function billingUpdate(Request $request)
     {
         $payload = $request->validate([
             'phone' => ['required', 'string', 'max:15'],

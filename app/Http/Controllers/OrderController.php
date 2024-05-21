@@ -31,6 +31,10 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        if (auth()->id() !== $order->user_id) {
+            return abort(404);
+        }
+
         $order = [
             "id" => $order->id,
             "status" => $order->status,
