@@ -21,3 +21,12 @@ export const calculatePrice = (
 ) => {
     return (basePrice + (finish?.price || 0) + (material?.price || 0)) / 100;
 };
+
+export const formatDate = (_date: string): string => {
+    const date = new Date(_date);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const year = date.getFullYear().toString();
+
+    return `${day}-${month}-${year}`;
+};

@@ -40,7 +40,39 @@ class DashboardOrderController extends Controller
      */
     public function show(Order $order)
     {
-        return inertia("dashboard/orders/Show");
+        $order = [
+            "id" => $order->id,
+            "user_id" => $order->user_id,
+            "status" => $order->status,
+            "amount" => $order->amount,
+            "name" => $order->name,
+            "email" => $order->email,
+            "phone" => $order->phone,
+            "address_1" => $order->address_1,
+            "address_2" => $order->address_2,
+            "zip" => $order->zip,
+            "city" => $order->city,
+            "state" => $order->state,
+            "country" => $order->country,
+            "originalImageKey" => $order->caseDesign->originalImage->url,
+            "originalImageUrl" => $order->caseDesign->originalImage->fullurl(),
+            "croppedImageKey" => $order->caseDesign->croppedImage->url,
+            "croppedImageUrl" => $order->caseDesign->croppedImage->fullurl(),
+            "color" => [
+                "label" => $order->caseDesign->color->label,
+                "value" => $order->caseDesign->color->value,
+            ],
+            "modelLabel" => $order->caseDesign->phoneModel->label,
+            "materialLabel" => $order->caseDesign->material->label,
+            "finishLabel" => $order->caseDesign->finish->label,
+            "paid" => $order->paid,
+            "created_at" => $order->created_at,
+            "charge_id" => $order->charge_id,
+        ];
+
+        return inertia("dashboard/orders/Show", [
+            "order" => $order,
+        ]);
     }
 
     /**
