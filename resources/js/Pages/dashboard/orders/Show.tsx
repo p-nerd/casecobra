@@ -1,16 +1,14 @@
 import type { TID } from "@/types";
 
 import { formatPrice, formatDate } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-
-import { Link } from "@inertiajs/react";
 
 import SiteLayout from "@/layouts/SiteLayout";
 
 import { cn } from "@/lib/utils";
 import { Container, Phone } from "@/components/ui2/misc";
-import { ReactNode } from "react";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ReactNode, useState } from "react";
+import { Button } from "@/components/ui/button";
+import Modal from "@/components/Modal";
 
 const Section = (props: { title: string; children: ReactNode }) => {
     return (
@@ -60,16 +58,31 @@ type TOrder = {
     charge_id: string;
 };
 
+const ChangeStatus = () => {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <div className="pt-2">
+            <Button size="sm" onClick={() => setOpen(true)}>
+                Change Order Status
+            </Button>
+        </div>
+    );
+};
+
 const Info = ({ order }: { order: TOrder }) => {
     return (
         <>
             <Section title="Order Details">
-                <Item label="User" value={`#${order.user_id}`} />
+                <Item label="Id" value={`#${order.id}`} />
+                <Item label="User" value={`#${order.user_id} (${order.name})`} />
                 <Item label="Amount" value={formatPrice(order.amount / 100)} />
                 <Item label="Payment" value={order.paid ? "Paid" : "Unpiad"} />
                 <Item label="Status" value={order.status.toUpperCase()} />
                 <Item label="Placed On" value={formatDate(order.created_at)} />
                 <Item label="Charge Id" value={order.charge_id} />
+
+                <ChangeStatus />
             </Section>
 
             <Section title="Case Details">
@@ -131,9 +144,9 @@ const Info = ({ order }: { order: TOrder }) => {
 
 const Order = ({ order }: { order: TOrder }) => {
     return (
-        <SiteLayout title="Checkout Phone Case">
-            <Container className="flex flex-1 flex-col py-10 text-sm lg:flex-row">
-                <div className="my-10 w-full space-y-6 lg:w-2/5">
+        <SiteLayout title={`Manage Order #${order.id}`}>
+            <Container className="flex flex-1 flex-col text-sm lg:flex-row">
+                <div className="w-full space-y-6 py-10 lg:w-2/5">
                     <h3 className="text-center text-3xl font-bold tracking-tight text-gray-900">
                         {order.modelLabel} Case
                     </h3>
