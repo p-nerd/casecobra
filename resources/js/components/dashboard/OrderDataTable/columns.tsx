@@ -164,14 +164,14 @@ const columns: ColumnDef<TOrder>[] = [
     },
     {
         accessorKey: "id",
-        header: ({ column }) => <ColumnHeader column={column} title="Task" />,
+        header: ({ column }) => <ColumnHeader column={column} title="ID" />,
         cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
         enableSorting: false,
         enableHiding: false,
     },
     {
         accessorKey: "email",
-        header: ({ column }) => <ColumnHeader column={column} title="Title" />,
+        header: ({ column }) => <ColumnHeader column={column} title="Email" />,
         cell: ({ row }) => {
             return (
                 <div className="flex space-x-2">
