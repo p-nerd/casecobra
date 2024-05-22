@@ -1,10 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TOrder } from "./orderSchema";
 
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "@radix-ui/react-icons";
-import { CheckCircledIcon, CircleIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon, CircleIcon } from "@radix-ui/react-icons";
 import { QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
 
 import type { Row } from "@tanstack/react-table";
@@ -13,13 +12,9 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
-import { DropdownMenuShortcut, DropdownMenuSub } from "@/components/ui/dropdown-menu";
-import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
-import { DropdownMenuSubContent, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-
-import orderSchema from "./orderSchema";
 
 import type { Column } from "@tanstack/react-table";
 
@@ -75,24 +70,7 @@ const ColumnHeader = <TData, TValue>(props: {
     );
 };
 
-export const labels = [
-    {
-        value: "bug",
-        label: "Bug",
-    },
-    {
-        value: "feature",
-        label: "Feature",
-    },
-    {
-        value: "documentation",
-        label: "Documentation",
-    },
-];
-
 const RowActions = <TData,>({ row }: { row: Row<TData> }) => {
-    const task = orderSchema.parse(row.original);
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -106,6 +84,7 @@ const RowActions = <TData,>({ row }: { row: Row<TData> }) => {
                 <DropdownMenuItem>Make a copy</DropdownMenuItem>
                 <DropdownMenuItem>Favorite</DropdownMenuItem>
                 <DropdownMenuSeparator />
+                {/*
                 <DropdownMenuSub>
                     <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
@@ -119,6 +98,7 @@ const RowActions = <TData,>({ row }: { row: Row<TData> }) => {
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
                 <DropdownMenuSeparator />
+*/}
                 <DropdownMenuItem>
                     Delete
                     <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
@@ -130,48 +110,31 @@ const RowActions = <TData,>({ row }: { row: Row<TData> }) => {
 
 export const statuses = [
     {
-        value: "backlog",
-        label: "Backlog",
+        value: "awaiting",
+        label: "Awaiting",
         icon: QuestionMarkCircledIcon,
     },
+
     {
-        value: "todo",
-        label: "Todo",
-        icon: CircleIcon,
-    },
-    {
-        value: "in progress",
-        label: "In Progress",
+        value: "processing",
+        label: "Processing",
         icon: StopwatchIcon,
     },
     {
-        value: "done",
-        label: "Done",
+        value: "shipped",
+        label: "Shipped",
+        icon: CircleIcon,
+    },
+    {
+        value: "completed",
+        label: "Completed",
         icon: CheckCircledIcon,
     },
-    {
-        value: "canceled",
-        label: "Canceled",
-        icon: CrossCircledIcon,
-    },
-];
-
-export const priorities = [
-    {
-        label: "Low",
-        value: "low",
-        icon: ArrowDownIcon,
-    },
-    {
-        label: "Medium",
-        value: "medium",
-        icon: ArrowRightIcon,
-    },
-    {
-        label: "High",
-        value: "high",
-        icon: ArrowUpIcon,
-    },
+    // {
+    //     value: "canceled",
+    //     label: "Canceled",
+    //     icon: CrossCircledIcon,
+    // },
 ];
 
 const columns: ColumnDef<TOrder>[] = [
@@ -207,16 +170,13 @@ const columns: ColumnDef<TOrder>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "title",
+        accessorKey: "email",
         header: ({ column }) => <ColumnHeader column={column} title="Title" />,
         cell: ({ row }) => {
-            const label = labels.find(label => label.value === row.original.label);
-
             return (
                 <div className="flex space-x-2">
-                    {label && <Badge variant="outline">{label.label}</Badge>}
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("title")}
+                        {row.getValue("email")}
                     </span>
                 </div>
             );
@@ -236,31 +196,6 @@ const columns: ColumnDef<TOrder>[] = [
                 <div className="flex w-[100px] items-center">
                     {status.icon && <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
                     <span>{status.label}</span>
-                </div>
-            );
-        },
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
-        },
-    },
-    {
-        accessorKey: "priority",
-        header: ({ column }) => <ColumnHeader column={column} title="Priority" />,
-        cell: ({ row }) => {
-            const priority = priorities.find(
-                priority => priority.value === row.getValue("priority"),
-            );
-
-            if (!priority) {
-                return null;
-            }
-
-            return (
-                <div className="flex items-center">
-                    {priority.icon && (
-                        <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                    )}
-                    <span>{priority.label}</span>
                 </div>
             );
         },

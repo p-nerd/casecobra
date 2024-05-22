@@ -1,4 +1,4 @@
-import { priorities, statuses } from "./columns";
+import { statuses } from "./columns";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -192,13 +192,6 @@ const Toolbar = <TData,>({ table }: { table: Table<TData> }) => {
                         column={table.getColumn("status")}
                         title="Status"
                         options={statuses}
-                    />
-                )}
-                {table.getColumn("priority") && (
-                    <FacetedFilter
-                        column={table.getColumn("priority")}
-                        title="Priority"
-                        options={priorities}
                     />
                 )}
                 {isFiltered && (

@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { useState } from "react";
 import { getFacetedUniqueValues, getFilteredRowModel } from "@tanstack/react-table";
 import { flexRender, getCoreRowModel, getFacetedRowModel } from "@tanstack/react-table";
@@ -9,7 +8,7 @@ import { Table as UITable, TableBody } from "@/components/ui/table";
 import { TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef, ColumnFiltersState, SortingState } from "@tanstack/react-table";
 
-import orderSchema, { TOrder } from "./orderSchema";
+import { TOrder } from "./orderSchema";
 
 import columns from "./columns";
 import Toolbar from "./Toolbar";
@@ -105,7 +104,7 @@ const DataTableInternal = <TData, TValue>({
 };
 
 const DataTable = (props: { items: TOrder[] }) => {
-    return <DataTableInternal data={z.array(orderSchema).parse(props.items)} columns={columns} />;
+    return <DataTableInternal data={props.items} columns={columns} />;
 };
 
 export default DataTable;

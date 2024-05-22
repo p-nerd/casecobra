@@ -10,7 +10,7 @@ const Orders = (props: { orders: TOrder[] }) => {
         <SiteLayout title="Manage Orders">
             <Container className="mx-auto space-y-6 py-12">
                 <Header>Manage Orders</Header>
-                <OrderDataTable />
+                <OrderDataTable items={props.orders} />
             </Container>
         </SiteLayout>
     );
