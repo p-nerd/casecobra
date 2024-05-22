@@ -14,7 +14,7 @@ class DashboardOrderController extends Controller
     {
         $orders = Order::select(["id", "email", "amount", "paid", "status", "created_at", "updated_at"])->get();
 
-        return inertia('dashboard/Orders', [
+        return inertia('dashboard/orders/Index', [
             "orders" => $orders,
         ]);
     }
@@ -40,7 +40,7 @@ class DashboardOrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return inertia("dashboard/orders/Show");
     }
 
     /**

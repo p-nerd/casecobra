@@ -44,6 +44,7 @@ Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(func
 
     Route::prefix('/orders')->group(function () {
         Route::get('/', [DashboardOrderController::class, "index"])->name('dashboard.orders.index');
+        Route::get('/{order}', [DashboardOrderController::class, "show"])->name('dashboard.orders.show');
     });
 
     Route::get('/settings', fn () => inertia('dashboard/Settings'))->name('dashboard.settings.index');

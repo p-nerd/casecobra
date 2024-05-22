@@ -7,7 +7,7 @@ import { CheckCircledIcon, CircleIcon } from "@radix-ui/react-icons";
 import { QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
 
 import type { Row } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
@@ -21,6 +21,7 @@ import type { Column } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 
 import { CaretSortIcon, EyeNoneIcon } from "@radix-ui/react-icons";
+import { Link } from "@inertiajs/react";
 
 const ColumnHeader = <TData, TValue>(props: {
     column: Column<TData, TValue>;
@@ -165,7 +166,14 @@ const columns: ColumnDef<TOrder>[] = [
     {
         accessorKey: "id",
         header: ({ column }) => <ColumnHeader column={column} title="ID" />,
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+        cell: ({ row }) => (
+            <Link
+                href={`/dashboard/orders/${row.getValue("id")}`}
+                className={cn(buttonVariants({ variant: "link" }), "px-0")}
+            >
+                {row.getValue("id")}
+            </Link>
+        ),
         enableSorting: false,
         enableHiding: false,
     },
