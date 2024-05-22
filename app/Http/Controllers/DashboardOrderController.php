@@ -12,7 +12,11 @@ class DashboardOrderController extends Controller
      */
     public function index()
     {
-        return inertia('dashboard/Orders');
+        $orders = Order::select(["id", "email", "amount", "paid", "status", "created_at", "updated_at"])->get();
+
+        return inertia('dashboard/Orders', [
+            "orders" => $orders,
+        ]);
     }
 
     /**

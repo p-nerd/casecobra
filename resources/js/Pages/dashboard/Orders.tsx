@@ -1,14 +1,16 @@
+import type { TOrder } from "@/components/dashboard/OrderDataTable/orderSchema";
+
 import { Container, Header } from "@/components/ui2/misc";
 
 import SiteLayout from "@/layouts/SiteLayout";
-import DataTable from "@/components/ui2/data-table";
+import OrderDataTable from "@/components/dashboard/OrderDataTable";
 
-const Orders = () => {
+const Orders = (props: { orders: TOrder[] }) => {
     return (
         <SiteLayout title="Manage Orders">
             <Container className="mx-auto space-y-6 py-12">
                 <Header>Manage Orders</Header>
-                <DataTable />
+                <OrderDataTable />
             </Container>
         </SiteLayout>
     );
