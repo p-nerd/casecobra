@@ -4,11 +4,13 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Enums\Role;
 use App\Models\Color;
 use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
 use App\Models\Option;
+use App\Models\Order;
 use App\Models\PhoneModel;
 use App\Models\Profile;
 use App\Models\User;
@@ -21,10 +23,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Option::setCaseBasePrice(1500);
+
         $adminUser = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@casecobra.com',
-            "role" => "admin",
+            "role" => Role::ADMIN->value,
         ]);
         Profile::factory()->create([
             "user_id" => $adminUser->id,
@@ -35,7 +39,29 @@ class DatabaseSeeder extends Seeder
         $this->materials($adminUser->id);
         $this->finishes($adminUser->id);
 
-        Option::setCaseBasePrice(1500);
+        $shihab4t = User::factory()->create([
+            "name" => "Shihab Mahamud",
+            "email" => "shihab4t@gmail.com",
+            "role" => Role::USER->value,
+        ]);
+        Profile::factory()->create([
+            "user_id" => $shihab4t->id,
+        ]);
+        Order::factory(10)->create([
+            "user_id" => $shihab4t->id,
+        ]);
+
+        $romi = User::factory()->create([
+            "name" => "MD Romi",
+            "email" => "romi@gmail.com",
+            "role" => Role::USER->value,
+        ]);
+        Profile::factory()->create([
+            "user_id" => $romi->id,
+        ]);
+        Order::factory(10)->create([
+            "user_id" => $romi->id,
+        ]);
     }
 
     private function phoneModels(int $user_id)

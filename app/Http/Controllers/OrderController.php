@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $orders = Order::query()
-            ->where("user_id", auth()->id())
+            ->where("user_id", $request->user()->id)
+            ->with("caseDesign.croppedImage")
             ->with("caseDesign.color")
             ->with("caseDesign.phoneModel")
+            ->with("caseDesign.material")
+            ->with("caseDesign.finish")
             ->get()
             ->map(fn (Order $order) => [
                 "id" => $order->id,
@@ -29,9 +33,9 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show(Order $order)
+    public function show(Request $request, Order $order)
     {
-        if (auth()->id() !== $order->user_id) {
+        if ($request->user()->id !== $order->user_id) {
             return abort(404);
         }
 

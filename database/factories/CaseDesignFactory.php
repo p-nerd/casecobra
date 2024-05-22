@@ -7,7 +7,6 @@ use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
 use App\Models\PhoneModel;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,7 +28,6 @@ class CaseDesignFactory extends Factory
             'color_id' => Color::inRandomOrder()->pluck('id')->random(),
             'material_id' => Material::inRandomOrder()->pluck('id')->random(),
             'finish_id' => Finish::inRandomOrder()->pluck('id')->random(),
-            'user_id' => User::inRandomOrder()->pluck('id')->random(),
         ];
     }
 }
