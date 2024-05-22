@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Status;
 use App\Models\CaseDesign;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->decimal('amount', 8, 2);
             $table->boolean('paid')->default(false);
             $table->boolean('end')->default(false);
-            $table->enum("status", ["awaiting", 'shipped', 'fullfilled'])->default('awaiting');
+            $table->enum("status", Status::values())->default(Status::AWAITING->value);
             $table->enum("charge_method", ["stripe", "free"])->default("stripe");
             $table->string("charge_id")->nullable();
             $table->string('email');

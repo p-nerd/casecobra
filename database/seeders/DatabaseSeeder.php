@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         Profile::factory()->create([
             "user_id" => $shihab4t->id,
         ]);
-        Order::factory(10)->create([
+        Order::factory(100)->create([
             "user_id" => $shihab4t->id,
         ]);
 

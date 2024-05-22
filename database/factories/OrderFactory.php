@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Status;
 use App\Models\CaseDesign;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,7 +24,7 @@ class OrderFactory extends Factory
             'case_design_id' => CaseDesign::factory(),
             'amount' => fake()->randomFloat(2, 10, 500),
             'paid' => fake()->boolean,
-            'status' => fake()->randomElement(['awaiting', 'shipped', 'fullfilled']),
+            'status' => fake()->randomElement(Status::values()),
             'email' => fake()->safeEmail,
             'phone' => fake()->phoneNumber,
             'address_1' => fake()->streetAddress,

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CreateCaseController;
+use App\Http\Controllers\DashboardOrderController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -40,8 +41,12 @@ Route::middleware('auth')->prefix("/orders")->group(function () {
 Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(function () {
     Route::get('/', fn () => redirect(route("dashboard.overview.index")));
     Route::get('/overview', fn () => inertia('dashboard/Overview'))->name('dashboard.overview.index');
-    Route::get('/orders', fn () => inertia('dashboard/Orders'));
-    Route::get('/settings', fn () => inertia('dashboard/Settings'));
+
+    Route::prefix('/orders')->group(function () {
+        Route::get('/', [DashboardOrderController::class, "index"])->name('dashboard.orders.index');
+    });
+
+    Route::get('/settings', fn () => inertia('dashboard/Settings'))->name('dashboard.settings.index');
 });
 
 require __DIR__.'/auth.php';
