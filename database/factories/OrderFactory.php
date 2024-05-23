@@ -25,6 +25,7 @@ class OrderFactory extends Factory
             'amount' => fake()->randomFloat(2, 10, 500),
             'paid' => fake()->boolean,
             'status' => fake()->randomElement(Status::values()),
+            'name' => fake()->name,
             'email' => fake()->safeEmail,
             'phone' => fake()->phoneNumber,
             'address_1' => fake()->streetAddress,
