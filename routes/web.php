@@ -46,6 +46,7 @@ Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(func
         Route::get('/', [DashboardOrderController::class, "index"])->name('dashboard.orders.index');
         Route::get('/{order}', [DashboardOrderController::class, "show"])->name('dashboard.orders.show');
         Route::patch('/{order}', [DashboardOrderController::class, "update"])->name('dashboard.orders.update');
+        Route::delete('/{order}', [DashboardOrderController::class, "destroy"])->name('dashboard.orders.destroy');
     });
 
     Route::get('/settings', fn () => inertia('dashboard/Settings'))->name('dashboard.settings.index');

@@ -14,7 +14,20 @@ class DashboardOrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::select(["id", "email", "amount", "paid", "status", "created_at", "updated_at"])->get();
+        $orders = Order::query()
+            ->with("caseDesign.croppedImage")
+            ->get()
+            ->map(fn (Order $order) => [
+                "id" => $order->id,
+                "user_id" => $order->user_id,
+                "name" => $order->name,
+                "email" => $order->email,
+                "amount" => $order->amount,
+                "payment" => $order->paid ? "paid" : "unpaid",
+                "status" => $order->status,
+                "createdAt" => $order->created_at,
+                "croppedImageUrl" => $order->caseDesign->croppedImage->fullurl(),
+            ]);
 
         return inertia('dashboard/orders/Index', [
             "orders" => $orders,
@@ -106,6 +119,8 @@ class DashboardOrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $order->delete();
+
+        return redirect()->route("dashboard.orders.index");
     }
 }

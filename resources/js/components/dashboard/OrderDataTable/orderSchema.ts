@@ -2,12 +2,14 @@ import { z } from "zod";
 
 const orderSchema = z.object({
     id: z.string(),
+    user_id: z.string(),
+    name: z.string(),
     email: z.string(),
     amount: z.number(),
-    paid: z.boolean(),
+    payment: z.string(),
     status: z.string(),
-    create_at: z.string(),
-    update_at: z.string(),
+    createdAt: z.string(),
+    croppedImageUrl: z.string(),
 });
 
 export default orderSchema;

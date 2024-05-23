@@ -1,27 +1,17 @@
-import type { ColumnDef } from "@tanstack/react-table";
 import type { TOrder } from "./orderSchema";
+import type { ColumnDef, Column, Row } from "@tanstack/react-table";
 
+import { Link, router } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
-import { CheckCircledIcon, CircleIcon } from "@radix-ui/react-icons";
-import { QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
-
-import type { Row } from "@tanstack/react-table";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { DropdownMenu } from "@/components/ui/dropdown-menu";
-import { DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { ArrowDownIcon, ArrowUpIcon, CheckCircledIcon } from "@radix-ui/react-icons";
+import { CircleIcon, QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon, CaretSortIcon, EyeNoneIcon } from "@radix-ui/react-icons";
+import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import type { Column } from "@tanstack/react-table";
-
-import { cn } from "@/lib/utils";
-
-import { CaretSortIcon, EyeNoneIcon } from "@radix-ui/react-icons";
-import { Link } from "@inertiajs/react";
+import { cn, formatDate, formatPrice } from "@/lib/utils";
 
 const ColumnHeader = <TData, TValue>(props: {
     column: Column<TData, TValue>;
@@ -71,7 +61,13 @@ const ColumnHeader = <TData, TValue>(props: {
     );
 };
 
-const RowActions = <TData,>({ row }: { row: Row<TData> }) => {
+const RowActions = ({ row }: { row: Row<TOrder> }) => {
+    const handleDelete = () => {
+        if (confirm("Are you sure?")) {
+            router.delete(route("dashboard.orders.destroy", { order: row.original.id }));
+        }
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -81,29 +77,18 @@ const RowActions = <TData,>({ row }: { row: Row<TData> }) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                <DropdownMenuItem>Favorite</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                {/*
-                <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                        <DropdownMenuRadioGroup value={task.label}>
-                            {labels.map(label => (
-                                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                                    {label.label}
-                                </DropdownMenuRadioItem>
-                            ))}
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSeparator />
-*/}
-                <DropdownMenuItem>
-                    Delete
-                    <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+                <DropdownMenuItem
+                    onClick={() =>
+                        router.get(route("dashboard.orders.show", { order: row.original.id }))
+                    }
+                >
+                    Details
                 </DropdownMenuItem>
+                <a href={row.original.croppedImageUrl} target="_blank">
+                    <DropdownMenuItem>Cropped Image</DropdownMenuItem>
+                </a>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );
@@ -168,27 +153,34 @@ const columns: ColumnDef<TOrder>[] = [
         header: ({ column }) => <ColumnHeader column={column} title="ID" />,
         cell: ({ row }) => (
             <Link
+                className="hover:underline hover:underline-offset-2"
                 href={`/dashboard/orders/${row.getValue("id")}`}
-                className={cn(buttonVariants({ variant: "link" }), "px-0")}
             >
-                {row.getValue("id")}
+                #{row.getValue("id")}
             </Link>
         ),
-        enableSorting: false,
-        enableHiding: false,
     },
     {
-        accessorKey: "email",
-        header: ({ column }) => <ColumnHeader column={column} title="Email" />,
-        cell: ({ row }) => {
-            return (
-                <div className="flex space-x-2">
-                    <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("email")}
-                    </span>
-                </div>
-            );
-        },
+        accessorKey: "user",
+        header: () => "User",
+        cell: ({ row }) => (
+            <div className="flex flex-col">
+                <span>
+                    #{row.original.user_id} ({row.original.name || "N/A"})
+                </span>
+                <span>{row.original.email}</span>
+            </div>
+        ),
+    },
+    {
+        accessorKey: "amount",
+        header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
+        cell: ({ row }) => formatPrice(row.original.amount / 100),
+    },
+    {
+        accessorKey: "payment",
+        header: ({ column }) => <ColumnHeader column={column} title="Payment" />,
+        cell: ({ row }) => row.original.payment,
     },
     {
         accessorKey: "status",
@@ -210,6 +202,11 @@ const columns: ColumnDef<TOrder>[] = [
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
+    },
+    {
+        accessorKey: "createdAt",
+        header: ({ column }) => <ColumnHeader column={column} title="CreatedAt" />,
+        cell: ({ row }) => formatDate(row.original.createdAt),
     },
     {
         id: "actions",
