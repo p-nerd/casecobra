@@ -1,14 +1,17 @@
 import type { TID } from "@/types";
-
-import { formatPrice, formatDate } from "@/lib/utils";
-
-import SiteLayout from "@/layouts/SiteLayout";
+import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { Container, Phone } from "@/components/ui2/misc";
-import { ReactNode, useState } from "react";
+import { router } from "@inertiajs/react";
+import { useCallback, useState } from "react";
+import { formatPrice, formatDate } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
-import Modal from "@/components/Modal";
+import { Container, Phone } from "@/components/ui2/misc";
+import { SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
+
+import SiteLayout from "@/layouts/SiteLayout";
 
 const Section = (props: { title: string; children: ReactNode }) => {
     return (
@@ -58,19 +61,45 @@ type TOrder = {
     charge_id: string;
 };
 
-const ChangeStatus = () => {
+const ChangeStatus = ({
+    orderId,
+    statuses,
+    status,
+}: {
+    orderId: TID;
+    statuses: string[];
+    status: string;
+}) => {
     const [open, setOpen] = useState(false);
 
+    const handleChangeStatus = useCallback((status: string) => {
+        router.patch(route("dashboard.orders.update", { order: orderId }), { status });
+    }, []);
+
     return (
-        <div className="pt-2">
-            <Button size="sm" onClick={() => setOpen(true)}>
+        <div className="flex gap-3 pt-3">
+            <Button variant={open ? "destructive" : "default"} onClick={() => setOpen(!open)}>
                 Change Order Status
             </Button>
+            {open && (
+                <Select value={status} onValueChange={handleChangeStatus}>
+                    <SelectTrigger className="w-[180px] bg-white">
+                        <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {statuses.map((status, index) => (
+                            <SelectItem value={status} key={index}>
+                                {status.toUpperCase()}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            )}
         </div>
     );
 };
 
-const Info = ({ order }: { order: TOrder }) => {
+const Info = ({ order, statuses }: { order: TOrder; statuses: string[] }) => {
     return (
         <>
             <Section title="Order Details">
@@ -82,7 +111,7 @@ const Info = ({ order }: { order: TOrder }) => {
                 <Item label="Placed On" value={formatDate(order.created_at)} />
                 <Item label="Charge Id" value={order.charge_id} />
 
-                <ChangeStatus />
+                <ChangeStatus orderId={order.id} statuses={statuses} status={order.status} />
             </Section>
 
             <Section title="Case Details">
@@ -142,7 +171,7 @@ const Info = ({ order }: { order: TOrder }) => {
     );
 };
 
-const Order = ({ order }: { order: TOrder }) => {
+const Order = ({ order, statuses }: { order: TOrder; statuses: string[] }) => {
     return (
         <SiteLayout title={`Manage Order #${order.id}`}>
             <Container className="flex flex-1 flex-col text-sm lg:flex-row">
@@ -161,7 +190,7 @@ const Order = ({ order }: { order: TOrder }) => {
                     </div>
                 </div>
                 <div className="lg:w-3/5">
-                    <Info order={order} />
+                    <Info order={order} statuses={statuses} />
                 </div>
             </Container>
         </SiteLayout>

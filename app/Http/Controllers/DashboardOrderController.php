@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Status;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DashboardOrderController extends Controller
 {
@@ -72,6 +74,7 @@ class DashboardOrderController extends Controller
 
         return inertia("dashboard/orders/Show", [
             "order" => $order,
+            "statuses" => Status::values(),
         ]);
     }
 
@@ -88,7 +91,14 @@ class DashboardOrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $payload = $request->validate([
+            'status' => ["sometimes", Rule::enum(Status::class)],
+        ]);
+
+        $order->fill($payload);
+        $order->save();
+
+        return redirect()->route("dashboard.orders.show", ["order" => $order->id]);
     }
 
     /**
