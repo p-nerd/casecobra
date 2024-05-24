@@ -2,8 +2,7 @@ import type { TID } from "@/types";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { formatPrice, formatDate } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import { SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 
 import SiteLayout from "@/layouts/SiteLayout";
+import { useChangeStatus, useDeleteOrder } from "@/components/dashboard/orders/columns";
 
 const Section = (props: { title: string; children: ReactNode }) => {
     return (
@@ -72,17 +72,18 @@ const ChangeStatus = ({
 }) => {
     const [open, setOpen] = useState(false);
 
-    const handleChangeStatus = useCallback((status: string) => {
-        router.patch(route("dashboard.orders.update", { order: orderId }), { status });
-    }, []);
+    const handleChangeStatus = useChangeStatus("show");
 
     return (
         <div className="flex gap-3 pt-3">
-            <Button variant={open ? "destructive" : "default"} onClick={() => setOpen(!open)}>
+            <Button onClick={() => setOpen(!open)} className="min-w-[166px]">
                 Change Order Status
             </Button>
             {open && (
-                <Select value={status} onValueChange={handleChangeStatus}>
+                <Select
+                    value={status}
+                    onValueChange={status => handleChangeStatus(status, orderId)}
+                >
                     <SelectTrigger className="w-[180px] bg-white">
                         <SelectValue placeholder="Theme" />
                     </SelectTrigger>
@@ -99,6 +100,19 @@ const ChangeStatus = ({
     );
 };
 
+const DeleteOrder = (props: { orderId: TID }) => {
+    const handleDeleteOrder = useDeleteOrder();
+    return (
+        <Button
+            variant="destructive"
+            className="mt-2 min-w-[166px]"
+            onClick={() => handleDeleteOrder(props.orderId)}
+        >
+            Delete The Order
+        </Button>
+    );
+};
+
 const Info = ({ order, statuses }: { order: TOrder; statuses: string[] }) => {
     return (
         <>
@@ -112,6 +126,7 @@ const Info = ({ order, statuses }: { order: TOrder; statuses: string[] }) => {
                 <Item label="Charge Id" value={order.charge_id} />
 
                 <ChangeStatus orderId={order.id} statuses={statuses} status={order.status} />
+                <DeleteOrder orderId={order.id} />
             </Section>
 
             <Section title="Case Details">

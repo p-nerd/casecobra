@@ -31,6 +31,7 @@ class DashboardOrderController extends Controller
 
         return inertia('dashboard/orders/Index', [
             "orders" => $orders,
+            "statuses" => Status::values(),
         ]);
     }
 
@@ -106,12 +107,17 @@ class DashboardOrderController extends Controller
     {
         $payload = $request->validate([
             'status' => ["sometimes", Rule::enum(Status::class)],
+            "from" => ["required", "in:index,show"],
         ]);
 
         $order->fill($payload);
         $order->save();
 
-        return redirect()->route("dashboard.orders.show", ["order" => $order->id]);
+        if ($payload["from"] === "show") {
+            return redirect()->route("dashboard.orders.show", ["order" => $order->id]);
+        }
+
+        return redirect()->route("dashboard.orders.index");
     }
 
     /**

@@ -1,4 +1,4 @@
-import type { TOrder } from "@/components/dashboard/OrderDataTable/orderSchema";
+import type { TOrder } from "@/components/dashboard/orders/orderSchema";
 
 import { useState } from "react";
 import { getFacetedUniqueValues, getFilteredRowModel } from "@tanstack/react-table";
@@ -11,18 +11,20 @@ import { Table as UITable, TableBody } from "@/components/ui/table";
 import { TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef, ColumnFiltersState, SortingState } from "@tanstack/react-table";
 
-import columns from "@/components/dashboard/OrderDataTable/columns";
+import columns from "@/components/dashboard/orders/columns";
 
 import SiteLayout from "@/layouts/SiteLayout";
-import Toolbar from "@/components/dashboard/OrderDataTable/Toolbar";
-import Pagination from "@/components/dashboard/OrderDataTable/Pagination";
+import Toolbar from "@/components/dashboard/orders/Toolbar";
+import Pagination from "@/components/dashboard/orders/Pagination";
 
 const OrderDataTable = <TData, TValue>({
     columns,
     data,
+    statuses,
 }: {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    statuses: string[];
 }) => {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -53,7 +55,7 @@ const OrderDataTable = <TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <Toolbar table={table} />
+            <Toolbar table={table} statuses={statuses} />
             <div className="rounded-md border">
                 <UITable className="rounded-lg bg-white">
                     <TableHeader>
@@ -65,9 +67,9 @@ const OrderDataTable = <TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                      header.column.columnDef.header,
-                                                      header.getContext(),
-                                                  )}
+                                                    header.column.columnDef.header,
+                                                    header.getContext(),
+                                                )}
                                         </TableHead>
                                     );
                                 })}
@@ -106,14 +108,16 @@ const OrderDataTable = <TData, TValue>({
     );
 };
 
-const Orders = (props: { orders: TOrder[] }) => {
-    console.log(props.orders);
-
+const Orders = (props: { orders: TOrder[]; statuses: string[] }) => {
     return (
         <SiteLayout title="Manage Orders">
             <Container className="mx-auto space-y-6 py-12">
                 <Header>Manage Orders</Header>
-                <OrderDataTable data={props.orders} columns={columns} />
+                <OrderDataTable
+                    data={props.orders}
+                    columns={columns(props.statuses)}
+                    statuses={props.statuses}
+                />
             </Container>
         </SiteLayout>
     );

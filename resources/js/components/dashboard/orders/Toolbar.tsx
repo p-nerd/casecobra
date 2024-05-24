@@ -1,23 +1,16 @@
-import { statuses } from "./columns";
+import type { Table, Column } from "@tanstack/react-table";
+
+import { cn } from "@/lib/utils";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Cross2Icon } from "@radix-ui/react-icons";
+import { Cross2Icon, MixerHorizontalIcon } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { Command, CommandEmpty, CommandGroup } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
-
-import type { Column } from "@tanstack/react-table";
-import type { ComponentType } from "react";
-
-import { cn } from "@/lib/utils";
-
-import type { Table } from "@tanstack/react-table";
-
-import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 import { DropdownMenu, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
@@ -59,11 +52,7 @@ const ViewOptions = <TData,>(props: { table: Table<TData> }) => {
 const FacetedFilter = <TData, TValue>(props: {
     column?: Column<TData, TValue>;
     title?: string;
-    options: {
-        label: string;
-        value: string;
-        icon?: ComponentType<{ className?: string }>;
-    }[];
+    options: string[];
 }) => {
     const facets = props.column?.getFacetedUniqueValues();
     const selectedValues = new Set(props.column?.getFilterValue() as string[]);
@@ -93,14 +82,14 @@ const FacetedFilter = <TData, TValue>(props: {
                                     </Badge>
                                 ) : (
                                     props.options
-                                        .filter(option => selectedValues.has(option.value))
+                                        .filter(option => selectedValues.has(option))
                                         .map(option => (
                                             <Badge
                                                 variant="secondary"
-                                                key={option.value}
+                                                key={option}
                                                 className="rounded-sm px-1 font-normal"
                                             >
-                                                {option.label}
+                                                {option.toUpperCase()}
                                             </Badge>
                                         ))
                                 )}
@@ -116,15 +105,15 @@ const FacetedFilter = <TData, TValue>(props: {
                         <CommandEmpty>No results found.</CommandEmpty>
                         <CommandGroup>
                             {props.options.map(option => {
-                                const isSelected = selectedValues.has(option.value);
+                                const isSelected = selectedValues.has(option);
                                 return (
                                     <CommandItem
-                                        key={option.value}
+                                        key={option}
                                         onSelect={() => {
                                             if (isSelected) {
-                                                selectedValues.delete(option.value);
+                                                selectedValues.delete(option);
                                             } else {
-                                                selectedValues.add(option.value);
+                                                selectedValues.add(option);
                                             }
                                             const filterValues = Array.from(selectedValues);
                                             props.column?.setFilterValue(
@@ -142,13 +131,10 @@ const FacetedFilter = <TData, TValue>(props: {
                                         >
                                             <CheckIcon className={cn("h-4 w-4")} />
                                         </div>
-                                        {option.icon && (
-                                            <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                                        )}
-                                        <span>{option.label}</span>
-                                        {facets?.get(option.value) && (
+                                        <span>{option.toUpperCase()}</span>
+                                        {facets?.get(option) && (
                                             <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                                                {facets.get(option.value)}
+                                                {facets.get(option)}
                                             </span>
                                         )}
                                     </CommandItem>
@@ -175,7 +161,7 @@ const FacetedFilter = <TData, TValue>(props: {
     );
 };
 
-const Toolbar = <TData,>({ table }: { table: Table<TData> }) => {
+const Toolbar = <TData,>({ table, statuses }: { table: Table<TData>; statuses: string[] }) => {
     const isFiltered = table.getState().columnFilters.length > 0;
 
     return (
