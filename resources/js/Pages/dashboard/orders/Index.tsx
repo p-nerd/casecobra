@@ -235,7 +235,13 @@ const Toolbar = ({ statuses }: { statuses: string[] }) => {
                     <Button
                         variant="ghost"
                         onClick={() =>
-                            navigate(url.replaceQueries(href, { id: undefined, status: undefined }))
+                            navigate(
+                                url.replaceQueries(href, {
+                                    id: undefined,
+                                    status: undefined,
+                                    page: undefined,
+                                }),
+                            )
                         }
                         className="h-8 px-2 lg:px-3"
                     >
@@ -387,9 +393,9 @@ const DataTable = <TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                      header.column.columnDef.header,
-                                                      header.getContext(),
-                                                  )}
+                                                    header.column.columnDef.header,
+                                                    header.getContext(),
+                                                )}
                                         </TableHead>
                                     );
                                 })}

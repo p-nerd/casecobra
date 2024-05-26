@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Status;
+use App\Helpers\URL;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -14,8 +15,19 @@ class DashboardOrderController extends Controller
      */
     public function index(Request $request)
     {
+        $id = URL::decode($request->query("id"));
+        $status = URL::querySplit($request->query("status"), ",");
+
+        $idStartWithHash = Str($id)->startsWith("#");
+
+        $idLike = $idStartWithHash ? null : $id;
+        $idHash = $idStartWithHash ? Str($id)->replaceStart("#", "")->value : null;
+
         $orders = Order::query()
             ->with("caseDesign.croppedImage")
+            ->when($idHash, fn ($query, $idHash) => $query->where('id', $idHash))
+            ->when($idLike, fn ($query, $idLike) => $query->where('id', 'like', "%$idLike%"))
+            ->when($status, fn ($query, $status) => $query->whereIn('status', $status))
             ->latest()
             ->paginate($request->query("per_page") ?? 10)
             ->withQueryString();
