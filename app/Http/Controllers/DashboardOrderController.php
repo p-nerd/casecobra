@@ -132,4 +132,19 @@ class DashboardOrderController extends Controller
 
         return redirect()->route("dashboard.orders.index");
     }
+
+    public function destroyMany(Request $request)
+    {
+        $payload = $request->validate([
+            "ids" => ["array", "nullable"],
+        ]);
+
+        $ids = $payload['ids'] ?? [];
+
+        if (! empty($ids)) {
+            Order::whereIn('id', $ids)->delete();
+        }
+
+        return redirect()->route("dashboard.orders.index", $request->query());
+    }
 }

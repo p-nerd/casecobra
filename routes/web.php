@@ -48,6 +48,7 @@ Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(func
 
     Route::prefix('/orders')->group(function () {
         Route::get('/', [DashboardOrderController::class, "index"])->name('dashboard.orders.index');
+        Route::delete('/', [DashboardOrderController::class, "destroyMany"])->name('dashboard.orders.destroyMany');
         Route::get('/{order}', [DashboardOrderController::class, "show"])->name('dashboard.orders.show');
         Route::patch('/{order}', [DashboardOrderController::class, "update"])->name('dashboard.orders.update');
         Route::delete('/{order}', [DashboardOrderController::class, "destroy"])->name('dashboard.orders.destroy');

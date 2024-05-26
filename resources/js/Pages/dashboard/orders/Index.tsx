@@ -189,11 +189,15 @@ const StatusFilter = (props: { title?: string; options: string[] }) => {
 };
 
 const Toolbar = ({
+    orders,
     statuses,
     selectedRows,
+    setRowSelection,
 }: {
+    orders: TOrder[];
     statuses: string[];
     selectedRows: { [key: number]: boolean };
+    setRowSelection: (x: { [key: number]: boolean }) => void;
 }) => {
     const href = window.location.href;
     const { status, id } = url.getQueries(href);
@@ -203,7 +207,17 @@ const Toolbar = ({
     const [search, setSearch] = useState(id || "");
 
     const handleDelete = useCallback(() => {
-        console.log(selectedRows);
+        const ids: number[] = [];
+        for (const selectedRow in selectedRows) {
+            const order = orders[selectedRow];
+            if (order) {
+                ids.push(order.id);
+            }
+        }
+        router.delete(route("dashboard.orders.destroyMany", url.getQueries(href)), {
+            data: { ids },
+        });
+        setRowSelection({});
     }, [selectedRows]);
 
     return (
@@ -244,7 +258,16 @@ const Toolbar = ({
                 )}
             </div>
             {!isObjectEmpty(selectedRows) && (
-                <Button variant="outline" size="sm" className="h-8" onClick={handleDelete}>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8"
+                    onClick={() => {
+                        if (confirm("Are you sure?")) {
+                            handleDelete();
+                        }
+                    }}
+                >
                     <DeleteIcon className="mr-2 h-4 w-4" />
                     Delete Select Orders
                 </Button>
@@ -343,19 +366,17 @@ const Pagination = <TData,>(props: {
 
 const DataTable = <TData, TValue>({
     columns,
-    data,
     statuses,
     pagiationData,
 }: {
     columns: ColumnDef<TData, TValue>[];
-    data: TData[];
     statuses: string[];
     pagiationData: TPaginatedOrders;
 }) => {
     const [rowSelection, setRowSelection] = useState<{ [key: number]: boolean }>({});
 
     const table = useReactTable({
-        data,
+        data: pagiationData.data as any,
         columns,
         state: { rowSelection },
         enableRowSelection: true,
@@ -365,7 +386,12 @@ const DataTable = <TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <Toolbar statuses={statuses} selectedRows={rowSelection} />
+            <Toolbar
+                orders={pagiationData.data}
+                setRowSelection={setRowSelection}
+                statuses={statuses}
+                selectedRows={rowSelection}
+            />
             <div className="rounded-md border">
                 <UITable className="rounded-lg bg-white">
                     <TableHeader>
@@ -682,7 +708,6 @@ const Orders = (props: { orders: TPaginatedOrders; statuses: string[] }) => {
             <Container className="mx-auto space-y-6 py-12">
                 <Header>Manage Orders</Header>
                 <DataTable
-                    data={props.orders.data}
                     columns={columns(props.statuses)}
                     statuses={props.statuses}
                     pagiationData={props.orders}
