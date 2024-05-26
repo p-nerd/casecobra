@@ -1,28 +1,11 @@
 import type { TID } from "@/types";
-import type {
-    Table,
-    Column,
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-} from "@tanstack/react-table";
-
-import { cn } from "@/lib/utils";
+import type { Table, ColumnDef } from "@tanstack/react-table";
+import { cn, isObjectEmpty } from "@/lib/utils";
 import { router } from "@inertiajs/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { useChangeStatus, useDeleteOrder } from "@/hooks/dashboard/orders";
-import {
-    getFacetedUniqueValues,
-    getFilteredRowModel,
-    flexRender,
-    getCoreRowModel,
-    getFacetedRowModel,
-    getSortedRowModel,
-    useReactTable,
-} from "@tanstack/react-table";
-
+import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Container, Header } from "@/components/ui2/misc";
 import {
     Table as UITable,
@@ -62,7 +45,6 @@ import {
     DoubleArrowRightIcon,
     DotsHorizontalIcon,
     CaretSortIcon,
-    EyeNoneIcon,
     ArrowDownIcon,
     ArrowUpIcon,
     ChevronLeftIcon,
@@ -84,11 +66,12 @@ import {
 import SiteLayout from "@/layouts/SiteLayout";
 import url from "@/lib/url";
 import { Form } from "@/components/ui2/form";
+import { DeleteIcon } from "lucide-react";
 
 const useNavigate = () => {
-    return (href: string) => {
+    return useCallback((href: string) => {
         router.get(href, {}, { preserveScroll: true });
-    };
+    }, []);
 };
 
 const StatusFilter = (props: { title?: string; options: string[] }) => {
@@ -205,13 +188,23 @@ const StatusFilter = (props: { title?: string; options: string[] }) => {
     );
 };
 
-const Toolbar = ({ statuses }: { statuses: string[] }) => {
+const Toolbar = ({
+    statuses,
+    selectedRows,
+}: {
+    statuses: string[];
+    selectedRows: { [key: number]: boolean };
+}) => {
     const href = window.location.href;
     const { status, id } = url.getQueries(href);
     const isFiltered = !!status || !!id;
     const navigate = useNavigate();
 
     const [search, setSearch] = useState(id || "");
+
+    const handleDelete = useCallback(() => {
+        console.log(selectedRows);
+    }, [selectedRows]);
 
     return (
         <div className="flex items-center justify-between">
@@ -250,6 +243,12 @@ const Toolbar = ({ statuses }: { statuses: string[] }) => {
                     </Button>
                 )}
             </div>
+            {!isObjectEmpty(selectedRows) && (
+                <Button variant="outline" size="sm" className="h-8" onClick={handleDelete}>
+                    <DeleteIcon className="mr-2 h-4 w-4" />
+                    Delete Select Orders
+                </Button>
+            )}
         </div>
     );
 };
@@ -353,35 +352,20 @@ const DataTable = <TData, TValue>({
     statuses: string[];
     pagiationData: TPaginatedOrders;
 }) => {
-    const [rowSelection, setRowSelection] = useState({});
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [sorting, setSorting] = useState<SortingState>([]);
+    const [rowSelection, setRowSelection] = useState<{ [key: number]: boolean }>({});
 
     const table = useReactTable({
         data,
         columns,
-        state: {
-            sorting,
-            columnVisibility,
-            rowSelection,
-            columnFilters,
-        },
+        state: { rowSelection },
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
-        onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFacetedRowModel: getFacetedRowModel(),
-        getFacetedUniqueValues: getFacetedUniqueValues(),
     });
 
     return (
         <div className="space-y-4">
-            <Toolbar statuses={statuses} />
+            <Toolbar statuses={statuses} selectedRows={rowSelection} />
             <div className="rounded-md border">
                 <UITable className="rounded-lg bg-white">
                     <TableHeader>
@@ -393,9 +377,9 @@ const DataTable = <TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext(),
-                                                )}
+                                                      header.column.columnDef.header,
+                                                      header.getContext(),
+                                                  )}
                                         </TableHead>
                                     );
                                 })}
@@ -446,14 +430,14 @@ const DataTable = <TData, TValue>({
     );
 };
 
-const ColumnHeader = <TData, TValue>(props: {
-    column: Column<TData, TValue>;
-    title: string;
-    className?: string;
-}) => {
-    if (!props.column.getCanSort()) {
-        return <div className={cn(props.className)}>{props.title}</div>;
-    }
+const ColumnSortableHeader = (props: { title: string; sortKey: string; className?: string }) => {
+    const href = window.location.href;
+    const { sort, order } = url.getQueries(href);
+
+    const navigate = useNavigate();
+
+    const sortKey = sort || "created_at";
+    const orderKey = order || "desc";
 
     return (
         <div className={cn("flex items-center space-x-2", props.className)}>
@@ -465,9 +449,9 @@ const ColumnHeader = <TData, TValue>(props: {
                         className="-ml-3 h-8 data-[state=open]:bg-accent"
                     >
                         <span>{props.title}</span>
-                        {props.column.getIsSorted() === "desc" ? (
+                        {sortKey === props.sortKey && orderKey === "desc" ? (
                             <ArrowDownIcon className="ml-2 h-4 w-4" />
-                        ) : props.column.getIsSorted() === "asc" ? (
+                        ) : sortKey === props.sortKey && orderKey === "asc" ? (
                             <ArrowUpIcon className="ml-2 h-4 w-4" />
                         ) : (
                             <CaretSortIcon className="ml-2 h-4 w-4" />
@@ -475,18 +459,33 @@ const ColumnHeader = <TData, TValue>(props: {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
-                    <DropdownMenuItem onClick={() => props.column.toggleSorting(false)}>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            navigate(
+                                url.replaceQueries(href, {
+                                    page: undefined,
+                                    sort: props.sortKey,
+                                    order: "asc",
+                                }),
+                            );
+                        }}
+                    >
                         <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Asc
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => props.column.toggleSorting(true)}>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            navigate(
+                                url.replaceQueries(href, {
+                                    page: undefined,
+                                    sort: props.sortKey,
+                                    order: "desc",
+                                }),
+                            );
+                        }}
+                    >
                         <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Desc
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => props.column.toggleVisibility(false)}>
-                        <EyeNoneIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-                        Hide
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -534,7 +533,7 @@ const columns = (statuses: string[]) => {
         },
         {
             accessorKey: "id",
-            header: ({ column }) => <ColumnHeader column={column} title="ID" />,
+            header: () => <ColumnSortableHeader title="ID" sortKey="id" />,
             cell: ({ row }) => (
                 <Link
                     className="hover:underline hover:underline-offset-2"
@@ -558,17 +557,17 @@ const columns = (statuses: string[]) => {
         },
         {
             accessorKey: "amount",
-            header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
+            header: () => <ColumnSortableHeader title="Amount" sortKey="amount" />,
             cell: ({ row }) => formatPrice(row.original.amount / 100),
         },
         {
             accessorKey: "payment",
-            header: ({ column }) => <ColumnHeader column={column} title="Payment" />,
+            header: () => <ColumnSortableHeader title="Payment" sortKey="paid" />,
             cell: ({ row }) => row.original.payment,
         },
         {
             accessorKey: "status",
-            header: ({ column }) => <ColumnHeader column={column} title="Status" />,
+            header: () => <ColumnSortableHeader title="Status" sortKey="status" />,
             cell: ({ row }) => {
                 const status = statuses.find(status => status === row.getValue("status"));
                 if (!status) {
@@ -582,7 +581,7 @@ const columns = (statuses: string[]) => {
         },
         {
             accessorKey: "createdAt",
-            header: ({ column }) => <ColumnHeader column={column} title="CreatedAt" />,
+            header: () => <ColumnSortableHeader title="CreatedAt" sortKey="created_at" />,
             cell: ({ row }) => formatDate(row.original.createdAt),
         },
         {

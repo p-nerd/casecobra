@@ -30,3 +30,7 @@ export const formatDate = (_date: string): string => {
 
     return `${day}-${month}-${year}`;
 };
+
+export const isObjectEmpty = (obj: object) => {
+    return Object.keys(obj).length === 0;
+};

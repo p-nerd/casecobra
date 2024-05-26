@@ -6,7 +6,7 @@ class URL
 {
     public static function decode(?string $str): ?string
     {
-        if (!$str) {
+        if (! $str) {
             return null;
         }
 
@@ -15,7 +15,7 @@ class URL
 
     public static function querySplit(?string $query, string $spit = " "): ?array
     {
-        if (!$query) {
+        if (! $query) {
             return null;
         }
 

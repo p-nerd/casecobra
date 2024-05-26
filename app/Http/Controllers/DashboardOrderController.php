@@ -17,11 +17,19 @@ class DashboardOrderController extends Controller
     {
         $id = URL::decode($request->query("id"));
         $status = URL::querySplit($request->query("status"), ",");
+        $sort = URL::decode($request->query("sort"));
+        $order = URL::decode($request->query("order", 'desc'));
 
+        // deciding is id start with #
         $idStartWithHash = Str($id)->startsWith("#");
-
         $idLike = $idStartWithHash ? null : $id;
         $idHash = $idStartWithHash ? Str($id)->replaceStart("#", "")->value : null;
+
+        // validating valid columns
+        $sortKey = "created_at";
+        if (in_array($sort, ['id', 'amount', "paid", 'status', 'created_at'])) {
+            $sortKey = $sort;
+        }
 
         /** @var Illuminate\Database\Eloquent\Builder $orders */
         $orders = Order::query()
@@ -29,8 +37,8 @@ class DashboardOrderController extends Controller
             ->when($idHash, fn ($query, $idHash) => $query->where('id', $idHash))
             ->when($idLike, fn ($query, $idLike) => $query->where('id', 'like', "%$idLike%"))
             ->when($status, fn ($query, $status) => $query->whereIn('status', $status))
-            ->latest()
-            ->paginate($request->query("per_page") ?? 10);
+            ->when($sortKey, fn ($query, $sortKey) => $query->orderBy($sortKey, $order))
+            ->paginate($request->query("per_page") ?? 15);
 
         $orders
             ->withQueryString()
