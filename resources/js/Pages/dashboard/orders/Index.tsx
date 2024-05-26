@@ -82,25 +82,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import SiteLayout from "@/layouts/SiteLayout";
+import url from "@/lib/url";
+import { Form } from "@/components/ui2/form";
 
-const FacetedFilter = <TData, TValue>(props: {
-    column?: Column<TData, TValue>;
-    title?: string;
-    options: string[];
-}) => {
-    const facets = props.column?.getFacetedUniqueValues();
-    const selectedValues = new Set(props.column?.getFilterValue() as string[]);
-
-    const navigate = (url: string) => {
-        router.get(url, {}, { preserveScroll: true });
+const useNavigate = () => {
+    return (href: string) => {
+        router.get(href, {}, { preserveScroll: true });
     };
+};
+
+const StatusFilter = (props: { title?: string; options: string[] }) => {
+    const href = window.location.href;
+    const status = url.getQueries(href)?.status;
+    const selectedValues = new Set(status ? url.decode(status)?.split(",") || [] : []);
+
+    const navigate = useNavigate();
 
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 border-dashed">
                     <PlusCircledIcon className="mr-2 h-4 w-4" />
-                    {props.title}
+                    Status
                     {selectedValues?.size > 0 && (
                         <>
                             <Separator orientation="vertical" className="mx-2 h-4" />
@@ -154,8 +157,10 @@ const FacetedFilter = <TData, TValue>(props: {
                                                 selectedValues.add(option);
                                             }
                                             const filterValues = Array.from(selectedValues);
-                                            props.column?.setFilterValue(
-                                                filterValues.length ? filterValues : undefined,
+                                            navigate(
+                                                url.replaceQueries(href, {
+                                                    status: url.encode(filterValues.join(",")),
+                                                }),
                                             );
                                         }}
                                     >
@@ -170,11 +175,6 @@ const FacetedFilter = <TData, TValue>(props: {
                                             <CheckIcon className={cn("h-4 w-4")} />
                                         </div>
                                         <span>{option.toUpperCase()}</span>
-                                        {facets?.get(option) && (
-                                            <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                                                {facets.get(option)}
-                                            </span>
-                                        )}
                                     </CommandItem>
                                 );
                             })}
@@ -184,7 +184,13 @@ const FacetedFilter = <TData, TValue>(props: {
                                 <CommandSeparator />
                                 <CommandGroup>
                                     <CommandItem
-                                        onSelect={() => props.column?.setFilterValue(undefined)}
+                                        onSelect={() =>
+                                            navigate(
+                                                url.replaceQueries(href, {
+                                                    status: undefined,
+                                                }),
+                                            )
+                                        }
                                         className="justify-center text-center"
                                     >
                                         Clear filters
@@ -199,37 +205,38 @@ const FacetedFilter = <TData, TValue>(props: {
     );
 };
 
-const Toolbar = <TData,>({ table, statuses }: { table: Table<TData>; statuses: string[] }) => {
-    const isFiltered = table.getState().columnFilters.length > 0;
+const Toolbar = ({ statuses }: { statuses: string[] }) => {
+    const href = window.location.href;
+    const { status, id } = url.getQueries(href);
+    const isFiltered = !!status || !!id;
+    const navigate = useNavigate();
+
+    const [search, setSearch] = useState(id || "");
 
     return (
         <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center space-x-2">
-                <Input
-                    placeholder="Filter ids..."
-                    value={(table.getColumn("id")?.getFilterValue() as TID) ?? ""}
-                    onChange={event => {
-                        console.log(
-                            "x",
-                            table.getColumn("id")?.getFilterValue(),
-                            typeof table.getColumn("id")?.getFilterValue(),
-                        );
-                        console.log("y", event.target.value, typeof event.target.value);
-                        table.getColumn("id")?.setFilterValue(event.target.value);
-                    }}
-                    className="h-8 w-[150px] bg-white lg:w-[250px]"
-                />
-                {table.getColumn("status") && (
-                    <FacetedFilter
-                        column={table.getColumn("status")}
-                        title="Status"
-                        options={statuses}
+                <Form
+                    className="flex-row gap-2"
+                    onSubmit={() => navigate(url.replaceQueries(href, { id: search }))}
+                >
+                    <Input
+                        placeholder="Filter id..."
+                        className="h-8 w-[150px] bg-white lg:w-[250px]"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
                     />
-                )}
+                    <Button variant="outline" size="sm" className="h-8" type="submit">
+                        Search
+                    </Button>
+                </Form>
+                <StatusFilter options={statuses} />
                 {isFiltered && (
                     <Button
                         variant="ghost"
-                        onClick={() => table.resetColumnFilters()}
+                        onClick={() =>
+                            navigate(url.replaceQueries(href, { id: undefined, status: undefined }))
+                        }
                         className="h-8 px-2 lg:px-3"
                     >
                         Reset
@@ -239,23 +246,6 @@ const Toolbar = <TData,>({ table, statuses }: { table: Table<TData>; statuses: s
             </div>
         </div>
     );
-};
-
-const hrefReplaceQueries = (href: string, queries: { [key: string]: string }) => {
-    const url = new URL(href);
-
-    const existingQueries: { [key: string]: string } = {};
-    new URLSearchParams(url.search).forEach((value, key) => {
-        existingQueries[key] = value;
-    });
-
-    const finalQueries = { ...existingQueries, ...queries };
-
-    url.search = "";
-    for (const key in finalQueries) {
-        url.searchParams.append(key, finalQueries[key]);
-    }
-    return url.toString();
 };
 
 const Pagination = <TData,>(props: {
@@ -273,9 +263,7 @@ const Pagination = <TData,>(props: {
 }) => {
     const href = window.location.href;
 
-    const navigate = (url: string) => {
-        router.get(url, {}, { preserveScroll: true });
-    };
+    const navigate = useNavigate();
 
     return (
         <div className="flex items-center justify-between px-2">
@@ -288,7 +276,7 @@ const Pagination = <TData,>(props: {
                     <p className="text-sm font-medium">Rows per page</p>
                     <Select
                         value={`${props.per_page}`}
-                        onValueChange={v => navigate(hrefReplaceQueries(href, { per_page: v }))}
+                        onValueChange={v => navigate(url.replaceQueries(href, { per_page: v }))}
                     >
                         <SelectTrigger className="h-8 w-[70px]">
                             <SelectValue placeholder={props.per_page} />
@@ -359,8 +347,6 @@ const DataTable = <TData, TValue>({
     statuses: string[];
     pagiationData: TPaginatedOrders;
 }) => {
-    console.log(pagiationData);
-
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -389,7 +375,7 @@ const DataTable = <TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <Toolbar table={table} statuses={statuses} />
+            <Toolbar statuses={statuses} />
             <div className="rounded-md border">
                 <UITable className="rounded-lg bg-white">
                     <TableHeader>
