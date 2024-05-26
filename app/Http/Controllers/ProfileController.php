@@ -17,7 +17,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        return inertia('profile/Edit', [
+        return inertia('Profile', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
             'user' => [

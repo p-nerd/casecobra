@@ -4,14 +4,19 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { formatPrice, formatDate } from "@/lib/utils";
+import { useChangeStatus, useDeleteOrder } from "@/hooks/dashboard/orders";
 
 import { Button } from "@/components/ui/button";
 import { Container, Phone } from "@/components/ui2/misc";
-import { SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Select, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 import SiteLayout from "@/layouts/SiteLayout";
-import { useChangeStatus, useDeleteOrder } from "@/components/dashboard/orders/columns";
 
 const Section = (props: { title: string; children: ReactNode }) => {
     return (
