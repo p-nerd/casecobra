@@ -12,13 +12,16 @@ class DashboardOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $orders = Order::query()
             ->with("caseDesign.croppedImage")
             ->latest()
-            ->get()
-            ->map(fn (Order $order) => [
+            ->paginate($request->query("per_page") ?? 10)
+            ->withQueryString();
+
+        $orders->getCollection()->transform(function ($order) {
+            return [
                 "id" => $order->id,
                 "user_id" => $order->user_id,
                 "name" => $order->name,
@@ -28,7 +31,10 @@ class DashboardOrderController extends Controller
                 "status" => $order->status,
                 "createdAt" => $order->created_at,
                 "croppedImageUrl" => $order->caseDesign->croppedImage->fullurl(),
-            ]);
+            ];
+        });
+
+        // return $orders;
 
         return inertia('dashboard/orders/Index', [
             "orders" => $orders,

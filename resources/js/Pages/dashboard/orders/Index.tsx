@@ -19,7 +19,6 @@ import {
     flexRender,
     getCoreRowModel,
     getFacetedRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
@@ -238,27 +237,60 @@ const Toolbar = <TData,>({ table, statuses }: { table: Table<TData>; statuses: s
     );
 };
 
-const Pagination = <TData,>(props: { table: Table<TData> }) => {
+const hrefReplaceQueries = (href: string, queries: { [key: string]: string }) => {
+    const url = new URL(href);
+
+    const existingQueries: { [key: string]: string } = {};
+    new URLSearchParams(url.search).forEach((value, key) => {
+        existingQueries[key] = value;
+    });
+
+    const finalQueries = { ...existingQueries, ...queries };
+
+    url.search = "";
+    for (const key in finalQueries) {
+        url.searchParams.append(key, finalQueries[key]);
+    }
+    return url.toString();
+};
+
+const Pagination = <TData,>(props: {
+    per_page: number;
+    table: Table<TData>;
+    total: number;
+    from: number;
+    to: number;
+    last_page_url: string;
+    first_page_url: string;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+    current_page: number;
+    last_page: number;
+}) => {
+    const href = window.location.href;
+
+    const navigate = (url: string) => {
+        router.get(url, {}, { preserveScroll: true });
+    };
+
     return (
         <div className="flex items-center justify-between px-2">
             <div className="flex-1 text-sm text-muted-foreground">
-                {props.table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {props.table.getFilteredRowModel().rows.length} row(s) selected.
+                {props.table.getFilteredSelectedRowModel().rows.length} selected from {props.from}{" "}
+                to {props.to} of {props.total} row(s).
             </div>
             <div className="flex items-center space-x-6 lg:space-x-8">
                 <div className="flex items-center space-x-2">
                     <p className="text-sm font-medium">Rows per page</p>
                     <Select
-                        value={`${props.table.getState().pagination.pageSize}`}
-                        onValueChange={value => {
-                            props.table.setPageSize(Number(value));
-                        }}
+                        value={`${props.per_page}`}
+                        onValueChange={v => navigate(hrefReplaceQueries(href, { per_page: v }))}
                     >
                         <SelectTrigger className="h-8 w-[70px]">
-                            <SelectValue placeholder={props.table.getState().pagination.pageSize} />
+                            <SelectValue placeholder={props.per_page} />
                         </SelectTrigger>
                         <SelectContent side="top">
-                            {[10, 20, 30, 40, 50].map(pageSize => (
+                            {[10, 15, 20, 30, 40, 50].map(pageSize => (
                                 <SelectItem key={pageSize} value={`${pageSize}`}>
                                     {pageSize}
                                 </SelectItem>
@@ -267,15 +299,14 @@ const Pagination = <TData,>(props: { table: Table<TData> }) => {
                     </Select>
                 </div>
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                    Page {props.table.getState().pagination.pageIndex + 1} of{" "}
-                    {props.table.getPageCount()}
+                    Page {props.current_page} of {props.last_page}
                 </div>
                 <div className="flex items-center space-x-2">
                     <Button
                         variant="outline"
                         className="hidden h-8 w-8 p-0 lg:flex"
-                        onClick={() => props.table.setPageIndex(0)}
-                        disabled={!props.table.getCanPreviousPage()}
+                        onClick={() => navigate(props.first_page_url!)}
+                        disabled={props.first_page_url === href}
                     >
                         <span className="sr-only">Go to first page</span>
                         <DoubleArrowLeftIcon className="h-4 w-4" />
@@ -283,8 +314,8 @@ const Pagination = <TData,>(props: { table: Table<TData> }) => {
                     <Button
                         variant="outline"
                         className="h-8 w-8 p-0"
-                        onClick={() => props.table.previousPage()}
-                        disabled={!props.table.getCanPreviousPage()}
+                        onClick={() => navigate(props.prev_page_url!)}
+                        disabled={!props.prev_page_url}
                     >
                         <span className="sr-only">Go to previous page</span>
                         <ChevronLeftIcon className="h-4 w-4" />
@@ -292,8 +323,8 @@ const Pagination = <TData,>(props: { table: Table<TData> }) => {
                     <Button
                         variant="outline"
                         className="h-8 w-8 p-0"
-                        onClick={() => props.table.nextPage()}
-                        disabled={!props.table.getCanNextPage()}
+                        onClick={() => navigate(props.next_page_url!)}
+                        disabled={!props.next_page_url}
                     >
                         <span className="sr-only">Go to next page</span>
                         <ChevronRightIcon className="h-4 w-4" />
@@ -301,8 +332,8 @@ const Pagination = <TData,>(props: { table: Table<TData> }) => {
                     <Button
                         variant="outline"
                         className="hidden h-8 w-8 p-0 lg:flex"
-                        onClick={() => props.table.setPageIndex(props.table.getPageCount() - 1)}
-                        disabled={!props.table.getCanNextPage()}
+                        onClick={() => navigate(props.last_page_url!)}
+                        disabled={props.last_page_url === href}
                     >
                         <span className="sr-only">Go to last page</span>
                         <DoubleArrowRightIcon className="h-4 w-4" />
@@ -317,11 +348,15 @@ const DataTable = <TData, TValue>({
     columns,
     data,
     statuses,
+    pagiationData,
 }: {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     statuses: string[];
+    pagiationData: TPaginatedOrders;
 }) => {
+    console.log(pagiationData);
+
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -343,7 +378,6 @@ const DataTable = <TData, TValue>({
         onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -363,9 +397,9 @@ const DataTable = <TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                      header.column.columnDef.header,
-                                                      header.getContext(),
-                                                  )}
+                                                    header.column.columnDef.header,
+                                                    header.getContext(),
+                                                )}
                                         </TableHead>
                                     );
                                 })}
@@ -399,7 +433,19 @@ const DataTable = <TData, TValue>({
                     </TableBody>
                 </UITable>
             </div>
-            <Pagination table={table} />
+            <Pagination
+                table={table}
+                per_page={pagiationData.per_page}
+                total={pagiationData.total}
+                from={pagiationData.from}
+                to={pagiationData.to}
+                first_page_url={pagiationData.first_page_url}
+                prev_page_url={pagiationData.prev_page_url}
+                next_page_url={pagiationData.next_page_url}
+                last_page_url={pagiationData.last_page_url}
+                current_page={pagiationData.current_page}
+                last_page={pagiationData.last_page}
+            />
         </div>
     );
 };
@@ -615,15 +661,36 @@ const columns = (statuses: string[]) => {
     return _columns;
 };
 
-const Orders = (props: { orders: TOrder[]; statuses: string[] }) => {
+type TPaginatedOrders = {
+    from: number;
+    to: number;
+    total: number;
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    data: TOrder[];
+    path: string;
+    links: {
+        url: string;
+        label: string;
+        actiive: boolean;
+    }[];
+    last_page_url: string;
+    first_page_url: string;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+};
+
+const Orders = (props: { orders: TPaginatedOrders; statuses: string[] }) => {
     return (
         <SiteLayout title="Manage Orders">
             <Container className="mx-auto space-y-6 py-12">
                 <Header>Manage Orders</Header>
                 <DataTable
-                    data={props.orders}
+                    data={props.orders.data}
                     columns={columns(props.statuses)}
                     statuses={props.statuses}
+                    pagiationData={props.orders}
                 />
             </Container>
         </SiteLayout>
