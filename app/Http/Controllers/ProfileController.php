@@ -13,7 +13,7 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    public function edit(Request $request): Response
+    public function index(Request $request): Response
     {
         $user = $request->user();
 
@@ -44,7 +44,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return redirect()->route('profile.edit');
+        return redirect()->route('profile.index');
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -83,7 +83,7 @@ class ProfileController extends Controller
         $profile->image?->makeRemovable();
         $profile->update(["image_id" => $image->id]);
 
-        return redirect()->route("profile.edit");
+        return redirect()->route("profile.index");
     }
 
     public function billingUpdate(Request $request)
@@ -100,6 +100,6 @@ class ProfileController extends Controller
 
         $request->user()->profile->update($payload);
 
-        return redirect()->route("profile.edit");
+        return redirect()->route("profile.index");
     }
 }

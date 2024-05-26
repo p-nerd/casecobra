@@ -58,7 +58,6 @@ import { Link } from "@inertiajs/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
     Cross2Icon,
-    MixerHorizontalIcon,
     CheckIcon,
     PlusCircledIcon,
     DoubleArrowRightIcon,
@@ -78,11 +77,9 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenu,
-    DropdownMenuLabel,
     DropdownMenuContent,
     DropdownMenuTrigger,
     DropdownMenuSeparator,
-    DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 
 import SiteLayout from "@/layouts/SiteLayout";
@@ -207,8 +204,16 @@ const Toolbar = <TData,>({ table, statuses }: { table: Table<TData>; statuses: s
             <div className="flex flex-1 items-center space-x-2">
                 <Input
                     placeholder="Filter ids..."
-                    value={(table.getColumn("id")?.getFilterValue() as string) ?? ""}
-                    onChange={event => table.getColumn("id")?.setFilterValue(event.target.value)}
+                    value={(table.getColumn("id")?.getFilterValue() as TID) ?? ""}
+                    onChange={event => {
+                        console.log(
+                            "x",
+                            table.getColumn("id")?.getFilterValue(),
+                            typeof table.getColumn("id")?.getFilterValue(),
+                        );
+                        console.log("y", event.target.value, typeof event.target.value);
+                        table.getColumn("id")?.setFilterValue(event.target.value);
+                    }}
                     className="h-8 w-[150px] bg-white lg:w-[250px]"
                 />
                 {table.getColumn("status") && (
@@ -229,36 +234,6 @@ const Toolbar = <TData,>({ table, statuses }: { table: Table<TData>; statuses: s
                     </Button>
                 )}
             </div>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
-                        <MixerHorizontalIcon className="mr-2 h-4 w-4" />
-                        View
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[150px]">
-                    <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {table
-                        .getAllColumns()
-                        .filter(
-                            column =>
-                                typeof column.accessorFn !== "undefined" && column.getCanHide(),
-                        )
-                        .map(column => {
-                            return (
-                                <DropdownMenuCheckboxItem
-                                    key={column.id}
-                                    className="capitalize"
-                                    checked={column.getIsVisible()}
-                                    onCheckedChange={value => column.toggleVisibility(!!value)}
-                                >
-                                    {column.id}
-                                </DropdownMenuCheckboxItem>
-                            );
-                        })}
-                </DropdownMenuContent>
-            </DropdownMenu>
         </div>
     );
 };

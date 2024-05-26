@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CreateCaseController;
 use App\Http\Controllers\DashboardOrderController;
+use App\Http\Controllers\DashboardOverviewController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +27,7 @@ Route::prefix("/create-case")->group(function () {
 });
 
 Route::middleware('auth')->prefix("/profile")->group(function () {
-    Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
     Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post("/picture", [ProfileController::class, "pictureStore"])->name("profile.picture.store");
@@ -40,7 +41,10 @@ Route::middleware('auth')->prefix("/orders")->group(function () {
 
 Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(function () {
     Route::get('/', fn () => redirect(route("dashboard.overview.index")));
-    Route::get('/overview', fn () => inertia('dashboard/Overview'))->name('dashboard.overview.index');
+
+    Route::prefix("/overview")->group(function () {
+        Route::get('/', [DashboardOverviewController::class, "index"])->name('dashboard.overview.index');
+    });
 
     Route::prefix('/orders')->group(function () {
         Route::get('/', [DashboardOrderController::class, "index"])->name('dashboard.orders.index');

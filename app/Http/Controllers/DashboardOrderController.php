@@ -16,6 +16,7 @@ class DashboardOrderController extends Controller
     {
         $orders = Order::query()
             ->with("caseDesign.croppedImage")
+            ->latest()
             ->get()
             ->map(fn (Order $order) => [
                 "id" => $order->id,
@@ -33,22 +34,6 @@ class DashboardOrderController extends Controller
             "orders" => $orders,
             "statuses" => Status::values(),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -90,14 +75,6 @@ class DashboardOrderController extends Controller
             "order" => $order,
             "statuses" => Status::values(),
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
     }
 
     /**
