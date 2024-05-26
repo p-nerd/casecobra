@@ -3,6 +3,7 @@
 use App\Http\Controllers\CreateCaseController;
 use App\Http\Controllers\DashboardOrderController;
 use App\Http\Controllers\DashboardOverviewController;
+use App\Http\Controllers\DashboardSettingController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -54,7 +55,10 @@ Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(func
         Route::delete('/{order}', [DashboardOrderController::class, "destroy"])->name('dashboard.orders.destroy');
     });
 
-    Route::get('/settings', fn () => inertia('dashboard/Settings'))->name('dashboard.settings.index');
+    Route::prefix("/settings")->group(function () {
+        Route::get('/', [DashboardSettingController::class, "index"])->name('dashboard.settings.index');
+        Route::patch('/', [DashboardSettingController::class, "update"])->name('dashboard.settings.update');
+    });
 });
 
 require __DIR__.'/auth.php';

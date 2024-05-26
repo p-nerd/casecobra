@@ -71,13 +71,15 @@ export const Icons = {
     ),
 };
 
+export const Title = (props: { children: ReactNode }) => {
+    return <h2 className="text-xl font-semibold leading-tight text-gray-800">{props.children}</h2>;
+};
+
 export const Header = (props: { children: ReactNode }) => {
     return (
         <header className="bg-white shadow lg:rounded-lg">
             <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {props.children}
-                </h2>
+                <Title>{props.children}</Title>
             </div>
         </header>
     );

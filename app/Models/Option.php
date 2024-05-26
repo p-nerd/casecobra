@@ -32,18 +32,34 @@ class Option extends Model
 
     public static function caseBasePrice()
     {
-        return self::query()
+        $price = self::query()
             ->where('name', self::CASE_BASE_PRICE)
-            ->first()
-            ->value;
+            ->first();
+
+        if (! $price) {
+            return 0;
+        }
+
+        return $price->value;
     }
 
     public static function setCaseBasePrice(int $price)
     {
-        self::create([
-            "name" => self::CASE_BASE_PRICE,
-            "value" => $price,
-            "type" => "integer",
-        ]);
+        $caseBasePrice = Option::query()
+            ->where("name", self::CASE_BASE_PRICE)
+            ->first();
+
+        if (! $caseBasePrice) {
+            return self::create([
+                "name" => self::CASE_BASE_PRICE,
+                "value" => $price,
+                "type" => "integer",
+            ]);
+        }
+
+        $caseBasePrice->value = $price;
+        $caseBasePrice->save();
+
+        return $caseBasePrice;
     }
 }
