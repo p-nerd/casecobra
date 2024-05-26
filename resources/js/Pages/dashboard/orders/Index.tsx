@@ -91,6 +91,10 @@ const FacetedFilter = <TData, TValue>(props: {
     const facets = props.column?.getFacetedUniqueValues();
     const selectedValues = new Set(props.column?.getFilterValue() as string[]);
 
+    const navigate = (url: string) => {
+        router.get(url, {}, { preserveScroll: true });
+    };
+
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -397,9 +401,9 @@ const DataTable = <TData, TValue>({
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext(),
-                                                )}
+                                                      header.column.columnDef.header,
+                                                      header.getContext(),
+                                                  )}
                                         </TableHead>
                                     );
                                 })}
