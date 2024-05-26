@@ -23,30 +23,30 @@ class DashboardOrderController extends Controller
         $idLike = $idStartWithHash ? null : $id;
         $idHash = $idStartWithHash ? Str($id)->replaceStart("#", "")->value : null;
 
+        /** @var Illuminate\Database\Eloquent\Builder $orders */
         $orders = Order::query()
             ->with("caseDesign.croppedImage")
             ->when($idHash, fn ($query, $idHash) => $query->where('id', $idHash))
             ->when($idLike, fn ($query, $idLike) => $query->where('id', 'like', "%$idLike%"))
             ->when($status, fn ($query, $status) => $query->whereIn('status', $status))
             ->latest()
-            ->paginate($request->query("per_page") ?? 10)
-            ->withQueryString();
+            ->paginate($request->query("per_page") ?? 10);
 
-        $orders->getCollection()->transform(function ($order) {
-            return [
-                "id" => $order->id,
-                "user_id" => $order->user_id,
-                "name" => $order->name,
-                "email" => $order->email,
-                "amount" => $order->amount,
-                "payment" => $order->paid ? "paid" : "unpaid",
-                "status" => $order->status,
-                "createdAt" => $order->created_at,
-                "croppedImageUrl" => $order->caseDesign->croppedImage->fullurl(),
-            ];
-        });
-
-        // return $orders;
+        $orders
+            ->withQueryString()
+            ->getCollection()->transform(function ($order) {
+                return [
+                    "id" => $order->id,
+                    "user_id" => $order->user_id,
+                    "name" => $order->name,
+                    "email" => $order->email,
+                    "amount" => $order->amount,
+                    "payment" => $order->paid ? "paid" : "unpaid",
+                    "status" => $order->status,
+                    "createdAt" => $order->created_at,
+                    "croppedImageUrl" => $order->caseDesign->croppedImage->fullurl(),
+                ];
+            });
 
         return inertia('dashboard/orders/Index', [
             "orders" => $orders,
