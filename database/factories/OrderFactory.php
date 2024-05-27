@@ -19,6 +19,8 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
+        $time = fake()->dateTimeThisYear;
+
         return [
             'user_id' => User::factory(),
             'case_design_id' => CaseDesign::factory(),
@@ -34,6 +36,8 @@ class OrderFactory extends Factory
             'state' => fake()->state,
             'country' => fake()->country,
             'zip' => fake()->postcode,
+            "created_at" => $time,
+            "updated_at" => $time,
         ];
     }
 }

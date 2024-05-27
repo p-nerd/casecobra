@@ -1,12 +1,13 @@
+import type { ReactNode } from "react";
+
 import { useForm } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
 import { Transition } from "@headlessui/react";
 import { Form, TextField } from "@/components/ui2/form";
-import { Container, Header, Header2, Section, Title } from "@/components/ui2/misc";
+import { Container, Header2, Section, Title } from "@/components/ui2/misc";
 
 import SiteLayout from "@/layouts/SiteLayout";
-import { ReactNode } from "react";
 
 const CaseSettings = (props: { caseBasePrice?: number }) => {
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
@@ -15,6 +16,7 @@ const CaseSettings = (props: { caseBasePrice?: number }) => {
 
     return (
         <Section>
+            <Title>Case Settings</Title>
             <Form
                 onSubmit={() => patch(route("dashboard.settings.update"))}
                 className="mt-6 max-w-xl gap-6"

@@ -23,15 +23,25 @@ class DashboardOverviewController extends Controller
                 "createdAt" => $order->created_at,
             ]);
 
+        $lastWeekGoal = 3000;
+        $lastWeekSum = Order::query()
+            ->where('created_at', '>=', now()->subWeek())
+            ->sum('amount');
+
+        $lastMonthGoal = 3000 * 4;
+        $lastMonthSum = Order::query()
+            ->where('created_at', '>=', now()->subMonth())
+            ->sum('amount');
+
         return inertia('dashboard/Overview', [
             "orders" => $orders,
             "lastWeek" => [
-                "sum" => 1000,
-                "goal" => 3000,
+                "sum" => $lastWeekSum,
+                "goal" => $lastWeekGoal,
             ],
             "lastMonth" => [
-                "sum" => 1000,
-                "goal" => 3000,
+                "sum" => $lastMonthSum,
+                "goal" => $lastMonthGoal,
             ],
         ]);
     }
