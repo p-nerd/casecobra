@@ -25,6 +25,14 @@ class DashboardOverviewController extends Controller
 
         return inertia('dashboard/Overview', [
             "orders" => $orders,
+            "lastWeek" => [
+                "sum" => 1000,
+                "goal" => 3000,
+            ],
+            "lastMonth" => [
+                "sum" => 1000,
+                "goal" => 3000,
+            ],
         ]);
     }
 }

@@ -3,7 +3,7 @@ import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Transition } from "@headlessui/react";
 import { Form, TextField } from "@/components/ui2/form";
-import { Container, Header, Section } from "@/components/ui2/misc";
+import { Container, Header, Header2, Section, Title } from "@/components/ui2/misc";
 
 import SiteLayout from "@/layouts/SiteLayout";
 
@@ -14,7 +14,6 @@ const CaseSettings = (props: { caseBasePrice?: number }) => {
 
     return (
         <Section>
-            <h2 className="text-lg font-medium text-gray-900">Case Settings</h2>
             <Form
                 onSubmit={() => patch(route("dashboard.settings.update"))}
                 className="mt-6 max-w-xl gap-6"
@@ -48,8 +47,10 @@ const CaseSettings = (props: { caseBasePrice?: number }) => {
 const Settings = (props: { caseBasePrice?: number }) => {
     return (
         <SiteLayout title="Site Settings">
-            <Container className="flex flex-col gap-4 py-12">
-                <Header>Settings</Header>
+            <Container>
+                <Header2>
+                    <Title>Settings</Title>
+                </Header2>
                 <CaseSettings caseBasePrice={props.caseBasePrice} />
             </Container>
         </SiteLayout>

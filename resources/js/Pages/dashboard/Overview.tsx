@@ -1,5 +1,4 @@
 import { cn, formatDate, formatPrice } from "@/lib/utils";
-
 import { Progress } from "@/components/ui/progress";
 import {
     Card,
@@ -9,7 +8,7 @@ import {
     CardContent,
     CardDescription,
 } from "@/components/ui/card";
-import { Container, Header, Section } from "@/components/ui2/misc";
+import { Container, Header2, Section, Title } from "@/components/ui2/misc";
 import SiteLayout from "@/layouts/SiteLayout";
 import {
     Table,
@@ -23,6 +22,25 @@ import type { TID } from "@/types";
 import { Link } from "@inertiajs/react";
 import { buttonVariants } from "@/components/ui/button";
 
+const ProgressCard = (props: { title: string; sum: number; goal: number }) => {
+    return (
+        <Card>
+            <CardHeader className="pb-2">
+                <CardDescription>{props.title}</CardDescription>
+                <CardTitle className="text-4xl">{formatPrice(props.sum ?? 0)}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="text-sm text-muted-foreground">
+                    of {formatPrice(props.goal)} goal
+                </div>
+            </CardContent>
+            <CardFooter>
+                <Progress value={((props.sum ?? 0) * 100) / props.goal} />
+            </CardFooter>
+        </Card>
+    );
+};
+
 type TOrder = {
     id: TID;
     user_id: TID;
@@ -34,103 +52,92 @@ type TOrder = {
     createdAt: string;
 };
 
-const LastXOrders = (props: { orders: TOrder[] }) => {
-    return (
-        <div className="space-y-2">
-            <Header>Last {props.orders?.length || 0} orders</Header>
-            {props.orders?.length > 0 && (
-                <Section>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>ID</TableHead>
-                                <TableHead>User</TableHead>
-                                <TableHead>Amount</TableHead>
-                                <TableHead>Payment</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>CreatedAt</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {props.orders.map(order => (
-                                <TableRow key={order.id}>
-                                    <TableCell>
-                                        <Link
-                                            className={cn(
-                                                buttonVariants({ variant: "link" }),
-                                                "px-0",
-                                            )}
-                                            href={`/dashboard/orders/${order.id}`}
-                                        >
-                                            #{order.id}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex flex-col">
-                                            <span>
-                                                #{order.user_id} ({order.name || "N/A"})
-                                            </span>
-                                            <span>{order.email}</span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>{formatPrice(order.amount / 100)}</TableCell>
-                                    <TableCell>{order.payment}</TableCell>
-                                    <TableCell>{order.status.toUpperCase()}</TableCell>
-                                    <TableCell>{formatDate(order.createdAt)}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </Section>
-            )}
-        </div>
-    );
+type TStatistic = {
+    sum: number;
+    goal: number;
 };
 
-const Overview = (props: { orders: TOrder[] }) => {
-    const lastWeekSum = 120;
-    const lastMonthSum = 2000;
-    const WEEKLY_GOAL = 500;
-    const MONTHLY_GOAL = 2500;
-
+const Overview = (props: { orders: TOrder[]; lastWeek: TStatistic; lastMonth: TStatistic }) => {
     return (
         <SiteLayout title="Overview">
-            <Container className="flex flex-col gap-4 py-5">
+            <Container className="gap-4">
                 <div className="grid gap-4 lg:grid-cols-2">
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardDescription>Last Week</CardDescription>
-                            <CardTitle className="text-4xl">
-                                {formatPrice(lastWeekSum ?? 0)}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-sm text-muted-foreground">
-                                of {formatPrice(WEEKLY_GOAL)} goal
-                            </div>
-                        </CardContent>
-                        <CardFooter>
-                            <Progress value={((lastWeekSum ?? 0) * 100) / WEEKLY_GOAL} />
-                        </CardFooter>
-                    </Card>
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardDescription>Last Month</CardDescription>
-                            <CardTitle className="text-4xl">
-                                {formatPrice(lastMonthSum ?? 0)}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-sm text-muted-foreground">
-                                of {formatPrice(MONTHLY_GOAL)} goal
-                            </div>
-                        </CardContent>
-                        <CardFooter>
-                            <Progress value={((lastMonthSum ?? 0) * 100) / MONTHLY_GOAL} />
-                        </CardFooter>
-                    </Card>
+                    <ProgressCard
+                        title="Last Week"
+                        sum={props.lastWeek.sum}
+                        goal={props.lastWeek.goal}
+                    />
+                    <ProgressCard
+                        title="Last Month"
+                        sum={props.lastMonth.sum}
+                        goal={props.lastMonth.goal}
+                    />
                 </div>
-                <LastXOrders orders={props.orders} />
+                <Header2>
+                    <Title>Last {props.orders?.length || 0} orders</Title>
+                </Header2>
+                {props.orders?.length > 0 && (
+                    <Section>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>ID</TableHead>
+                                    <TableHead>User</TableHead>
+                                    <TableHead>Amount</TableHead>
+                                    <TableHead>Payment</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>CreatedAt</TableHead>
+                                    <TableHead></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {props.orders.map(order => (
+                                    <TableRow key={order.id}>
+                                        <TableCell>
+                                            <Link
+                                                className={cn(
+                                                    buttonVariants({ variant: "link" }),
+                                                    "px-0",
+                                                )}
+                                                href={`/dashboard/orders/${order.id}`}
+                                            >
+                                                #{order.id}
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-col">
+                                                <span>
+                                                    #{order.user_id} ({order.name || "N/A"})
+                                                </span>
+                                                <span>{order.email}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>{formatPrice(order.amount / 100)}</TableCell>
+                                        <TableCell>{order.payment}</TableCell>
+                                        <TableCell>{order.status.toUpperCase()}</TableCell>
+                                        <TableCell>{formatDate(order.createdAt)}</TableCell>
+                                        <TableCell>
+                                            <Link
+                                                href={`/dashboard/orders/${order.id}`}
+                                                className={buttonVariants({
+                                                    variant: "link",
+                                                    size: "sm",
+                                                })}
+                                            >
+                                                View
+                                            </Link>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Section>
+                )}
+                <Section className="py-1 text-center">
+                    <Link href="/dashboard/orders" className={buttonVariants({ variant: "link" })}>
+                        View all orders
+                    </Link>
+                </Section>
             </Container>
         </SiteLayout>
     );

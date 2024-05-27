@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { useChangeStatus, useDeleteOrder } from "@/hooks/dashboard/orders";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Container, Header } from "@/components/ui2/misc";
+import { Container, Header, Header2, Title } from "@/components/ui2/misc";
 import {
     Table as UITable,
     TableBody,
@@ -385,7 +385,7 @@ const DataTable = <TData, TValue>({
     });
 
     return (
-        <div className="space-y-4">
+        <>
             <Toolbar
                 orders={pagiationData.data}
                 setRowSelection={setRowSelection}
@@ -452,7 +452,7 @@ const DataTable = <TData, TValue>({
                 current_page={pagiationData.current_page}
                 last_page={pagiationData.last_page}
             />
-        </div>
+        </>
     );
 };
 
@@ -705,8 +705,10 @@ type TPaginatedOrders = {
 const Orders = (props: { orders: TPaginatedOrders; statuses: string[] }) => {
     return (
         <SiteLayout title="Manage Orders">
-            <Container className="mx-auto space-y-6 py-12">
-                <Header>Manage Orders</Header>
+            <Container className="gap-4">
+                <Header2>
+                    <Title className="text-center">Manage Orders</Title>
+                </Header2>
                 <DataTable
                     columns={columns(props.statuses)}
                     statuses={props.statuses}

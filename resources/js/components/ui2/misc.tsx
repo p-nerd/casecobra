@@ -7,7 +7,12 @@ import images from "@/lib/images";
 
 export const Container = (p: { className?: string; children: ReactNode }) => {
     return (
-        <div className={cn("mx-auto h-full w-full max-w-screen-xl px-2.5 lg:px-20", p.className)}>
+        <div
+            className={cn(
+                "mx-auto flex h-full w-full max-w-screen-xl flex-col gap-4 px-2.5 py-2.5 lg:px-20 lg:py-5",
+                p.className,
+            )}
+        >
             {p.children}
         </div>
     );
@@ -71,24 +76,34 @@ export const Icons = {
     ),
 };
 
-export const Title = (props: { children: ReactNode }) => {
-    return <h2 className="text-xl font-semibold leading-tight text-gray-800">{props.children}</h2>;
+export const Title = (props: { children: ReactNode; className?: string }) => {
+    return (
+        <h2 className={cn("text-xl font-semibold leading-tight text-gray-800", props.className)}>
+            {props.children}
+        </h2>
+    );
 };
 
-export const Header = (props: { children: ReactNode }) => {
+export const Header2 = (props: { children: ReactNode; className?: string }) => {
     return (
-        <header className="bg-white shadow lg:rounded-lg">
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <Title>{props.children}</Title>
-            </div>
+        <header className={cn("w-full rounded-lg bg-white p-6 shadow", props.className)}>
+            {props.children}
         </header>
     );
 };
 
 export const Section = (props: { children: ReactNode; className?: string }) => {
     return (
-        <section className={cn("w-full bg-white p-4 shadow sm:rounded-lg sm:p-8", props.className)}>
+        <section className={cn("w-full rounded-lg bg-white p-6 shadow", props.className)}>
             {props.children}
         </section>
+    );
+};
+
+export const Header = (props: { children: ReactNode }) => {
+    return (
+        <header className="mx-auto rounded-lg bg-white p-6 shadow">
+            <Title>{props.children}</Title>
+        </header>
     );
 };
