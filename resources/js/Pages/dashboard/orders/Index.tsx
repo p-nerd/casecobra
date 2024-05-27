@@ -2,7 +2,7 @@ import type { TID } from "@/types";
 import type { Table, ColumnDef } from "@tanstack/react-table";
 import { cn, isObjectEmpty } from "@/lib/utils";
 import { router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { useChangeStatus, useDeleteOrder } from "@/hooks/dashboard/orders";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -704,19 +704,19 @@ type TPaginatedOrders = {
 
 const Orders = (props: { orders: TPaginatedOrders; statuses: string[] }) => {
     return (
-        <SiteLayout title="Manage Orders">
-            <Container className="gap-4">
-                <Header2>
-                    <Title className="text-center">Manage Orders</Title>
-                </Header2>
-                <DataTable
-                    columns={columns(props.statuses)}
-                    statuses={props.statuses}
-                    pagiationData={props.orders}
-                />
-            </Container>
-        </SiteLayout>
+        <Container className="gap-4">
+            <Header2>
+                <Title className="text-center">Manage Orders</Title>
+            </Header2>
+            <DataTable
+                columns={columns(props.statuses)}
+                statuses={props.statuses}
+                pagiationData={props.orders}
+            />
+        </Container>
     );
 };
+
+Orders.layout = (page: ReactNode) => <SiteLayout children={page} title="Manage Orders" />;
 
 export default Orders;

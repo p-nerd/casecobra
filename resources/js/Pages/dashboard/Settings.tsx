@@ -6,6 +6,7 @@ import { Form, TextField } from "@/components/ui2/form";
 import { Container, Header, Header2, Section, Title } from "@/components/ui2/misc";
 
 import SiteLayout from "@/layouts/SiteLayout";
+import { ReactNode } from "react";
 
 const CaseSettings = (props: { caseBasePrice?: number }) => {
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
@@ -46,15 +47,15 @@ const CaseSettings = (props: { caseBasePrice?: number }) => {
 
 const Settings = (props: { caseBasePrice?: number }) => {
     return (
-        <SiteLayout title="Site Settings">
-            <Container>
-                <Header2>
-                    <Title>Settings</Title>
-                </Header2>
-                <CaseSettings caseBasePrice={props.caseBasePrice} />
-            </Container>
-        </SiteLayout>
+        <Container>
+            <Header2>
+                <Title>Settings</Title>
+            </Header2>
+            <CaseSettings caseBasePrice={props.caseBasePrice} />
+        </Container>
     );
 };
+
+Settings.layout = (page: ReactNode) => <SiteLayout children={page} title="Site Settings" />;
 
 export default Settings;

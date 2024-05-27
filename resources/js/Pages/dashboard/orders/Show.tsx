@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 
 import SiteLayout from "@/layouts/SiteLayout";
+import { usePage } from "@inertiajs/react";
 
 const Section = (props: { title: string; children: ReactNode }) => {
     return (
