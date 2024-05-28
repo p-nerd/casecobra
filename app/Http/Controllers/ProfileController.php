@@ -86,7 +86,7 @@ class ProfileController extends Controller
         return redirect()->route("profile.index");
     }
 
-    public function billingUpdate(Request $request)
+    public function billingUpdate(Request $request): RedirectResponse
     {
         $payload = $request->validate([
             'phone' => ['required', 'string', 'max:15'],

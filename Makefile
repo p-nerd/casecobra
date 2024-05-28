@@ -7,5 +7,5 @@ format:
 	pnpm format
 
 dev:
-	pnpm dev
-
+	pnpm dev & \
+	php artisan queue:work

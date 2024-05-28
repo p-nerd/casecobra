@@ -43,7 +43,7 @@ class Option extends Model
         return $price->value;
     }
 
-    public static function setCaseBasePrice(int $price)
+    public static function setCaseBasePrice(int $price): self
     {
         $caseBasePrice = Option::query()
             ->where("name", self::CASE_BASE_PRICE)

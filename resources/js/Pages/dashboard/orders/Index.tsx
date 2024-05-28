@@ -6,7 +6,7 @@ import { ReactNode, useCallback, useState } from "react";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { useChangeStatus, useDeleteOrder } from "@/hooks/dashboard/orders";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Container, Header, Header2, Title } from "@/components/ui2/misc";
+import { Container, Header2, Title } from "@/components/ui2/misc";
 import {
     Table as UITable,
     TableBody,
@@ -318,7 +318,7 @@ const Pagination = <TData,>(props: {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                <div className="flex w-[110px] items-center justify-center text-sm font-medium">
                     Page {props.current_page} of {props.last_page}
                 </div>
                 <div className="flex items-center space-x-2">

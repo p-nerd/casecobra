@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Inertia\Response;
 
 class DashboardOverviewController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $orders = Order::query()
             ->latest()

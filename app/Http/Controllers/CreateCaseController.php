@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Response;
 use Laravel\Cashier\Cashier;
+use Stripe\Exception\ApiErrorException;
 
 class CreateCaseController extends Controller
 {
@@ -43,10 +44,10 @@ class CreateCaseController extends Controller
             'original_image_id' => $originalImage->id,
         ]);
 
-        return redirect("/create-case/design?id={$caseDesign->id}");
+        return redirect("/create-case/design?id=$caseDesign->id");
     }
 
-    public function designCreate(Request $request)
+    public function designCreate(Request $request): mixed
     {
         $caseDesignID = $request->query('id');
         $caseDesign = CaseDesign::findOrFail($caseDesignID);
@@ -55,7 +56,7 @@ class CreateCaseController extends Controller
         if ($order && $order->paid) {
             return redirect(route("orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
         } elseif ($order) {
-            return redirect("/create-case/checkout?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
+            return redirect("/create-case/checkout?id=$order->id")->withErrors(["message" => "You already designed your case"]);
         }
 
         $originalImage = $caseDesign->originalImage;
@@ -110,7 +111,7 @@ class CreateCaseController extends Controller
         if ($order && $order->paid) {
             return redirect(route("orders.index"))->withErrors(["message" => "You order is done, checkout your orders"]);
         } elseif ($order) {
-            return redirect("/create-case/checkout?id={$order->id}")->withErrors(["message" => "You already designed your case"]);
+            return redirect("/create-case/checkout?id=$order->id")->withErrors(["message" => "You already designed your case"]);
         }
 
         $croppedImage = Image::store(
@@ -133,10 +134,10 @@ class CreateCaseController extends Controller
             'cropped_image_id' => $croppedImage->id,
         ]);
 
-        return redirect("/create-case/preview?id={$caseDesign->id}");
+        return redirect("/create-case/preview?id=$caseDesign->id");
     }
 
-    public function previewCreate(Request $request)
+    public function previewCreate(Request $request): mixed
     {
         $caseDesignID = $request->query('id');
         $caseDesign = CaseDesign::findOrFail($caseDesignID);
@@ -188,6 +189,9 @@ class CreateCaseController extends Controller
         ]);
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function previewStore(Request $request): RedirectResponse
     {
 
@@ -220,10 +224,10 @@ class CreateCaseController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect("/create-case/checkout?id={$order->id}");
+        return redirect("/create-case/checkout?id=$order->id");
     }
 
-    public function checkoutCreate(Request $request)
+    public function checkoutCreate(Request $request): mixed
     {
         $orderId = $request->query('id');
         $order = Order::query()
@@ -278,6 +282,9 @@ class CreateCaseController extends Controller
         ]);
     }
 
+    /**
+     * @throws ApiErrorException
+     */
     public function thankYouCreate(Request $request)
     {
         $sessionId = $request->query("session_id");

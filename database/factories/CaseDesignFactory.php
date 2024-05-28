@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\CaseDesign;
 use App\Models\Color;
 use App\Models\Finish;
 use App\Models\Image;
@@ -10,7 +11,7 @@ use App\Models\PhoneModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CaseDesign>
+ * @extends Factory<CaseDesign>
  */
 class CaseDesignFactory extends Factory
 {

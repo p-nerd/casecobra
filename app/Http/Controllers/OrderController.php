@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Inertia\Response;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $orders = Order::query()
             ->where("user_id", $request->user()->id)
@@ -33,7 +34,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show(Request $request, Order $order)
+    public function show(Request $request, Order $order): Response
     {
         if ($request->user()->id !== $order->user_id) {
             return abort(404);

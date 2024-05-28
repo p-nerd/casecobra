@@ -33,7 +33,7 @@ class SendLoginAlert
             ));
     }
 
-    public function parseUserAgent($userAgent)
+    public function parseUserAgent($userAgent): array
     {
         // Initialize default values
         $browser = 'Unknown';

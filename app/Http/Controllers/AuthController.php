@@ -34,8 +34,6 @@ class AuthController extends Controller
 
     /**
      * Handle an incoming registration request.
-     *
-     * @throws ValidationException
      */
     public function registerStore(Request $request): RedirectResponse
     {
@@ -59,7 +57,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect($to ? $to : route('home', absolute: false));
+        return redirect($to ?: route('home', absolute: false));
     }
 
     /**
@@ -87,7 +85,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended($to ? $to : route('home', absolute: false));
+        return redirect()->intended($to ?: route('home', absolute: false));
     }
 
     /**
@@ -268,7 +266,7 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', \Illuminate\Validation\Rules\Password::defaults(), 'confirmed'],
+            'password' => ['required', Rules\Password::defaults(), 'confirmed'],
         ]);
 
         $request->user()->update([

@@ -5,15 +5,17 @@ namespace App\Http\Controllers;
 use App\Enums\Status;
 use App\Helpers\URL;
 use App\Models\Order;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Inertia\Response;
 
 class DashboardOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $id = URL::decode($request->query("id"));
         $status = URL::querySplit($request->query("status"), ",");
@@ -65,7 +67,7 @@ class DashboardOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Order $order): Response
     {
         $order = [
             "id" => $order->id,
@@ -106,7 +108,7 @@ class DashboardOrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, Order $order): RedirectResponse
     {
         $payload = $request->validate([
             'status' => ["sometimes", Rule::enum(Status::class)],
@@ -126,14 +128,14 @@ class DashboardOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function destroy(Order $order): RedirectResponse
     {
         $order->delete();
 
         return redirect()->route("dashboard.orders.index");
     }
 
-    public function destroyMany(Request $request)
+    public function destroyMany(Request $request): RedirectResponse
     {
         $payload = $request->validate([
             "ids" => ["array", "nullable"],

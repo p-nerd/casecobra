@@ -31,7 +31,7 @@ class Image extends Model
         return self::create([
             "user_id" => Auth::id(),
             'url' => str_replace('images/', '', $path),
-            "alt" => self::humanifyFilename($file->getClientOriginalName()),
+            "alt" => self::humanityFilename($file->getClientOriginalName()),
             "height" => $height,
             "width" => $width,
         ]);
@@ -47,14 +47,14 @@ class Image extends Model
         return $url;
     }
 
-    public function makeRemovable()
+    public function makeRemovable(): void
     {
         self::update([
             "removable" => true,
         ]);
     }
 
-    private static function humanifyFilename($filename): string
+    private static function humanityFilename($filename): string
     {
         $filenameWithoutExtension = pathinfo($filename, PATHINFO_FILENAME);
         $normalizedFilename = str_replace(['_', '-'], ' ', $filenameWithoutExtension);

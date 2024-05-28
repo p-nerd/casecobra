@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 
-    private function phoneModels(int $user_id)
+    private function phoneModels(int $user_id): void
     {
         $image = Image::factory()->create();
 
@@ -112,7 +112,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function colors(int $user_id)
+    private function colors(int $user_id): void
     {
         $colors = [
             [
@@ -142,7 +142,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function materials(int $user_id)
+    private function materials(int $user_id): void
     {
         $materials = [
             [
@@ -170,7 +170,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function finishes(int $user_id)
+    private function finishes(int $user_id): void
     {
         $finishes = [
             [
