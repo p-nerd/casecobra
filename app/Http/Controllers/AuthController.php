@@ -196,7 +196,7 @@ class AuthController extends Controller
     public function verifyEmailPrompt(Request $request): RedirectResponse|Response
     {
         return $request->user()->hasVerifiedEmail()
-            ? redirect()->intended(route('dashboard', absolute: false))
+            ? redirect()->intended(route('profile.index', absolute: false))
             : Inertia::render('auth/VerifyEmail', ['status' => session('status')]);
     }
 
@@ -206,14 +206,14 @@ class AuthController extends Controller
     public function makeAuthenticatedUserEmailVerified(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+            return redirect()->intended(route('profile.index', absolute: false).'?verified=1');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        return redirect()->intended(route('profile.index', absolute: false).'?verified=1');
     }
 
     /**
@@ -222,7 +222,7 @@ class AuthController extends Controller
     public function emailVerificationNotificationStore(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('profile.index', absolute: false));
         }
 
         $request->user()->sendEmailVerificationNotification();
@@ -256,7 +256,7 @@ class AuthController extends Controller
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('profile.index', absolute: false));
     }
 
     /**
