@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Status;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -59,6 +60,7 @@ class OrderController extends Controller
 
         return inertia("orders/Show", [
             "order" => $order,
+            "statues" => Status::values(),
         ]);
     }
 }
