@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class LoginAlert extends Mailable implements ShouldQueue
+class OrderPlacedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -18,11 +19,7 @@ class LoginAlert extends Mailable implements ShouldQueue
      * Create a new message instance.
      */
     public function __construct(
-        public string $name,
-        public string $ip,
-        public string $browser,
-        public string $os,
-        public string $device
+        public Order $order,
     ) {
         //
     }
@@ -33,7 +30,7 @@ class LoginAlert extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Login Alert - ".config("app.name"),
+            subject: 'Your Order is Placed - '.config("app.name"),
         );
     }
 
@@ -43,7 +40,7 @@ class LoginAlert extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.login-alert',
+            markdown: 'emails.order-placed',
         );
     }
 

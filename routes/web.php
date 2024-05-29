@@ -37,7 +37,7 @@ Route::middleware('auth')->prefix("/profile")->group(function () {
 
 Route::middleware('auth')->prefix("/orders")->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/{order}', [OrderController::class, 'show']);
+    Route::get('/{order}', [OrderController::class, 'show'])->name("orders.show");
 });
 
 Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(function () {

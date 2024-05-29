@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Mail\LoginAlert;
+use App\Mail\LoginAlertMail;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Mail;
 
-class SendLoginAlert
+class SendLoginAlertNotification
 {
     /**
      * Create the event listener.
@@ -24,7 +24,7 @@ class SendLoginAlert
         $userAgent = $this->parseUserAgent(request()->header('User-Agent'));
 
         Mail::to($event->user->email)
-            ->send(new LoginAlert(
+            ->send(new LoginAlertMail(
                 $event->user->name,
                 request()->ip(),
                 $userAgent['browser'],
