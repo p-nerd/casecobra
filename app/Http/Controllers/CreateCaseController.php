@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPlaced;
 use App\Models\CaseDesign;
 use App\Models\Color;
 use App\Models\Finish;
@@ -309,36 +310,39 @@ class CreateCaseController extends Controller
             'end' => true,
         ]);
 
-        switch ($session->status) {
-            case 'open':
-                return redirect("/create-case/checkout?id={$order->caseDesign->id}");
-            case 'complete':
-                $order->update([
-                    "paid" => true,
-                ]);
-
-                return inertia("createCase/ThankYou", [
-                    "successful" => true,
-                    "croppedImage" => [
-                        "url" => $order->caseDesign->croppedImage->fullurl(),
-                    ],
-                    "color" => [
-                        "value" => $order->caseDesign->color->value,
-                    ],
-                    "order" => [
-                        "id" => $order->id,
-                        "amount" => $order->amount,
-                        "name" => $order->name,
-                        "address_1" => $order->address_1,
-                        "zip" => $order->zip,
-                        "city" => $order->city,
-                    ],
-                ]);
-            default:
-                return inertia("createCase/ThankYou", [
-                    "successful" => false,
-                    "checkoutUrl" => "/create-case/checkout?id={$order->caseDesign->id}",
-                ]);
+        if ($session->status === 'open') {
+            return redirect("/create-case/checkout?id={$order->caseDesign->id}");
         }
+
+        if ($session->status !== 'complete') {
+            return inertia("createCase/ThankYou", [
+                "successful" => false,
+                "checkoutUrl" => "/create-case/checkout?id={$order->caseDesign->id}",
+            ]);
+        }
+
+        $order->update([
+            "paid" => true,
+        ]);
+
+        event(new OrderPlaced($order));
+
+        return inertia("createCase/ThankYou", [
+            "successful" => true,
+            "croppedImage" => [
+                "url" => $order->caseDesign->croppedImage->fullurl(),
+            ],
+            "color" => [
+                "value" => $order->caseDesign->color->value,
+            ],
+            "order" => [
+                "id" => $order->id,
+                "amount" => $order->amount,
+                "name" => $order->name,
+                "address_1" => $order->address_1,
+                "zip" => $order->zip,
+                "city" => $order->city,
+            ],
+        ]);
     }
 }
