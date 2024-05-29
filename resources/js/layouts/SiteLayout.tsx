@@ -85,7 +85,14 @@ const Footer = () => {
                 <div className="flex h-full flex-col items-center justify-center lg:flex-row lg:justify-between">
                     <div className="pb-2 text-center lg:pb-0 lg:text-left">
                         <p className="text-sm text-muted-foreground">
-                            &copy; {new Date().getFullYear()} <a href="https://developershihab.com" className="hover:underline hover:underline-offset-2">Shihab Mahamud</a>
+                            &copy; {new Date().getFullYear()}{" "}
+                            <a
+                                target="_blank"
+                                href="https://developershihab.com"
+                                className="hover:underline hover:underline-offset-2"
+                            >
+                                Shihab Mahamud
+                            </a>
                         </p>
                     </div>
 
