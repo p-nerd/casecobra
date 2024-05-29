@@ -1,10 +1,8 @@
 import { useForm } from "@inertiajs/react";
 
 import { Link } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { Transition } from "@headlessui/react";
 import { Form, TextField } from "@/components/ui2/form";
-import { Section } from "@/components/ui2/misc";
+import { Save, Section } from "@/components/ui2/misc";
 
 export type TUpdateUser = {
     name: string;
@@ -75,18 +73,7 @@ const UpdateUserInfo = (props: {
                         )}
                     </div>
                 )}
-                <div className="flex items-center gap-4">
-                    <Button disabled={processing}>Save</Button>
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600">Saved.</p>
-                    </Transition>
-                </div>
+                <Save disabled={processing} saved={recentlySuccessful} />
             </Form>
         </Section>
     );

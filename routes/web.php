@@ -58,7 +58,8 @@ Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(func
     Route::prefix("/settings")->group(function () {
         Route::get('/', [DashboardSettingController::class, "index"])->name('dashboard.settings.index');
         Route::patch('/', [DashboardSettingController::class, "update"])->name('dashboard.settings.update');
+        Route::post('/phone-models', [DashboardSettingController::class, "phoneModelSave"])->name('dashboard.settings.phone-model-save');
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

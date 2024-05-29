@@ -1,8 +1,6 @@
 import { useForm } from "@inertiajs/react";
 
-import { Button } from "@/components/ui/button";
-import { Section } from "@/components/ui2/misc";
-import { Transition } from "@headlessui/react";
+import { Save, Section } from "@/components/ui2/misc";
 import { Form, TextField } from "@/components/ui2/form";
 
 export type TUpdateProfile = {
@@ -89,18 +87,7 @@ const UpdateProfileInfo = (props: { profile: TUpdateProfile }) => {
                     autoComplete="zip"
                     error={errors.zip}
                 />
-                <div className="flex items-center gap-4">
-                    <Button disabled={processing}>Save</Button>
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600">Saved.</p>
-                    </Transition>
-                </div>
+                <Save disabled={processing} saved={recentlySuccessful} />
             </Form>
         </Section>
     );

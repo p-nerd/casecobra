@@ -1,6 +1,9 @@
 import type { LucideProps } from "lucide-react";
 import type { ReactNode, HTMLAttributes } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Transition } from "@headlessui/react";
+
 import { cn } from "@/lib/utils";
 
 import images from "@/lib/images";
@@ -105,5 +108,24 @@ export const Header = (props: { children: ReactNode }) => {
         <header className="mx-auto rounded-lg bg-white p-6 shadow">
             <Title>{props.children}</Title>
         </header>
+    );
+};
+
+export const Save = (props: { disabled: boolean; saved: boolean }) => {
+    return (
+        <div className="flex items-center gap-4">
+            <Button disabled={props.disabled} type="submit">
+                Save
+            </Button>
+            <Transition
+                show={props.saved}
+                enter="transition ease-in-out"
+                enterFrom="opacity-0"
+                leave="transition ease-in-out"
+                leaveTo="opacity-0"
+            >
+                <p className="text-sm text-gray-600">Saved.</p>
+            </Transition>
+        </div>
     );
 };
