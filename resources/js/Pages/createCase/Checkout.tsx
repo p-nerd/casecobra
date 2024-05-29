@@ -4,8 +4,8 @@ import type { TImage } from "@/types/createCase";
 import { cn } from "@/lib/utils";
 import { loadStripe } from "@stripe/stripe-js";
 
-import { Phone } from "@/components/ui2/misc";
-import { Container } from "@/components/ui2/misc";
+import { Phone } from "@/components/ui2/parts";
+import { Container } from "@/components/ui2/parts";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 

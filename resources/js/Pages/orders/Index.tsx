@@ -2,7 +2,7 @@ import { cn, formatPrice } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 import { Link } from "@inertiajs/react";
-import { Container, Header, Header2, Phone, Section, Title } from "@/components/ui2/misc";
+import { Container, Header, Phone, Section, Title } from "@/components/ui2/parts";
 
 import SiteLayout from "@/layouts/SiteLayout";
 import { ArrowRight } from "lucide-react";
@@ -30,9 +30,9 @@ const Orders = (props: { orders: TOrder[] }) => {
     return (
         <SiteLayout title={`Orders (${props.orders?.length || 0})`}>
             <Container>
-                <Header2>
+                <Header>
                     <Title>Your Orders ({props.orders?.length || 0})</Title>
-                </Header2>
+                </Header>
                 {props.orders.length === 0 ? (
                     <Section className="text-center">
                         You have no order yet

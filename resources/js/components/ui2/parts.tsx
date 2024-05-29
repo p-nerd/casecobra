@@ -1,11 +1,8 @@
 import type { LucideProps } from "lucide-react";
 import type { ReactNode, HTMLAttributes } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Transition } from "@headlessui/react";
-
 import { cn } from "@/lib/utils";
-
 import images from "@/lib/images";
 
 export const Container = (p: { className?: string; children: ReactNode }) => {
@@ -87,7 +84,7 @@ export const Title = (props: { children: ReactNode; className?: string }) => {
     );
 };
 
-export const Header2 = (props: { children: ReactNode; className?: string }) => {
+export const Header = (props: { children: ReactNode; className?: string }) => {
     return (
         <header className={cn("w-full rounded-lg bg-white p-6 shadow", props.className)}>
             {props.children}
@@ -100,14 +97,6 @@ export const Section = (props: { children: ReactNode; className?: string }) => {
         <section className={cn("w-full rounded-lg bg-white p-6 shadow", props.className)}>
             {props.children}
         </section>
-    );
-};
-
-export const Header = (props: { children: ReactNode }) => {
-    return (
-        <header className="mx-auto rounded-lg bg-white p-6 shadow">
-            <Title>{props.children}</Title>
-        </header>
     );
 };
 

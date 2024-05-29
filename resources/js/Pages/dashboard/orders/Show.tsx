@@ -7,7 +7,7 @@ import { formatPrice, formatDate } from "@/lib/utils";
 import { useChangeStatus, useDeleteOrder } from "@/hooks/dashboard/orders";
 
 import { Button } from "@/components/ui/button";
-import { Container, Phone } from "@/components/ui2/misc";
+import { Container, Phone } from "@/components/ui2/parts";
 import {
     Select,
     SelectContent,
@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/select";
 
 import SiteLayout from "@/layouts/SiteLayout";
-import { usePage } from "@inertiajs/react";
 
 const Section = (props: { title: string; children: ReactNode }) => {
     return (
@@ -126,7 +125,7 @@ const Info = ({ order, statuses }: { order: TOrder; statuses: string[] }) => {
                 <Item label="Id" value={`#${order.id}`} />
                 <Item label="User" value={`#${order.user_id} (${order.name})`} />
                 <Item label="Amount" value={formatPrice(order.amount / 100)} />
-                <Item label="Payment" value={order.paid ? "Paid" : "Unpiad"} />
+                <Item label="Payment" value={order.paid ? "Paid" : "Unpaid"} />
                 <Item label="Status" value={order.status.toUpperCase()} />
                 <Item label="Placed On" value={formatDate(order.created_at)} />
                 <Item label="Charge Id" value={order.charge_id} />

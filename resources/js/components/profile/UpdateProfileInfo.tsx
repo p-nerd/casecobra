@@ -1,6 +1,6 @@
 import { useForm } from "@inertiajs/react";
 
-import { Save, Section } from "@/components/ui2/misc";
+import { Save, Section } from "@/components/ui2/parts";
 import { Form, TextField } from "@/components/ui2/form";
 
 export type TUpdateProfile = {

@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import { useForm } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Form, TextField } from "@/components/ui2/form";
-import { Container, Header2, Save, Section, Title } from "@/components/ui2/misc";
+import { Container, Header, Save, Section, Title } from "@/components/ui2/parts";
 import {
     Table,
     TableBody,
@@ -133,9 +133,9 @@ const PhoneModels = (props: { phoneModels: TPhoneModel[] }) => {
 const Settings = (props: { caseBasePrice?: number; phoneModels: TPhoneModel[] }) => {
     return (
         <Container>
-            <Header2>
+            <Header>
                 <Title>Settings</Title>
-            </Header2>
+            </Header>
             <CaseSettings caseBasePrice={props.caseBasePrice} />
             <PhoneModels phoneModels={props.phoneModels} />
         </Container>

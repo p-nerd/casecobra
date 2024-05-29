@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { Form, TextField } from "@/components/ui2/form";
-import { Save, Section } from "@/components/ui2/misc";
+import { Save, Section } from "@/components/ui2/parts";
 
 const UpdatePassword = () => {
     const passwordInput = useRef<HTMLInputElement>(null);

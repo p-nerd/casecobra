@@ -6,7 +6,7 @@ import { ReactNode, useCallback, useState } from "react";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { useChangeStatus, useDeleteOrder } from "@/hooks/dashboard/orders";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Container, Header2, Title } from "@/components/ui2/misc";
+import { Container, Header, Title } from "@/components/ui2/parts";
 import {
     Table as UITable,
     TableBody,
@@ -705,9 +705,9 @@ type TPaginatedOrders = {
 const Orders = (props: { orders: TPaginatedOrders; statuses: string[] }) => {
     return (
         <Container className="gap-4">
-            <Header2>
+            <Header>
                 <Title className="text-center">Manage Orders</Title>
-            </Header2>
+            </Header>
             <DataTable
                 columns={columns(props.statuses)}
                 statuses={props.statuses}

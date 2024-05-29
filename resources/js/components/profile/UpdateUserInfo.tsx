@@ -2,7 +2,7 @@ import { useForm } from "@inertiajs/react";
 
 import { Link } from "@inertiajs/react";
 import { Form, TextField } from "@/components/ui2/form";
-import { Save, Section } from "@/components/ui2/misc";
+import { Save, Section } from "@/components/ui2/parts";
 
 export type TUpdateUser = {
     name: string;

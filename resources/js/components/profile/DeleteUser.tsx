@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { Button } from "@/components/ui/button";
-import { Section } from "@/components/ui2/misc";
+import { Section } from "@/components/ui2/parts";
 import { Form, TextField } from "@/components/ui2/form";
 
 import Modal from "@/components/Modal";

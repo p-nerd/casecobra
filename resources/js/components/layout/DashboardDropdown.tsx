@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { Icons } from "@/components/ui2/misc";
+import { Icons } from "@/components/ui2/parts";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";

@@ -1,8 +1,8 @@
 import { buttonVariants } from "@/components/ui/button";
 
 import { Link } from "@inertiajs/react";
-import { Container } from "@/components/ui2/misc";
-import { Icons, Phone } from "@/components/ui2/misc";
+import { Container } from "@/components/ui2/parts";
+import { Icons, Phone } from "@/components/ui2/parts";
 import { ArrowRight, Check, Star } from "lucide-react";
 
 import images from "@/lib/images";

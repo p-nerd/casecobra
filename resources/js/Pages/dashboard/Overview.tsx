@@ -8,7 +8,7 @@ import {
     CardContent,
     CardDescription,
 } from "@/components/ui/card";
-import { Container, Header2, Section, Title } from "@/components/ui2/misc";
+import { Container, Header, Section, Title } from "@/components/ui2/parts";
 import SiteLayout from "@/layouts/SiteLayout";
 import {
     Table,
@@ -73,9 +73,9 @@ const Overview = (props: { orders: TOrder[]; lastWeek: TStatistic; lastMonth: TS
                     goal={props.lastMonth.goal}
                 />
             </div>
-            <Header2>
+            <Header>
                 <Title>Last {props.orders?.length || 0} orders</Title>
-            </Header2>
+            </Header>
             {props.orders?.length > 0 && (
                 <Section>
                     <Table>

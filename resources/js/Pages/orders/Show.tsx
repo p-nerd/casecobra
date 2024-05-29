@@ -6,7 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@inertiajs/react";
 import { Progress } from "@/components/ui/progress";
 import { PhonePreview } from "@/components/ui2/phones";
-import { Container, Section, Title } from "@/components/ui2/misc";
+import { Container, Section, Title } from "@/components/ui2/parts";
 
 import SiteLayout from "@/layouts/SiteLayout";
 

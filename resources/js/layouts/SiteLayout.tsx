@@ -5,7 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { usePage } from "@inertiajs/react";
 
 import { Link } from "@inertiajs/react";
-import { Container } from "@/components/ui2/misc";
+import { Container } from "@/components/ui2/parts";
 import { ArrowRight } from "lucide-react";
 
 import BaseLayout from "@/layouts/BaseLayout";

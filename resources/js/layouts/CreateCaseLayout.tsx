@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { Container } from "@/components/ui2/misc";
+import { Container } from "@/components/ui2/parts";
 
 import images from "@/lib/images";
 

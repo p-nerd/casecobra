@@ -62,4 +62,4 @@ Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(func
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

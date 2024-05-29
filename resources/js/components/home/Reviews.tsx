@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-import { Container, Phone } from "@/components/ui2/misc";
+import { Container, Phone } from "@/components/ui2/parts";
 
 import images from "@/lib/images";
 

@@ -4,7 +4,7 @@ import type { TUpdateProfile } from "@/components/profile/UpdateProfileInfo";
 
 import { usePage } from "@inertiajs/react";
 
-import { Container, Section } from "@/components/ui2/misc";
+import { Container, Section } from "@/components/ui2/parts";
 
 import SiteLayout from "@/layouts/SiteLayout";
 import DeleteUser from "@/components/profile/DeleteUser";

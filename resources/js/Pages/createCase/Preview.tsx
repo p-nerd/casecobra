@@ -5,7 +5,7 @@ import { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import { cn, formatPrice, calculatePrice } from "@/lib/utils";
 
-import { Phone } from "@/components/ui2/misc";
+import { Phone } from "@/components/ui2/parts";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 

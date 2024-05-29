@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { router } from "@inertiajs/react";
 
 import { Link } from "@inertiajs/react";
-import { Icons } from "@/components/ui2/misc";
+import { Icons } from "@/components/ui2/parts";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenu, DropdownMenuContent } from "@/components/ui/dropdown-menu";
