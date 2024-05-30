@@ -7,5 +7,11 @@ format:
 	pnpm format
 
 dev:
-	pnpm dev & \
-	php artisan queue:work
+	pnpm dev
+
+work:
+	php artisan 'queue:work'
+
+boradcasting:
+	php artisan reverb:start --debug
+
