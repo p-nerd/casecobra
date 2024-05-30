@@ -1,9 +1,9 @@
-import type { TID } from "@/types";
+import { TProps, type TID } from "@/types";
 
 import { formatPrice } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { Progress } from "@/components/ui/progress";
 import { PhonePreview } from "@/components/ui2/phones";
 import { Container, Section, Title } from "@/components/ui2/parts";

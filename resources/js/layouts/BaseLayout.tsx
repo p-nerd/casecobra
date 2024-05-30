@@ -22,7 +22,7 @@ const BaseLayout = (props: { children: ReactNode; title: string }) => {
         <>
             <Head title={props.title} />
             {props.children}
-            <Toaster position="top-right" />
+            <Toaster position="bottom-right" />
         </>
     );
 };

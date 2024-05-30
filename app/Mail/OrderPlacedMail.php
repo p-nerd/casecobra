@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Option;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,7 +31,7 @@ class OrderPlacedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Order is Placed - '.config("app.name"),
+            subject: 'Your '.$this->order->caseDesign->phoneModel->label.' Case Order is Placed - '.config("app.name"),
         );
     }
 
@@ -41,6 +42,9 @@ class OrderPlacedMail extends Mailable implements ShouldQueue
     {
         return new Content(
             markdown: 'emails.order-placed',
+            with: [
+                "caseBasePrice" => Option::caseBasePrice(),
+            ]
         );
     }
 

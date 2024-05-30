@@ -1,19 +1,24 @@
 @component('mail::message')
-# Order Confirmation
+# Your {{$order->caseDesign->phoneModel->label}} Case Order is Placed.
 
 Hello {{ $order->name }},
 
-Thank you for your order! Your order number is **{{ $order->id }}**.
+Thank you for your order! Your order id is **#{{ $order->id }}**.
 
-## Order Details
+## Details
 
-@component('mail::table')
-| Product       | Quantity | Price  |
-| ------------- |:--------:| ------:|
-| {{ $order->caseDesign->phoneModel->label }} Case | 1 | {{ $order->amount }} |
-@endcomponent
+- Phone Model: {{ $order->caseDesign->phoneModel->label }}
+- Color: {{ $order->caseDesign->color->label }}
+- Material: {{ $order->caseDesign->material->label }}
+- Finish: {{ $order->caseDesign->material->label }}
+- Cropped Image: [Link]({{ $order->caseDesign->croppedImage->fullurl() }})
 
-**Total:** ${{ number_format($order->amount, 2) }}
+## Price
+
+- Base Price: ${{ number_format($caseBasePrice / 100, 2) }}
+- Material: ${{ number_format($order->caseDesign->material->price / 100, 2) }}
+- Finish: ${{ number_format($order->caseDesign->finish->price / 100, 2) }}
+- Total Price: **${{ number_format($order->amount / 100, 2) }}**
 
 @component('mail::button', ['url' => route('orders.show', $order->id)])
 View Order Details
