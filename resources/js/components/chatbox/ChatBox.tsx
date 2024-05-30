@@ -2,32 +2,21 @@ import { Button } from "@/components/ui/button";
 import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageCircleMore, Minimize2 } from "lucide-react";
+import { MessageCircleMore, Minimize2, Send } from "lucide-react";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
-const SendIcon = (props: any) => {
+const Chats = (props: { onMinimize: () => void; show: boolean }) => {
     return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <Card
+            className={cn(
+                "fixed bottom-10 right-6 z-[999] w-[350px] overflow-hidden rounded-2xl shadow-lg transition-transform duration-500",
+                {
+                    "translate-y-0": props.show,
+                    "translate-y-80": !props.show,
+                },
+            )}
         >
-            <path d="m22 2-7 20-4-9-9-4Z" />
-            <path d="M22 2 11 13" />
-        </svg>
-    );
-}
-
-const Chats = (props: { onMinimize: () => void }) => {
-    return (
-        <Card className="fixed bottom-4 right-4 z-[999] w-[400px] overflow-hidden rounded-2xl shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between bg-gray-100 px-4 py-3">
                 <h3 className="text-xl font-bold">Chat with Us</h3>
                 <Button
@@ -40,7 +29,7 @@ const Chats = (props: { onMinimize: () => void }) => {
                     <span className="sr-only">Minimize</span>
                 </Button>
             </CardHeader>
-            <CardContent className="h-[400px] overflow-y-auto px-4 py-3">
+            <CardContent className="h-[350px] overflow-y-auto px-4 py-3">
                 <div className="flex flex-col gap-4">
                     <div className="flex items-start gap-3">
                         <Avatar className="h-8 w-8 shrink-0 border">
@@ -86,7 +75,7 @@ const Chats = (props: { onMinimize: () => void }) => {
                         size="icon"
                         type="submit"
                     >
-                        <SendIcon className="h-4 w-4" />
+                        <Send className="h-4 w-4" />
                         <span className="sr-only">Send</span>
                     </Button>
                 </div>
@@ -97,12 +86,18 @@ const Chats = (props: { onMinimize: () => void }) => {
 
 const ChatIcon = (props: { onMaximize: () => void }) => {
     return (
-        <div className="fixed bottom-10 right-6 z-[999]" onClick={props.onMaximize}>
+        <div className="fixed bottom-10 right-6 z-[999]">
             <div className="flex items-center gap-2">
-                <span className="rounded-2xl bg-white px-3 py-2 text-lg shadow-2xl">
+                <span
+                    className="cursor-pointer rounded-2xl bg-white px-3 py-2 text-lg shadow-2xl"
+                    onClick={props.onMaximize}
+                >
                     Chat with US
                 </span>{" "}
-                <MessageCircleMore className="h-12 w-12 text-primary" />
+                <MessageCircleMore
+                    className="h-12 w-12 cursor-pointer text-primary"
+                    onClick={props.onMaximize}
+                />
             </div>
         </div>
     );
@@ -113,9 +108,8 @@ const ChatBox = () => {
 
     return (
         <>
-            {" "}
             {show ? (
-                <Chats onMinimize={() => setShow(false)} />
+                <Chats show={show} onMinimize={() => setShow(false)} />
             ) : (
                 <ChatIcon onMaximize={() => setShow(true)} />
             )}
