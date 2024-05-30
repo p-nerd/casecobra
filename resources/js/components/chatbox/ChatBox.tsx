@@ -28,22 +28,23 @@ const messages = [
 ];
 
 const AddChat = () => {
-    return <div className="relative w-full">
-        <Textarea
-            className="w-full resize-none rounded-2xl border border-gray-200 bg-white p-3 pr-16 text-sm shadow-sm transition-colors focus:border-primary focus:outline-none"
-            placeholder="Type your message..."
-        />
-        <Button
-            className="hover:bg-primary-500 absolute right-3 top-3 rounded-full bg-primary p-2 text-white shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            size="icon"
-            type="submit"
-        >
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Send</span>
-        </Button>
-    </div>
-
-}
+    return (
+        <div className="relative w-full">
+            <Textarea
+                className="w-full resize-none rounded-2xl border border-gray-200 bg-white p-3 pr-16 text-sm shadow-sm transition-colors focus:border-primary focus:outline-none"
+                placeholder="Type your message..."
+            />
+            <Button
+                className="hover:bg-primary-500 absolute right-3 top-3 rounded-full bg-primary p-2 text-white shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                size="icon"
+                type="submit"
+            >
+                <Send className="h-4 w-4" />
+                <span className="sr-only">Send</span>
+            </Button>
+        </div>
+    );
+};
 
 const Chats = (props: { onMinimize: () => void; show: boolean }) => {
     return (

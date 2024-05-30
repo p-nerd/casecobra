@@ -108,8 +108,8 @@ const PhoneModels = (props: { phoneModels: TPhoneModel[] }) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {props.phoneModels.map(phoneModel => (
-                        <TableRow>
+                    {props.phoneModels.map((phoneModel, index) => (
+                        <TableRow key={index}>
                             <TableCell>{phoneModel.label}</TableCell>
                             <TableCell>{phoneModel.value}</TableCell>
                             <TableCell>{phoneModel.description}</TableCell>
