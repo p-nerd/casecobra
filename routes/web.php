@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreateCaseController;
 use App\Http\Controllers\DashboardOrderController;
 use App\Http\Controllers\DashboardOverviewController;
@@ -8,7 +9,38 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => inertia('Home'))->name("home");
+Route::prefix("/")->group(function () {
+    Route::get('/', fn () => inertia('Home'))->name("home");
+
+    Route::middleware('guest')->group(function () {
+        Route::get('register', [AuthController::class, 'registerCreate'])->name('register');
+        Route::post('register', [AuthController::class, 'registerStore']);
+
+        Route::get('login', [AuthController::class, 'loginCreate'])->name('login');
+        Route::post('login', [AuthController::class, 'loginStore']);
+
+        Route::get('forgot-password', [AuthController::class, 'forgotPasswordCreate'])->name('password.request');
+        Route::post('forgot-password', [AuthController::class, 'forgotPasswordStore'])->name('password.email');
+
+        Route::get('reset-password/{token}', [AuthController::class, 'resetPasswordCreate'])->name('password.reset');
+        Route::post('reset-password', [AuthController::class, 'resetPasswordStore'])->name('password.store');
+    });
+
+    Route::middleware('auth')->group(function () {
+        Route::get('verify-email', [AuthController::class, "verifyEmailPrompt"])->name('verification.notice');
+
+        Route::get('verify-email/{id}/{hash}', [AuthController::class, "makeAuthenticatedUserEmailVerified"])->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+
+        Route::post('email/verification-notification', [AuthController::class, 'emailVerificationNotificationStore'])->middleware('throttle:6,1')->name('verification.send');
+
+        Route::get('confirm-password', [AuthController::class, 'confirmPasswordShow'])->name('password.confirm');
+        Route::post('confirm-password', [AuthController::class, 'confirmPasswordStore']);
+
+        Route::put('password', [AuthController::class, 'passwordUpdate'])->name('password.update');
+
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    });
+});
 
 Route::prefix("/create-case")->group(function () {
     Route::get("/", fn () => redirect()->route("create-case.upload.create"));
@@ -27,7 +59,7 @@ Route::prefix("/create-case")->group(function () {
     Route::get("/thank-you", [CreateCaseController::class, "thankYouCreate"])->middleware("auth")->name("create-case.thank-you.create");
 });
 
-Route::middleware('auth')->prefix("/profile")->group(function () {
+Route::prefix("/profile")->middleware('auth')->group(function () {
     Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
     Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -35,12 +67,12 @@ Route::middleware('auth')->prefix("/profile")->group(function () {
     Route::patch("/billing", [ProfileController::class, "billingUpdate"])->name("profile.billing.update");
 });
 
-Route::middleware('auth')->prefix("/orders")->group(function () {
+Route::prefix("/orders")->middleware('auth')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/{order}', [OrderController::class, 'show'])->name("orders.show");
 });
 
-Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(function () {
+Route::prefix("/dashboard")->middleware('auth', 'verified', "admin")->group(function () {
     Route::get('/', fn () => redirect(route("dashboard.overview.index")));
 
     Route::prefix("/overview")->group(function () {
@@ -61,5 +93,3 @@ Route::middleware('auth', 'verified', "admin")->prefix("/dashboard")->group(func
         Route::post('/phone-models', [DashboardSettingController::class, "phoneModelSave"])->name('dashboard.settings.phone-model-save');
     });
 });
-
-require __DIR__.'/auth.php';
