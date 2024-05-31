@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
         $user = auth()->user();
 
         $_user = null;
+        $_chat = null;
         $_profile = null;
         $_admin = false;
 
@@ -42,6 +43,9 @@ class HandleInertiaRequests extends Middleware
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+            ];
+            $_chat = [
+                "id" => $user->chats,
             ];
             $_profile = [
                 'avatar' => $user->profile?->image?->fullurl(),
@@ -53,6 +57,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $_user,
+                "chat" => $_chat,
                 'profile' => $_profile,
                 'admin' => $_admin,
             ],

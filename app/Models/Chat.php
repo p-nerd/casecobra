@@ -8,18 +8,12 @@ class Chat extends Model
 {
     protected $fillable = [
         'name',
-        'support_user_id',
-        'chatter_user_id',
+        'user_id',
     ];
 
-    public function supportUser()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'support_user_id');
-    }
-
-    public function chatterUser()
-    {
-        return $this->belongsTo(User::class, 'chatter_user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function messages()

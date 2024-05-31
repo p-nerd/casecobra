@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { MessageCircleMore, Minimize2, Send } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Form } from "../ui2/form";
+import { router } from "@inertiajs/react";
 
 const messages = [
     {
@@ -28,11 +30,29 @@ const messages = [
 ];
 
 const AddChat = () => {
+    const [content, setContent] = useState("");
+
+    const handleSubmit = () => {
+        router.post(
+            "/chats",
+            {
+                content,
+            },
+            {
+                onSuccess: () => {
+                    setContent("");
+                },
+            },
+        );
+    };
+
     return (
-        <div className="relative w-full">
+        <Form className="relative flex w-full flex-row gap-0" onSubmit={handleSubmit}>
             <Textarea
                 className="w-full resize-none rounded-2xl border border-gray-200 bg-white p-3 pr-16 text-sm shadow-sm transition-colors focus:border-primary focus:outline-none"
                 placeholder="Type your message..."
+                value={content}
+                onChange={e => setContent(e.target.value)}
             />
             <Button
                 className="hover:bg-primary-500 absolute right-3 top-3 rounded-full bg-primary p-2 text-white shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -42,7 +62,7 @@ const AddChat = () => {
                 <Send className="h-4 w-4" />
                 <span className="sr-only">Send</span>
             </Button>
-        </div>
+        </Form>
     );
 };
 
