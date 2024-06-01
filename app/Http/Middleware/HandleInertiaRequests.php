@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\Role;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -45,7 +46,9 @@ class HandleInertiaRequests extends Middleware
                 'email' => $user->email,
             ];
             if ($request->query("chat") === "true") {
-                $_messages = $user->messages;
+                $_messages = Message::where('user_id', $user->id)
+                    ->with(['replier:id,name'])
+                    ->get();
             }
             $_profile = [
                 'avatar' => $user->profile?->image?->fullurl(),

@@ -11,7 +11,7 @@ class Message extends Model
 
     protected $fillable = [
         'user_id',
-        "support_user_id",
+        "replier_id",
         'content',
     ];
 
@@ -22,6 +22,6 @@ class Message extends Model
 
     public function replier()
     {
-        return $this->belongsTo(User::class, 'replier_user_id');
+        return $this->belongsTo(User::class, 'replier_id');
     }
 }

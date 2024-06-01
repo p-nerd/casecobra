@@ -1,4 +1,4 @@
-import type { TMessage, TProps, TUser } from "@/types";
+import type { TID, TMessage, TProps, TUser } from "@/types";
 
 import { cn } from "@/lib/utils";
 import { router, usePage } from "@inertiajs/react";
@@ -13,11 +13,11 @@ import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card"
 
 import url from "@/lib/url";
 
-const Messages = (props: { data: TMessage[]; user?: TUser }) => {
+const Messages = (props: { data: TMessage[]; user: TUser }) => {
     return (
-        <>
+        <div className="flex flex-col gap-4">
             {props.data?.map((message, index) => {
-                const isChatter = message.user_id === props.user?.id;
+                const isChatter = !message.replier;
                 return (
                     <div
                         key={index}
@@ -28,7 +28,9 @@ const Messages = (props: { data: TMessage[]; user?: TUser }) => {
                         <Avatar className="h-8 w-8 shrink-0 border">
                             <AvatarImage alt="Agent" src="" />
                             <AvatarFallback>
-                                {String(message.user_id)?.slice(0, 1)?.toUpperCase()}
+                                {String(isChatter ? props.user.name : message.replier?.name)
+                                    ?.slice(0, 1)
+                                    ?.toUpperCase()}
                             </AvatarFallback>
                         </Avatar>
                         <div
@@ -41,29 +43,33 @@ const Messages = (props: { data: TMessage[]; user?: TUser }) => {
                     </div>
                 );
             })}
-        </>
+        </div>
     );
 };
 
-const AddChat = () => {
+const AddChat = (props: { user_id: TID }) => {
     const [content, setContent] = useState("");
 
-    const handleSubmit = () => {
-        router.post(
-            "/chats",
-            {
-                content,
-            },
-            {
-                onSuccess: () => {
-                    setContent("");
-                },
-            },
-        );
-    };
-
     return (
-        <Form className="relative flex w-full flex-row gap-0" onSubmit={handleSubmit}>
+        <Form
+            className="relative flex w-full flex-row gap-0"
+            onSubmit={() => {
+                router.post(
+                    route("messages.save"),
+                    {
+                        content,
+                        user_id: props.user_id,
+                    },
+                    {
+                        preserveState: true,
+                        preserveScroll: true,
+                        onSuccess: () => {
+                            setContent("");
+                        },
+                    },
+                );
+            }}
+        >
             <Textarea
                 className="w-full resize-none rounded-2xl border border-gray-200 bg-white p-3 pr-16 text-sm shadow-sm transition-colors focus:border-primary focus:outline-none"
                 placeholder="Type your message..."
@@ -82,7 +88,7 @@ const AddChat = () => {
     );
 };
 
-const Chats = (props: { messages: TMessage[]; user?: TUser; onMinimize: () => void }) => {
+const Chats = (props: { messages: TMessage[]; user: TUser; onMinimize: () => void }) => {
     return (
         <Card className="fixed bottom-10 right-6 z-[999] w-[350px] overflow-hidden rounded-2xl shadow-lg transition-transform duration-500">
             <CardHeader className="flex flex-row items-center justify-between bg-gray-100 px-4 py-3">
@@ -97,19 +103,17 @@ const Chats = (props: { messages: TMessage[]; user?: TUser; onMinimize: () => vo
                     <span className="sr-only">Minimize</span>
                 </Button>
             </CardHeader>
-            <CardContent className="h-[350px] overflow-y-auto px-4 py-3">
-                <div className="flex flex-col gap-4">
-                    {!!props.messages?.length ? (
-                        <Messages data={props.messages} user={props.user} />
-                    ) : (
-                        <div className="flex h-full w-full flex-col items-center justify-center text-accent-foreground">
-                            There is no message
-                        </div>
-                    )}
-                </div>
+            <CardContent className="flex h-[350px] flex-col-reverse overflow-y-auto px-4 py-3">
+                {!!props.messages?.length ? (
+                    <Messages data={props.messages} user={props.user} />
+                ) : (
+                    <div className="flex h-full w-full flex-col items-center justify-center text-accent-foreground">
+                        There is no message
+                    </div>
+                )}
             </CardContent>
             <CardFooter className="w-full  bg-gray-100 px-4 py-3">
-                <AddChat />
+                <AddChat user_id={props.user?.id} />
             </CardFooter>
         </Card>
     );
@@ -139,6 +143,12 @@ const ChatBox = () => {
     const show = !!url.getQueries(href)?.chat;
 
     const page = usePage<TProps>();
+    const user = page.props.auth.user;
+
+    if (show && !user) {
+        window.location.href = route("login");
+        return;
+    }
 
     const navigate = useCallback(
         (href: string) => {
@@ -147,9 +157,9 @@ const ChatBox = () => {
         [router],
     );
 
-    return show ? (
+    return show && user ? (
         <Chats
-            user={page.props.auth.user}
+            user={user}
             messages={page.props.auth.messages}
             onMinimize={() => navigate(url.replaceQueries(href, { chat: undefined }))}
         />

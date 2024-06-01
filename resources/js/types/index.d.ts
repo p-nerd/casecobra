@@ -16,7 +16,10 @@ type TProfile = {
 type TMessage = {
     id: TID;
     user_id: TID;
-    replier_user_id?: TID;
+    replier?: {
+        id: TID;
+        name: string;
+    };
     content: string;
     created_at: string;
     updated_at: string;

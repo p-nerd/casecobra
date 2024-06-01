@@ -5,6 +5,7 @@ use App\Http\Controllers\CreateCaseController;
 use App\Http\Controllers\DashboardOrderController;
 use App\Http\Controllers\DashboardOverviewController;
 use App\Http\Controllers\DashboardSettingController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -92,4 +93,8 @@ Route::prefix("/dashboard")->middleware('auth', 'verified', "admin")->group(func
         Route::patch('/', [DashboardSettingController::class, "update"])->name('dashboard.settings.update');
         Route::post('/phone-models', [DashboardSettingController::class, "phoneModelSave"])->name('dashboard.settings.phone-model-save');
     });
+});
+
+Route::prefix("/messages")->middleware("auth")->group(function () {
+    Route::post("/", [MessageController::class, "save"])->name("messages.save");
 });
