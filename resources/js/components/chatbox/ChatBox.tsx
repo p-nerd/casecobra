@@ -1,33 +1,49 @@
+import type { TMessage, TProps, TUser } from "@/types";
+
+import { cn } from "@/lib/utils";
+import { router, usePage } from "@inertiajs/react";
+import { useCallback, useState } from "react";
+
+import { Form } from "@/components/ui2/form";
 import { Button } from "@/components/ui/button";
-import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircleMore, Minimize2, Send } from "lucide-react";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Form } from "../ui2/form";
-import { router } from "@inertiajs/react";
+import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
+import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
 
-const messages = [
-    {
-        chat: "Hi there! How can I assist you today?",
-        user: false,
-        name: "Admin",
-        avatar: "/",
-    },
-    {
-        chat: "I'm looking for a new pair of shoes for my upcoming trip.",
-        user: true,
-        name: "Shihab",
-        avatar: "/",
-    },
-    {
-        chat: "Great! We have a wide selection of comfortable and stylish shoes perfect for travel. Let me know if you have any specific requirements, and I'd be happy to provide some recommendations.",
-        user: false,
-        name: "Admin",
-        avatar: "/",
-    },
-];
+import url from "@/lib/url";
+
+const Messages = (props: { data: TMessage[]; user?: TUser }) => {
+    return (
+        <>
+            {props.data?.map((message, index) => {
+                const isChatter = message.user_id === props.user?.id;
+                return (
+                    <div
+                        key={index}
+                        className={cn("flex items-start gap-3", {
+                            "flex-row-reverse": isChatter,
+                        })}
+                    >
+                        <Avatar className="h-8 w-8 shrink-0 border">
+                            <AvatarImage alt="Agent" src="" />
+                            <AvatarFallback>
+                                {String(message.user_id)?.slice(0, 1)?.toUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div
+                            className={cn("rounded-lg bg-gray-100 p-3 text-sm", {
+                                "bg-primary text-white": isChatter,
+                            })}
+                        >
+                            <p>{message.content}</p>
+                        </div>
+                    </div>
+                );
+            })}
+        </>
+    );
+};
 
 const AddChat = () => {
     const [content, setContent] = useState("");
@@ -66,17 +82,9 @@ const AddChat = () => {
     );
 };
 
-const Chats = (props: { onMinimize: () => void; show: boolean }) => {
+const Chats = (props: { messages: TMessage[]; user?: TUser; onMinimize: () => void }) => {
     return (
-        <Card
-            className={cn(
-                "fixed bottom-10 right-6 z-[999] w-[350px] overflow-hidden rounded-2xl shadow-lg transition-transform duration-500",
-                {
-                    "translate-y-0": props.show,
-                    "translate-y-80": !props.show,
-                },
-            )}
-        >
+        <Card className="fixed bottom-10 right-6 z-[999] w-[350px] overflow-hidden rounded-2xl shadow-lg transition-transform duration-500">
             <CardHeader className="flex flex-row items-center justify-between bg-gray-100 px-4 py-3">
                 <h3 className="text-xl font-bold">Chat with Us</h3>
                 <Button
@@ -91,28 +99,13 @@ const Chats = (props: { onMinimize: () => void; show: boolean }) => {
             </CardHeader>
             <CardContent className="h-[350px] overflow-y-auto px-4 py-3">
                 <div className="flex flex-col gap-4">
-                    {messages.map((message, index) => (
-                        <div
-                            key={index}
-                            className={cn("flex items-start gap-3", {
-                                "flex-row-reverse": message.user,
-                            })}
-                        >
-                            <Avatar className="h-8 w-8 shrink-0 border">
-                                <AvatarImage alt="Agent" src={message.avatar} />
-                                <AvatarFallback>
-                                    {message.name?.slice(0, 1)?.toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div
-                                className={cn("rounded-lg bg-gray-100 p-3 text-sm", {
-                                    "bg-primary text-white": message.user,
-                                })}
-                            >
-                                <p>{message.chat}</p>
-                            </div>
+                    {!!props.messages?.length ? (
+                        <Messages data={props.messages} user={props.user} />
+                    ) : (
+                        <div className="flex h-full w-full flex-col items-center justify-center text-accent-foreground">
+                            There is no message
                         </div>
-                    ))}
+                    )}
                 </div>
             </CardContent>
             <CardFooter className="w-full  bg-gray-100 px-4 py-3">
@@ -142,16 +135,26 @@ const ChatIcon = (props: { onMaximize: () => void }) => {
 };
 
 const ChatBox = () => {
-    const [show, setShow] = useState(false);
+    const href = window.location.href;
+    const show = !!url.getQueries(href)?.chat;
 
-    return (
-        <>
-            {show ? (
-                <Chats show={show} onMinimize={() => setShow(false)} />
-            ) : (
-                <ChatIcon onMaximize={() => setShow(true)} />
-            )}
-        </>
+    const page = usePage<TProps>();
+
+    const navigate = useCallback(
+        (href: string) => {
+            router.get(href, {}, { preserveScroll: true, preserveState: true });
+        },
+        [router],
+    );
+
+    return show ? (
+        <Chats
+            user={page.props.auth.user}
+            messages={page.props.auth.messages}
+            onMinimize={() => navigate(url.replaceQueries(href, { chat: undefined }))}
+        />
+    ) : (
+        <ChatIcon onMaximize={() => navigate(url.replaceQueries(href, { chat: "true" }))} />
     );
 };
 

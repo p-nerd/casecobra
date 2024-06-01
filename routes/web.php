@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CreateCaseController;
 use App\Http\Controllers\DashboardOrderController;
 use App\Http\Controllers\DashboardOverviewController;
@@ -93,9 +92,4 @@ Route::prefix("/dashboard")->middleware('auth', 'verified', "admin")->group(func
         Route::patch('/', [DashboardSettingController::class, "update"])->name('dashboard.settings.update');
         Route::post('/phone-models', [DashboardSettingController::class, "phoneModelSave"])->name('dashboard.settings.phone-model-save');
     });
-});
-
-Route::prefix("/chats")->group(function () {
-    Route::post('/', [ChatController::class, 'sendMessage']);
-    Route::get('/{chatId}/messages', [ChatController::class, 'getMessages']);
 });

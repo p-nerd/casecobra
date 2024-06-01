@@ -9,18 +9,23 @@ type TUser = {
     email_verified_at: string;
 };
 
-type TChat = {
-    id: TID;
-};
-
 type TProfile = {
     avatar?: string;
+};
+
+type TMessage = {
+    id: TID;
+    user_id: TID;
+    replier_user_id?: TID;
+    content: string;
+    created_at: string;
+    updated_at: string;
 };
 
 export type TProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user?: TUser;
-        chat?: TChat;
+        messages: TMessage[];
         profile?: TProfile;
         admin?: boolean;
     };

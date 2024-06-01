@@ -9,6 +9,7 @@ use App\Models\Color;
 use App\Models\Finish;
 use App\Models\Image;
 use App\Models\Material;
+use App\Models\Message;
 use App\Models\Option;
 use App\Models\Order;
 use App\Models\PhoneModel;
@@ -48,6 +49,9 @@ class DatabaseSeeder extends Seeder
             "user_id" => $shihab4t->id,
         ]);
         Order::factory(1000)->create([
+            "user_id" => $shihab4t->id,
+        ]);
+        Message::factory(10)->create([
             "user_id" => $shihab4t->id,
         ]);
 
