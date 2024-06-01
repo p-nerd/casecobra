@@ -13,36 +13,24 @@ import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card"
 
 import url from "@/lib/url";
 
-const Messages = (props: { data: TMessage[]; user: TUser }) => {
+const Message = (props: { isChatter: boolean; name: string; content: string }) => {
     return (
-        <div className="flex flex-col gap-4">
-            {props.data?.map((message, index) => {
-                const isChatter = !message.replier;
-                return (
-                    <div
-                        key={index}
-                        className={cn("flex items-start gap-3", {
-                            "flex-row-reverse": isChatter,
-                        })}
-                    >
-                        <Avatar className="h-8 w-8 shrink-0 border">
-                            <AvatarImage alt="Agent" src="" />
-                            <AvatarFallback>
-                                {String(isChatter ? props.user.name : message.replier?.name)
-                                    ?.slice(0, 1)
-                                    ?.toUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
-                        <div
-                            className={cn("rounded-lg bg-gray-100 p-3 text-sm", {
-                                "bg-primary text-white": isChatter,
-                            })}
-                        >
-                            <p>{message.content}</p>
-                        </div>
-                    </div>
-                );
+        <div
+            className={cn("flex items-start gap-3", {
+                "flex-row-reverse": props.isChatter,
             })}
+        >
+            <Avatar className="h-8 w-8 shrink-0 border">
+                <AvatarImage alt="Agent" src="" />
+                <AvatarFallback>{props.name?.slice(0, 1)?.toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div
+                className={cn("rounded-lg bg-gray-100 p-3 text-sm", {
+                    "bg-primary text-white": !props.isChatter,
+                })}
+            >
+                <p>{props.content}</p>
+            </div>
         </div>
     );
 };
@@ -105,7 +93,19 @@ const Chats = (props: { messages: TMessage[]; user: TUser; onMinimize: () => voi
             </CardHeader>
             <CardContent className="flex h-[350px] flex-col-reverse overflow-y-auto px-4 py-3">
                 {!!props.messages?.length ? (
-                    <Messages data={props.messages} user={props.user} />
+                    <div className="flex flex-col gap-4">
+                        {props.messages?.map((message, index) => {
+                            const isChatter = !message.replier;
+                            return (
+                                <Message
+                                    key={index}
+                                    isChatter={isChatter}
+                                    name={isChatter ? props.user.name : message.replier?.name || ""}
+                                    content={message.content}
+                                />
+                            );
+                        })}
+                    </div>
                 ) : (
                     <div className="flex h-full w-full flex-col items-center justify-center text-accent-foreground">
                         There is no message
