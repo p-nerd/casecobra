@@ -1,4 +1,4 @@
-import type { TID, TMessage, TProps, TUser } from "@/types";
+import type { TID, TMessage, TProfile, TProps, TUser } from "@/types";
 
 import { cn } from "@/lib/utils";
 import { router, usePage } from "@inertiajs/react";
@@ -13,7 +13,7 @@ import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card"
 
 import url from "@/lib/url";
 
-const Message = (props: { isChatter: boolean; name: string; content: string }) => {
+const Message = (props: { isChatter: boolean; name: string; content: string; avatar: string }) => {
     return (
         <div
             className={cn("flex items-start gap-3", {
@@ -21,7 +21,7 @@ const Message = (props: { isChatter: boolean; name: string; content: string }) =
             })}
         >
             <Avatar className="h-8 w-8 shrink-0 border">
-                <AvatarImage alt="Agent" src="" />
+                <AvatarImage alt="Agent" src={props.avatar} />
                 <AvatarFallback>{props.name?.slice(0, 1)?.toUpperCase()}</AvatarFallback>
             </Avatar>
             <div
@@ -76,7 +76,12 @@ const AddChat = (props: { user_id: TID }) => {
     );
 };
 
-const Chats = (props: { messages: TMessage[]; user: TUser; onMinimize: () => void }) => {
+const Chats = (props: {
+    messages: TMessage[];
+    user: TUser;
+    profile: TProfile;
+    onMinimize: () => void;
+}) => {
     return (
         <Card className="fixed bottom-10 right-6 z-[999] w-[350px] overflow-hidden rounded-2xl shadow-lg transition-transform duration-500">
             <CardHeader className="flex flex-row items-center justify-between bg-gray-100 px-4 py-3">
@@ -101,6 +106,7 @@ const Chats = (props: { messages: TMessage[]; user: TUser; onMinimize: () => voi
                                     key={index}
                                     isChatter={isChatter}
                                     name={isChatter ? props.user.name : message.replier?.name || ""}
+                                    avatar={isChatter ? props.profile.avatar || "" : ""}
                                     content={message.content}
                                 />
                             );
@@ -160,6 +166,7 @@ const ChatBox = () => {
     return show && user ? (
         <Chats
             user={user}
+            profile={page.props.auth.profile}
             messages={page.props.auth.messages}
             onMinimize={() => navigate(url.replaceQueries(href, { chat: undefined }))}
         />
