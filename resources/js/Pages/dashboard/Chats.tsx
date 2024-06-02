@@ -166,7 +166,34 @@ const Messages = () => {
     );
 };
 
-const Chats = () => {
+type TUser = {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+    email_verified_at: string;
+    created_at: string;
+    updated_at: string;
+    stripe_id: string | null;
+    pm_type: string | null;
+    pm_last_four: string | null;
+    trial_ends_at: string | null;
+};
+
+type TMessage = {
+    id: number;
+    user_id: number;
+    replier_id: number | null;
+    content: string;
+    created_at: string;
+    updated_at: string;
+};
+
+type TChat = TUser & {
+    messages: TMessage[];
+};
+
+const Chats = (props: { chats: TChat[] }) => {
     return (
         <SiteLayout hideFooter={true} title="Chat Support">
             <div className="grid flex-1 overflow-hidden lg:grid-cols-[280px_1fr]">
