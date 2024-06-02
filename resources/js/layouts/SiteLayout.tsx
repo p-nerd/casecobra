@@ -11,7 +11,7 @@ import { ArrowRight } from "lucide-react";
 import BaseLayout from "@/layouts/BaseLayout";
 import ProfileDropdown from "@/components/layout/ProfileDropdown";
 import DashboardDropdown from "@/components/layout/DashboardDropdown";
-import ChatBox from "@/components/chatbox/ChatBox";
+import ChatBox from "@/components/chats/ChatBox";
 
 const Navbar = () => {
     const { user, profile, admin } = usePage<TProps>().props.auth;
@@ -125,7 +125,7 @@ const Footer = () => {
     );
 };
 
-const SiteLayout = (props: { children: ReactNode; title: string }) => {
+const SiteLayout = (props: { children: ReactNode; title: string; hideFooter?: boolean }) => {
     const isDashboard = usePage<TProps>().url.includes("/dashboard");
 
     return (
@@ -133,7 +133,7 @@ const SiteLayout = (props: { children: ReactNode; title: string }) => {
             <Navbar />
             <main className="grainy-light flex min-h-[calc(100vh-3.5rem-1px)] flex-col">
                 <div className="flex h-full flex-1 flex-col">{props.children}</div>
-                <Footer />
+                {!props.hideFooter && <Footer />}
             </main>
             {!isDashboard && <ChatBox />}
         </BaseLayout>
