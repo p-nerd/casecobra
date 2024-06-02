@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreateCaseController;
+use App\Http\Controllers\DashboardChatController;
 use App\Http\Controllers\DashboardOrderController;
 use App\Http\Controllers\DashboardOverviewController;
 use App\Http\Controllers\DashboardSettingController;
@@ -86,6 +87,10 @@ Route::prefix("/dashboard")->middleware('auth', 'verified', "admin")->group(func
         Route::get('/{order}', [DashboardOrderController::class, "show"])->name('dashboard.orders.show');
         Route::patch('/{order}', [DashboardOrderController::class, "update"])->name('dashboard.orders.update');
         Route::delete('/{order}', [DashboardOrderController::class, "destroy"])->name('dashboard.orders.destroy');
+    });
+
+    Route::prefix("/chats")->group(function () {
+        Route::get("/", [DashboardChatController::class, "index"])->name("dashboard.chats.index");
     });
 
     Route::prefix("/settings")->group(function () {

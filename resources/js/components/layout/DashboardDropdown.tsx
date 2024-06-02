@@ -22,6 +22,9 @@ const DashboardDropdown = () => {
                     <Link href="/dashboard/orders">
                         <DropdownMenuItem>Orders</DropdownMenuItem>
                     </Link>
+                    <Link href="/dashboard/chats">
+                        <DropdownMenuItem>Chats</DropdownMenuItem>
+                    </Link>
                     <DropdownMenuSeparator />
                     <Link href="/dashboard/settings">
                         <DropdownMenuItem>Settings</DropdownMenuItem>
