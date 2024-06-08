@@ -26,21 +26,18 @@ class MakeReactComponent extends Command
      */
     public function handle()
     {
-        $parts = explode("/", $this->argument('path'));
-        $name = $parts[count($parts) - 1];
+        $_path = $this->argument('path');
+        $parts = explode("/", $_path);
+        $name = end($parts);
+        $path = resource_path('js/'.implode('/', array_slice($parts, 0, -1)));
 
-        $path = resource_path('js');
-
-        for ($i = 0; $i < count($parts) - 1; $i++) {
-            $path .= "/".$parts[$i];
-            if (! File::isDirectory($path)) {
-                File::makeDirectory($path, 0755, true);
-            }
+        if (! File::isDirectory($path)) {
+            File::makeDirectory($path, 0755, true);
         }
 
-        $path .= "/$name.tsx";
+        $filepath = "$path/$name.tsx";
 
-        if (File::exists($path)) {
+        if (File::exists($filepath)) {
             $this->error('Component already exists!');
 
             return;
@@ -49,7 +46,7 @@ class MakeReactComponent extends Command
         $tab = "    ";
         $code = "const $name = () => {\n{$tab}return (\n{$tab}{$tab}<div>$name</div>\n{$tab});\n};\n\nexport default $name;";
 
-        File::put($path, $code);
-        $this->info('React component created successfully.');
+        File::put($filepath, $code);
+        $this->info("$_path.tsx component created successfully.");
     }
 }
