@@ -26,19 +26,19 @@ class DatabaseSeeder extends Seeder
     {
         Option::setCaseBasePrice(1500);
 
-        $adminUser = User::factory()->create([
+        $admin = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@casecobra.com',
             "role" => Role::ADMIN->value,
         ]);
         Profile::factory()->create([
-            "user_id" => $adminUser->id,
+            "user_id" => $admin->id,
         ]);
 
-        $this->phoneModels($adminUser->id);
-        $this->colors($adminUser->id);
-        $this->materials($adminUser->id);
-        $this->finishes($adminUser->id);
+        $this->phoneModels($admin->id);
+        $this->colors($admin->id);
+        $this->materials($admin->id);
+        $this->finishes($admin->id);
 
         $shihab4t = User::factory()->create([
             "name" => "Shihab Mahamud",
@@ -54,6 +54,10 @@ class DatabaseSeeder extends Seeder
         Message::factory(10)->create([
             "user_id" => $shihab4t->id,
         ]);
+        Message::factory(5)->create([
+            "user_id" => $shihab4t->id,
+            "replier_id" => $admin->id,
+        ]);
 
         $romi = User::factory()->create([
             "name" => "MD Romi",
@@ -65,6 +69,13 @@ class DatabaseSeeder extends Seeder
         ]);
         Order::factory(10)->create([
             "user_id" => $romi->id,
+        ]);
+        Message::factory(10)->create([
+            "user_id" => $romi->id,
+        ]);
+        Message::factory(5)->create([
+            "user_id" => $romi->id,
+            "replier_id" => $admin->id,
         ]);
     }
 

@@ -1,168 +1,184 @@
-import SiteLayout from "@/layouts/SiteLayout";
+import type { TProps } from "@/types";
 
+import { cn } from "@/lib/utils";
+import { immer } from "zustand/middleware/immer";
+import { create } from "zustand";
+import { usePage } from "@inertiajs/react";
+
+import { Link } from "@inertiajs/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { Link } from "@inertiajs/react";
-import { MessageSquareIcon, Package2Icon, SendIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import { Fragment } from "react/jsx-runtime";
+import { Package2Icon, SendIcon } from "lucide-react";
+import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
+
+import SiteLayout from "@/layouts/SiteLayout";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+const useChatsState = create<{
+    activeChatIndex: number;
+    setActiveChatIndex: (activeChatIndex: number) => void;
+}>()(
+    immer(set => ({
+        activeChatIndex: 0,
+        setActiveChatIndex: activeChatIndex => {
+            set(state => {
+                state.activeChatIndex = activeChatIndex;
+            });
+        },
+    })),
+);
 
 const Sidebar = () => {
+    const chats = usePage<TProps<TChatsProps>>().props.chats;
+
+    const { activeChatIndex, setActiveChatIndex } = useChatsState();
+
     return (
-        <div className="hidden border-r bg-gray-100/40 dark:bg-gray-800/40 lg:block">
+        <ScrollArea className="hidden h-[calc(100vh-3.5rem-1px)] rounded-md border border-r bg-gray-100/40 lg:block">
             <div className="flex flex-col gap-2">
                 <div className="flex h-[60px] items-center px-6">
                     <Link className="flex items-center gap-2 font-semibold" href="#">
                         <Package2Icon className="h-6 w-6" />
-                        <span className="">Acme Inc</span>
+                        <span className="">Chat Support</span>
                     </Link>
                 </div>
                 <div className="flex-1">
                     <nav className="grid items-start px-4 text-sm font-medium">
-                        <Link
-                            className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
-                            href="#"
-                        >
-                            <MessageSquareIcon className="h-4 w-4" />
-                            Active Chats
-                            <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                12
-                            </Badge>
-                        </Link>
-                        <Link
-                            className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                            href="#"
-                        >
-                            <UsersIcon className="h-4 w-4" />
-                            Customers
-                        </Link>
-                        <Link
-                            className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                            href="#"
-                        >
-                            <SettingsIcon className="h-4 w-4" />
-                            Settings
-                        </Link>
+                        {chats.map((chat, index) => (
+                            <button
+                                onClick={() => setActiveChatIndex(index)}
+                                key={chat.id}
+                                className={cn(
+                                    "flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-all hover:text-gray-900",
+                                    { "bg-white": index === activeChatIndex },
+                                )}
+                            >
+                                <Avatar className="h-8 w-8 shrink-0 border">
+                                    <AvatarImage alt="Agent" src={chat.avatar} />
+                                    <AvatarFallback>
+                                        {chat.name?.slice(0, 1)?.toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                                {chat.name}
+                                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                                    12
+                                </Badge>
+                            </button>
+                        ))}
                     </nav>
+                </div>
+            </div>
+        </ScrollArea>
+    );
+};
+
+const formatChatMessageDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        return "Invalid date";
+    }
+    const time = date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+    });
+
+    const formattedDate = date.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+    });
+    return `${formattedDate} at ${time}`;
+};
+
+const UserMessage = (props: { message: TMessage; user: TUser }) => {
+    return (
+        <div className="flex items-start gap-4 rounded-2xl border bg-white p-4 shadow-sm">
+            <Avatar className="h-10 w-10 border">
+                <AvatarImage alt={props.user.name} src={props.user.avatar} />
+                <AvatarFallback>{props.user.name?.slice(0, 1)?.toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="grid items-start gap-1 text-sm">
+                <div className="flex items-center gap-2">
+                    <div className="font-bold">{props.user.name}</div>
+                    <div className="text-sm text-gray-500">
+                        {formatChatMessageDate(props.message.created_at)}
+                    </div>
+                </div>
+                <div>
+                    <p>{props.message.content}</p>
                 </div>
             </div>
         </div>
     );
 };
 
-const Messages = () => {
+const ReplierMessage = (props: { message: TMessage }) => {
+    const { repliers } = usePage<TProps<TChatsProps>>().props;
+
+    const replier = repliers.find(replier => props.message.replier_id === replier.id);
+
     return (
-        <div className="flex flex-col">
-            <header className="flex h-14 items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40 lg:h-[60px]">
-                <div className="flex-1">
-                    <h1 className="text-lg font-semibold">Support Chat</h1>
-                </div>
-            </header>
-            <main className="flex flex-1 flex-col">
-                <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-                    <div className="rounded-lg border bg-white p-4 shadow-sm">
-                        <div className="flex flex-col gap-6">
-                            <div className="flex items-start gap-4">
-                                <Avatar className="h-10 w-10 border">
-                                    <AvatarImage alt="User" src="/placeholder-user.jpg" />
-                                    <AvatarFallback>JD</AvatarFallback>
-                                </Avatar>
-                                <div className="grid items-start gap-1 text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="font-bold">John Doe</div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            2:39pm
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            Hi, I'm having trouble with my order. Can you please
-                                            help me?
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex items-start justify-end gap-4">
-                                <div className="grid items-start gap-1 text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="font-bold">Support Agent</div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            2:40pm
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            Hi John, I'd be happy to help you with your order. Could
-                                            you please provide me with the order number?
-                                        </p>
-                                    </div>
-                                </div>
-                                <Avatar className="h-10 w-10 border">
-                                    <AvatarImage alt="Support Agent" src="/placeholder-user.jpg" />
-                                    <AvatarFallback>SA</AvatarFallback>
-                                </Avatar>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <Avatar className="h-10 w-10 border">
-                                    <AvatarImage alt="User" src="/placeholder-user.jpg" />
-                                    <AvatarFallback>JD</AvatarFallback>
-                                </Avatar>
-                                <div className="grid items-start gap-1 text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="font-bold">John Doe</div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            2:41pm
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p>The order number is #12345.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex items-start justify-end gap-4">
-                                <div className="grid items-start gap-1 text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="font-bold">Support Agent</div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            2:42pm
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p>
-                                            Thank you, John. Let me look into that for you. One
-                                            moment, please.
-                                        </p>
-                                    </div>
-                                </div>
-                                <Avatar className="h-10 w-10 border">
-                                    <AvatarImage alt="Support Agent" src="/placeholder-user.jpg" />
-                                    <AvatarFallback>SA</AvatarFallback>
-                                </Avatar>
-                            </div>
-                        </div>
+        <div className="flex items-start justify-end gap-4 rounded-2xl border bg-primary p-4 text-primary-foreground shadow-sm">
+            <div className="grid items-start gap-1 text-sm">
+                <div className="flex items-center justify-end gap-2">
+                    <div className="text-sm text-white">
+                        {formatChatMessageDate(props.message.created_at)}
                     </div>
+                    <div className="font-bold">{replier?.name}</div>
                 </div>
-                <div className="sticky bottom-0 mx-auto flex w-full flex-col gap-1.5 px-4 py-2 dark:bg-gray-950">
-                    <div className="relative">
-                        <Textarea
-                            className="min-h-[48px] resize-none rounded-2xl border border-neutral-400 bg-white p-4 pr-16 shadow-sm dark:border-gray-800"
-                            id="message"
-                            name="message"
-                            placeholder="Type your message..."
-                            rows={1}
-                        />
-                        <Button
-                            className="absolute right-3 top-3 h-8 w-8 rounded-full"
-                            size="icon"
-                            type="submit"
-                        >
-                            <SendIcon className="h-4 w-4" />
-                            <span className="sr-only">Send</span>
-                        </Button>
-                    </div>
-                </div>
-            </main>
+                <p className="text-end">{props.message.content}</p>
+            </div>
+            <Avatar className="h-10 w-10 border">
+                <AvatarImage alt={replier?.name} src={replier?.avatar} />
+                <AvatarFallback>{replier?.name?.slice(0, 1)?.toUpperCase()}</AvatarFallback>
+            </Avatar>
         </div>
+    );
+};
+
+const Messages = () => {
+    const { chats } = usePage<TProps<TChatsProps>>().props;
+    const { activeChatIndex } = useChatsState();
+
+    const user = chats[activeChatIndex];
+    const messages = user.messages;
+
+    return (
+        <ScrollArea className="h-[calc(100vh-3.5rem-1px)]">
+            <div className="flex h-full flex-col gap-2 overflow-y-auto p-6">
+                {messages.map(message => (
+                    <Fragment key={message.id}>
+                        {!message.replier_id ? (
+                            <UserMessage message={message} user={user} />
+                        ) : (
+                            <ReplierMessage message={message} />
+                        )}
+                    </Fragment>
+                ))}
+            </div>
+            <div className="sticky bottom-0 mx-auto flex w-full flex-col gap-1.5 px-4 py-2">
+                <div className="relative">
+                    <Textarea
+                        className="min-h-[48px] resize-none rounded-2xl border border-neutral-400 bg-white p-4 pr-16 shadow-sm"
+                        id="message"
+                        name="message"
+                        placeholder="Type your message..."
+                        rows={1}
+                    />
+                    <Button
+                        className="absolute right-3 top-3 h-8 w-8 rounded-full"
+                        size="icon"
+                        type="submit"
+                    >
+                        <SendIcon className="h-4 w-4" />
+                        <span className="sr-only">Send</span>
+                    </Button>
+                </div>
+            </div>
+        </ScrollArea>
     );
 };
 
@@ -171,13 +187,9 @@ type TUser = {
     name: string;
     email: string;
     role: string;
-    email_verified_at: string;
     created_at: string;
     updated_at: string;
-    stripe_id: string | null;
-    pm_type: string | null;
-    pm_last_four: string | null;
-    trial_ends_at: string | null;
+    avatar: string;
 };
 
 type TMessage = {
@@ -193,7 +205,12 @@ type TChat = TUser & {
     messages: TMessage[];
 };
 
-const Chats = (props: { chats: TChat[] }) => {
+type TChatsProps = {
+    chats: TChat[];
+    repliers: TUser[];
+};
+
+const Chats = () => {
     return (
         <SiteLayout hideFooter={true} title="Chat Support">
             <div className="grid flex-1 overflow-hidden lg:grid-cols-[280px_1fr]">
