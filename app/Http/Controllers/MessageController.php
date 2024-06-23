@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Message;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,9 @@ class MessageController extends Controller
             "replier_id" => ["nullable"],
         ]);
 
-        Message::create($payload);
+        $message = Message::create($payload);
+        $profile = $message->user->profile;
+
+        event(new MessageSent($message, $profile));
     }
 }

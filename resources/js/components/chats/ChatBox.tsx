@@ -2,7 +2,7 @@ import type { TID, TMessage, TProfile, TProps, TUser } from "@/types";
 
 import { cn } from "@/lib/utils";
 import { router, usePage } from "@inertiajs/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Form } from "@/components/ui2/form";
 import { Button } from "@/components/ui/button";
@@ -81,6 +81,28 @@ const Chats = (props: {
     profile?: TProfile;
     onMinimize: () => void;
 }) => {
+    const { auth } = usePage<TProps>().props;
+
+    const [messages, setMessages] = useState<TMessage[]>([]);
+
+    useEffect(() => {
+        setMessages(props.messages);
+    }, []);
+
+    window.Echo.channel("message-sent").listen("MessageSent", (e: { message: TMessage }) => {
+        if (e.message.user_id !== auth.user?.id) {
+            console.log(
+                `message-sent: not for this user: ${e.message.user_id} !== ${auth.user?.id}`,
+            );
+            return;
+        }
+        if (messages.find(m => m.id === e.message.id)) {
+            console.log(`message-sent: message already exist in the chatbox: ${e.message.id}`);
+            return;
+        }
+        setMessages(messages => [...messages, e.message]);
+    });
+
     return (
         <Card className="fixed bottom-10 right-6 z-[999] w-[350px] overflow-hidden rounded-2xl shadow-lg transition-transform duration-500">
             <CardHeader className="flex flex-row items-center justify-between bg-gray-100 px-4 py-3">
@@ -98,7 +120,7 @@ const Chats = (props: {
             <CardContent className="flex h-[350px] flex-col-reverse overflow-y-auto px-4 py-3">
                 {!!props.messages?.length ? (
                     <div className="flex flex-col gap-4">
-                        {props.messages?.map((message, index) => {
+                        {messages?.map((message, index) => {
                             const isChatter = !message.replier;
                             return (
                                 <Message
