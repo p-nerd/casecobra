@@ -78,7 +78,7 @@ const AddChat = (props: { user_id: TID }) => {
 const Chats = (props: {
     messages: TMessage[];
     user: TUser;
-    profile: TProfile;
+    profile?: TProfile;
     onMinimize: () => void;
 }) => {
     return (
@@ -105,7 +105,7 @@ const Chats = (props: {
                                     key={index}
                                     isChatter={isChatter}
                                     name={isChatter ? props.user.name : message.replier?.name || ""}
-                                    avatar={isChatter ? props.profile.avatar || "" : ""}
+                                    avatar={isChatter ? props.profile?.avatar || "" : ""}
                                     content={message.content}
                                 />
                             );
