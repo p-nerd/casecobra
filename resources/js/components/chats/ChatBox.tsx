@@ -38,26 +38,25 @@ const Message = (props: { isChatter: boolean; name: string; content: string; ava
 const AddChat = (props: { user_id: TID }) => {
     const [content, setContent] = useState("");
 
+    const handleSubmit = () => {
+        router.post(
+            route("messages.save"),
+            {
+                content,
+                user_id: props.user_id,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    setContent("");
+                },
+            },
+        );
+    };
+
     return (
-        <Form
-            className="relative flex w-full flex-row gap-0"
-            onSubmit={() => {
-                router.post(
-                    route("messages.save"),
-                    {
-                        content,
-                        user_id: props.user_id,
-                    },
-                    {
-                        preserveState: true,
-                        preserveScroll: true,
-                        onSuccess: () => {
-                            setContent("");
-                        },
-                    },
-                );
-            }}
-        >
+        <Form className="relative flex w-full flex-row gap-0" onSubmit={handleSubmit}>
             <Textarea
                 className="w-full resize-none rounded-2xl border border-gray-200 bg-white p-3 pr-16 text-sm shadow-sm transition-colors focus:border-primary focus:outline-none"
                 placeholder="Type your message..."

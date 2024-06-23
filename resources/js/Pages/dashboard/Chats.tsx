@@ -3,18 +3,19 @@ import type { TProps } from "@/types";
 import { cn } from "@/lib/utils";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 
 import { Link } from "@inertiajs/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Fragment } from "react/jsx-runtime";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Package2Icon, SendIcon } from "lucide-react";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 
 import SiteLayout from "@/layouts/SiteLayout";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
 
 const useChatsState = create<{
     activeChatIndex: number;
@@ -140,11 +141,31 @@ const ReplierMessage = (props: { message: TMessage }) => {
 };
 
 const Messages = () => {
-    const { chats } = usePage<TProps<TChatsProps>>().props;
+    const { chats, auth } = usePage<TProps<TChatsProps>>().props;
     const { activeChatIndex } = useChatsState();
 
     const user = chats[activeChatIndex];
     const messages = user.messages;
+
+    const [content, setContent] = useState("");
+
+    const handleSubmit = () => {
+        router.post(
+            route("messages.save"),
+            {
+                content,
+                user_id: user.id,
+                replier_id: auth.user?.id,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    setContent("");
+                },
+            },
+        );
+    };
 
     return (
         <ScrollArea className="h-[calc(100vh-3.5rem-1px)]">
@@ -167,11 +188,13 @@ const Messages = () => {
                         name="message"
                         placeholder="Type your message..."
                         rows={1}
+                        value={content}
+                        onChange={e => setContent(e.target.value)}
                     />
                     <Button
                         className="absolute right-3 top-3 h-8 w-8 rounded-full"
                         size="icon"
-                        type="submit"
+                        onClick={handleSubmit}
                     >
                         <SendIcon className="h-4 w-4" />
                         <span className="sr-only">Send</span>

@@ -12,7 +12,7 @@ class MessageController extends Controller
         $payload = $request->validate([
             "content" => ["required"],
             "user_id" => ["required"],
-            "support_user_id" => ["nullable"],
+            "replier_id" => ["nullable"],
         ]);
 
         Message::create($payload);
